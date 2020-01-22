@@ -12,7 +12,7 @@ def readfile(filename):
     for line in content:
         line_list = line.split(",")
         attributes.append(line_list[0:-1])
-        label000s.append(line_list[-1].strip())
+        labels.append(line_list[-1].strip())
     
     # print(np.array(attributes))
     # print(np.array(labels))
