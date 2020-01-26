@@ -1,4 +1,5 @@
 import numpy as np 
+import operator
 
 def readfile(filename):
 
@@ -16,6 +17,7 @@ def readfile(filename):
             line_list[i] = int(line_list[i])
         attributes.append(line_list[0:-1])
         labels.append(label)
+        # report Q1.1
         ascii_labels.append(ord(label))
     
     # print(np.array(attributes))
@@ -29,8 +31,17 @@ def readfile(filename):
 
     # print("label, min: ", chr(np.amin(np.array(ascii_labels))))
     # print("label, max: ", chr(np.amax(np.array(ascii_labels))))
+    
+    # report Q1.2
+    labels_count = {}
 
+    for label in labels:
+        if label not in labels_count:
+            labels_count[label] = 0
+        labels_count[label] += 1
+
+    print(labels_count)
 
     return np.array(attributes), np.array(labels)
 
-readfile("data/train_full.txt")
+readfile("data/train_sub.txt")
