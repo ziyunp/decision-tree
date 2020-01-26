@@ -1,7 +1,7 @@
 import numpy as np 
 import operator
 
-def readfile(filename):
+def readFile(filename):
 
     attributes = []
     labels = []
@@ -44,4 +44,4 @@ def readfile(filename):
 
     return np.array(attributes), np.array(labels)
 
-readfile("data/train_sub.txt")
+readFile("data/train_full.txt")
