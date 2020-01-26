@@ -1,5 +1,14 @@
 import numpy as np 
 
+def count_frequency(a_list):
+    freq = {}
+    for item in a_list:
+        if (item in freq):
+            freq[item] += 1
+        else:
+            freq[item] = 1
+    return freq
+
 def read_file(filename):
     raw_data = open(filename).read().splitlines() # a list of lines
 
@@ -20,16 +29,13 @@ def read_file(filename):
 
     data_list = [raw_line.split(',') for raw_line in raw_data]
     # a [data_num X (attribute_num + 1)] list
-    attributes = [np.asarray(line[:-2], int) for line in data_list]
-    label = [np.asarray(ord(line[-1]), int) for line in data_list]
+    attributes = np.asarray([line[:-2] for line in data_list], int)
+    label = np.asarray([line[-1] for line in data_list])
     # attributes - a [data_num X attribute_num] array
     # label -  a [data_num X 1] array
 
     attributes_max = np.amax(attributes, axis = 0)
     attributes_min = np.amin(attributes, axis = 0)
-
-    label_max = np.amax(label)
-    label_min = np.amin(label)   
 
     print("Number of data is " + str(data_num))
     print("Number of attributs is " + str(attribute_num))
@@ -37,9 +43,30 @@ def read_file(filename):
     print(attributes_max)
     print(attributes_min)
     print("Range of labels are ")
-    print(label_max)
-    print(label_min)
+    print(count_frequency(np.transpose(label)))
 
     return attributes, label
 
+print("\n********** Information of tran_full.txt **********")
 read_file("data/train_full.txt")
+
+print("\n********** Information of tran_sub.txt **********")
+read_file("data/train_sub.txt")
+
+print("\n********** Information of tran_noisy.txt **********")
+read_file("data/train_noisy.txt")
+
+print("\n********** Information of validation.txt **********")
+read_file("data/validation.txt")
+
+print("\n********** Information of simple1.txt **********")
+read_file("data/simple1.txt")
+
+print("\n********** Information of simple2.txt **********")
+read_file("data/simple2.txt")
+
+print("\n********** Information of test.txt **********")
+read_file("data/test.txt")
+
+print("\n********** Information of toy.txt **********")
+read_file("data/toy.txt")
