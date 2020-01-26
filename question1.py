@@ -1,37 +1,45 @@
 import numpy as np 
 
-def readfile(filename):
+def read_file(filename):
+    raw_data = open(filename).read().splitlines() # a list of lines
 
-    attributes = []
-    labels = []
-    ascii_labels = []
-
-    with open(filename) as f:
-        content = f.readlines()
-
-    min, max
-    for line in content:
-        line_list = line.split(",")
-        for i in range (0, len(line_list) - 1):
-            line_list[i] = int(line_list[i])
-        attributes.append(line_list[0:-1])
-        labels.append(line_list[-1].strip())
-        for label in labels:
-            ascii_labels.append(ord(label))
+    # check whether there is data
+    data_num = len(raw_data)
+    if (data_num == 0):
+        print("No data found in the given file")
+        return
     
-    # print(np.array(attributes))
-    # print(np.array(labels))
+    # check whether attributes of each line is consistent
+    attribute_num = len(raw_data[0].split(",")) - 1 
+    # the last column is label
+    for raw_line in raw_data:
+        line = raw_line.split(",")
+        if (attribute_num != len(line) - 1):
+            print("Attribute numbers of each line is not consistent")
+            return 
 
-    for i in range (0, len(attributes[0]) - 1):
-        # print("#####################")
-        print(i, " column, min: ", np.amin(np.array(attributes[:][i])))
-        print(i, "column, max: ", np.amax(np.array(attributes[:][i])))
-        # print("#####################")
+    data_list = [raw_line.split(',') for raw_line in raw_data]
+    # a [data_num X (attribute_num + 1)] list
+    attributes = [np.asarray(line[:-2], int) for line in data_list]
+    label = [np.asarray(ord(line[-1]), int) for line in data_list]
+    # attributes - a [data_num X attribute_num] array
+    # label -  a [data_num X 1] array
 
-    print("label, min: ", chr(np.amin(np.array(ascii_labels))))
-    print("label, max: ", chr(np.amax(np.array(ascii_labels))))
+    attributes_max = np.amax(attributes, axis = 0)
+    attributes_min = np.amin(attributes, axis = 0)
 
+    label_max = np.amax(label)
+    label_min = np.amin(label)   
 
-    return np.array(attributes), np.array(labels)
+    print("Number of data is " + str(data_num))
+    print("Number of attributs is " + str(attribute_num))
+    print("Range of attributes are ")
+    print(attributes_max)
+    print(attributes_min)
+    print("Range of labels are ")
+    print(label_max)
+    print(label_min)
 
-readfile("data/train_full.txt")
+    return attributes, label
+
+read_file("data/train_full.txt")
