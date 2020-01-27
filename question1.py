@@ -1,4 +1,5 @@
 import numpy as np 
+import operator
 
 def count_frequency(a_list):
     freq = {}
