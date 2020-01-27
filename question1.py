@@ -51,7 +51,7 @@ def read_file(filename):
 
     return attributes, label
 
-print("\n********** Information of tran_full.txt **********")
+print("\n********** Information of train_full.txt **********")
 read_file("data/train_full.txt")
 print("***********************************************\n")
 
