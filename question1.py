@@ -1,7 +1,7 @@
 import numpy as np 
 import operator
 
-def count_frequency(a_list):
+def countFrequency(a_list):
     freq = {}
     for item in a_list:
         if (item in freq):
@@ -10,7 +10,7 @@ def count_frequency(a_list):
             freq[item] = 1
     return freq
 
-def read_file(filename):
+def readFile(filename):
     raw_data = open(filename).read().splitlines() # a list of lines
 
     # check whether there is data
@@ -39,47 +39,47 @@ def read_file(filename):
     attributes_min = np.amin(attributes, axis = 0)
     attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
 
-    label_freq = count_frequency(label)
+    label_freq = countFrequency(label)
 
     print("Number of data is " + str(data_num))
-    print("Number of attributs is " + str(attribute_num))
+    print("Number of attributes is " + str(attribute_num))
     print("\nRange of attributes are ")
     for i in range(attribute_num): 
         print("Attr {} : {}.".format(i, attributes_range[i]))
-    print("\nRange of labels are ")
+    print("\nFrequency of labels are ")
     for key, value in label_freq.items():
         print("Label '{}' : {}".format(key, value))
 
     return attributes, label
 
-print("\n********** Information of train_full.txt **********")
-read_file("data/train_full.txt")
-print("***********************************************\n")
+# print("\n********** Information of train_full.txt **********")
+# readFile("data/train_full.txt")
+# print("***********************************************\n")
 
-print("\n********** Information of tran_sub.txt **********")
-read_file("data/train_sub.txt")
-print("***********************************************\n")
+# print("\n********** Information of tran_sub.txt **********")
+# readFile("data/train_sub.txt")
+# print("***********************************************\n")
 
-print("\n********** Information of tran_noisy.txt **********")
-read_file("data/train_noisy.txt")
-print("***********************************************\n")
+# print("\n********** Information of tran_noisy.txt **********")
+# readFile("data/train_noisy.txt")
+# print("***********************************************\n")
 
-print("\n********** Information of validation.txt **********")
-read_file("data/validation.txt")
-print("***********************************************\n")
+# print("\n********** Information of validation.txt **********")
+# readFile("data/validation.txt")
+# print("***********************************************\n")
 
-print("\n********** Information of simple1.txt **********")
-read_file("data/simple1.txt")
-print("***********************************************\n")
+# print("\n********** Information of simple1.txt **********")
+# readFile("data/simple1.txt")
+# print("***********************************************\n")
 
-print("\n********** Information of simple2.txt **********")
-read_file("data/simple2.txt")
-print("***********************************************\n")
+# print("\n********** Information of simple2.txt **********")
+# readFile("data/simple2.txt")
+# print("***********************************************\n")
 
-print("\n********** Information of test.txt **********")
-read_file("data/test.txt")
-print("***********************************************\n")
+# print("\n********** Information of test.txt **********")
+# readFile("data/test.txt")
+# print("***********************************************\n")
 
-print("\n********** Information of toy.txt **********")
-read_file("data/toy.txt")
-print("***********************************************\n")
+# print("\n********** Information of toy.txt **********")
+# readFile("data/toy.txt")
+# print("***********************************************\n")
