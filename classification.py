@@ -9,6 +9,10 @@
 
 import numpy as np
 
+# own libraries
+import helpers as hp
+import node as nd
+
 
 class DecisionTreeClassifier(object):
     """
@@ -31,6 +35,21 @@ class DecisionTreeClassifier(object):
     def __init__(self):
         self.is_trained = False
     
+    # recursively inducing a decision tree
+    def induceDecisionTree(self, dataset):
+        bestSplit, splitIndex = hp.findBestSplitPoint(dataset)
+        if (splitIndex == -1): # all samples have the same label or cannot be split
+            node = nd.LeafNode()
+        else :
+            datasetSorted = hp.sortByColAndLabel(dataset, bestSplit.attribute)
+            subsets = np.vsplit(datasetSorted, [splitIndex + 1])
+
+            node = nd.DecisionNode() 
+            node.splitInfo = bestSplit
+            node.childNodeL = self.induceDecisionTree(subsets[0])
+            node.childNodeR = self.induceDecisionTree(subsets[1])
+            
+        return node 
     
     def train(self, x, y):
         """ Constructs a decision tree classifier from data

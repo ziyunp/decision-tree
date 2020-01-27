@@ -1,11 +1,19 @@
+import SplitInfo as si
+
 class Node:
     def __init__(self):
         self.entropy = 0
 
 class DecisionNode(Node):
-    # splitPoint
-    # subset1
-    # subset2
+    splitInfo = si.SplitInfo(-1, -1)
+    childNodeL = Node()
+    childNodeR = Node()
+
+    def __init__(self):
+        Node()
 
 class LeafNode(Node):
-    # subset
+    label = "A"
+    
+    def __init__(self):
+        Node()
