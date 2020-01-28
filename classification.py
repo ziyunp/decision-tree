@@ -12,6 +12,7 @@ import numpy as np
 # own libraries
 import helpers as hp
 import node as nd
+import question1 as q1
 
 
 class DecisionTreeClassifier(object):
@@ -37,18 +38,14 @@ class DecisionTreeClassifier(object):
     
     # recursively inducing a decision tree
     def induceDecisionTree(self, dataset):
-        bestSplit, splitIndex = hp.findBestSplitPoint(dataset)
-        if (splitIndex == -1): # all samples have the same label or cannot be split
-            node = nd.LeafNode()
+        bestSplit = hp.findBestSplitPoint(dataset)
+        if (bestSplit.attribute == None): # all samples have the same label or cannot be split
+            node = nd.LeafNode(dataset)
         else :
-            datasetSorted = hp.sortByColAndLabel(dataset, bestSplit.attribute)
-            subsets = np.vsplit(datasetSorted, [splitIndex + 1])
-
-            node = nd.DecisionNode() 
-            node.splitInfo = bestSplit
-            node.childNodeL = self.induceDecisionTree(subsets[0])
-            node.childNodeR = self.induceDecisionTree(subsets[1])
-            
+            node = nd.DecisionNode(bestSplit)
+            trueData, falseData = hp.split(dataset, bestSplit.attribute, bestSplit.value)
+            node.childTrue = self.induceDecisionTree(trueData)
+            node.childFalse = self.induceDecisionTree(falseData)
         return node 
     
     def train(self, x, y):
@@ -73,13 +70,8 @@ class DecisionTreeClassifier(object):
         assert x.shape[0] == len(y), \
             "Training failed. x and y must have the same number of instances."
         
-        
-
-        #######################################################################
-        #                 ** TASK 2.1: COMPLETE THIS METHOD **
-        #######################################################################
-        
-        
+        dataSet = hp.mergeArrays(hp.convertToAscii(y), x)
+        self.tree = self.induceDecisionTree(dataSet)
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -123,3 +115,12 @@ class DecisionTreeClassifier(object):
         return predictions
         
 
+
+# Tests
+
+### Hardcoded data ###
+labels, attributes = q1.readFile("data/toy.txt")
+######################
+
+dtClassifier = DecisionTreeClassifier()
+dtClassifier.train(attributes, labels).tree.print(0)

@@ -3,19 +3,15 @@ import SplitInfo as si
 class Node:
     def __init__(self):
         self.entropy = 0
+    
+    def print(self):
+        ...
 
 
 # potentially add:
     # pointers to sub nodes 
     # splittingRule - what's the format of this
 class DecisionNode(Node):
-    splitInfo = si.SplitInfo(-1, -1)
-    childNodeL = Node()
-    childNodeR = Node()
-
-    def __init__(self):
-        Node()
-
     """
     A decision node
     
@@ -31,12 +27,29 @@ class DecisionNode(Node):
         Given a split, compare the sum of the entropies from subLabel1 and subLabel2 with parent entropy
 
     """
+    childTrue = Node()
+    childFalse = Node()
 
-    def __init__(self, attributes, labels):
+    def __init__(self, _splitInfo):
         super().__init__()
-        self.entropy = calcEntropy(labels)
-        self.attributes = attributes
-        self.labels = labels
+        self.splitInfo = _splitInfo
+        # DecisionNode should not store entropy since entropy is related to a specific dataset. 
+
+        # Before pruning, there is no label stored in the Decision nodes but after pruning, the 
+        # decision node is effectively a LeafNode
+
+        # self.entropy = calcEntropy(labels)
+        # self.attributes = attributes
+        # self.labels = labels
+
+
+    def print(self, layer):
+        for _ in range(layer):
+            print('--', end='')
+        print("Desion Node: Attribute {} is smaller than {}?"
+            .format(self.splitInfo.attribute, self.splitInfo.value))
+        self.childTrue.print(layer + 1)
+        self.childFalse.print(layer + 1)
         
 
     # splitPoint
@@ -67,7 +80,12 @@ class DecisionNode(Node):
 
 
 class LeafNode(Node):
-    label = "A"
-    
-    def __init__(self):
+
+    def __init__(self, dataset):
         Node()
+        self.label = dataset[0][0]
+
+    def print(self, layer):
+        for _ in range(layer):
+            print('--', end='')        
+        print("Leaf Node: Label is {}".format(chr(self.label)))

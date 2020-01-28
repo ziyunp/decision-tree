@@ -1,6 +1,7 @@
 import numpy as np 
 from question1 import *
 import math
+import SplitInfo as si
 
 def convertToAscii(label):
     newArray = []
@@ -38,28 +39,20 @@ def calcIG(data, subLabel1, subLabel2):
     return calcEntropy(data) - childEntropy
 
 def checkIG(data, attr, splitPoint):
-    
-    # split in 2 subsets - use Ken's function
+    # split in 2 subsets
     subset1 = []
     subset2 = []
-    for row in data:
-        subset1.append(row) if (row[attr] < splitPoint) else subset2.append(row)
-    subset1, subset2 = np.asarray(subset1), np.asarray(subset2)
+    subset1, subset2 = split(data, attr, splitPoint)
     return calcIG(data[:,0], subset1[:,0], subset2[:,0])
 
-### Hardcoded data ###
-label, attributes = readFile("data/toy.txt")
-######################
-
-def findBestSplitPoint(data):
+def findBestSplitPoint(dataSet):
     bestIG = 0
-    bestSplitPoint = None
-    dataSet = mergeArrays(convertToAscii(label), attributes)
+    bestSplit = si.SplitInfo(None, None)
 
     # assuming label at position 0
     for attr in range (1, len(dataSet[0])):
         sortedArr = sortByAttrAndLabel(dataSet, attr)
-        print(sortedArr)
+        # print(sortedArr)
 
         # find split points
         prevSplitPoint = sortedArr[0][attr]
@@ -72,20 +65,33 @@ def findBestSplitPoint(data):
                 currIG = checkIG(sortedArr, attr, splitPoint)
                 if currIG > bestIG:
                     bestIG = currIG
-                    bestSplitPoint = [attr, splitPoint]
+                    bestSplit.attribute = attr
+                    bestSplit.value = splitPoint
             prevSplitPoint = splitPoint
 
-    return bestSplitPoint
+    return bestSplit
 
 # @param dataset NxAttr array
 # @param splitInfo = [splitAttribute, splitPoint]
 # @retrun an splitPoint x Attr array and an (N - splitPoint) x Attr array
-def split(dataset, splitInfo):
-    trueData = np.array([])
-    falseData = np.array([])
+def split(dataset, attr, splitPoint):
+    trueData = []
+    falseData = []
 
     for data in dataset:
-        if (data[0] > splitInfo.value):
+        if (data[attr] < splitPoint):
+            trueData.append(data)  
+        else: 
+            falseData.append(data)
+    return np.array(trueData), np.array(falseData)
 
-findBestSplitPoint(readFile("data/toy.txt")[1])
+
+
+### Hardcoded data ###
+labels, attributes = readFile("data/toy.txt")
+######################
+
+dataSet = mergeArrays(convertToAscii(labels), attributes)
+bestSplit = findBestSplitPoint(dataSet)
+# print(bestSplit.attribute, bestSplit.value)
 

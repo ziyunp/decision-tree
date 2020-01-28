@@ -1,5 +1,5 @@
 import numpy as np 
-import operator
+# import operator
 
 def countFrequency(a_list):
     freq = {}
@@ -35,11 +35,11 @@ def readFile(filename):
     # attributes - a [data_num X attribute_num] array
     # label -  a [data_num X 1] array
 
-    attributes_max = np.amax(attributes, axis = 0)
-    attributes_min = np.amin(attributes, axis = 0)
-    attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
+    # attributes_max = np.amax(attributes, axis = 0)
+    # attributes_min = np.amin(attributes, axis = 0)
+    # attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
 
-    label_freq = countFrequency(label)
+    # label_freq = countFrequency(label)
 
     # print("Number of data is " + str(data_num))
     # print("Number of attributes is " + str(attribute_num))
