@@ -14,6 +14,9 @@
 
 import numpy as np
 
+import helpers as hp
+import classification as cf
+
 
 class Evaluator(object):
     """ Class to perform evaluation
@@ -183,3 +186,14 @@ class Evaluator(object):
         return (f, macro_f)
    
  
+# Test
+train_attributes, train_labels = hp.readFile("data/train_full.txt")
+dtClassifier = cf.DecisionTreeClassifier()
+dtClassifier.train(train_attributes, train_labels)
+
+test_attributes, test_labels = hp.readFile("data/test.txt")
+preditions = dtClassifier.predict(test_attributes)
+
+evaluator = Evaluator()
+confusion = evaluator.confusion_matrix(preditions, test_labels)
+print(confusion)
