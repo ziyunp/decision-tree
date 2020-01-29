@@ -55,10 +55,9 @@ class Evaluator(object):
         confusion = np.zeros((len(classLabels), len(classLabels)), dtype=np.int)
         
             
-        for i in range(len(predictions)):
+        for i in range(len(prediction)):
             rowNum = np.where(classLabels == annotation[i])[0][0]
             colNum = np.where(classLabels == prediction[i])[0][0]
-            print(rowNum, colNum)
             confusion[rowNum][colNum] += 1
 
         
@@ -122,13 +121,18 @@ class Evaluator(object):
         
         # Initialise array to store precision for C classes
         p = np.zeros((len(confusion), ))
-        
-        #######################################################################
-        #                 ** TASK 3.3: COMPLETE THIS METHOD **
-        #######################################################################
 
-        # You will also need to change this        
+        for i in range (0, len(confusion)):
+            total = 0
+            TP = confusion[i][i]
+            for j in range (0, len(confusion)):
+                total += confusion[j][i]
+            p[i] = TP / total
+
         macro_p = 0
+        for i in range (0, len(p)):
+            macro_p += p[i]
+        macro_p = macro_p / len(p)
 
         return (p, macro_p)
     
@@ -215,13 +219,13 @@ dtClassifier = cf.DecisionTreeClassifier()
 dtClassifier.train(train_attributes, train_labels)
 
 test_attributes, test_labels = hp.readFile("data/test.txt")
-preditions = dtClassifier.predict(test_attributes)
+predictions = dtClassifier.predict(test_attributes)
 
 evaluator = Evaluator()
-confusion = evaluator.confusion_matrix(preditions, test_labels)
+confusion = evaluator.confusion_matrix(predictions, test_labels)
 print(confusion)
 
-# confusion = np.array([[70, 30],
-#                       [10, 90]])
+print(evaluator.accuracy(confusion))
+print(evaluator.precision(confusion))
 print(evaluator.recall(confusion))
 print(evaluator.f1_score(confusion))

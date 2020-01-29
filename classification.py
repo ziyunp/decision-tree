@@ -12,6 +12,7 @@ import numpy as np
 # own libraries
 import helpers as hp
 import node as nd
+import json
 
 
 class DecisionTreeClassifier(object):
@@ -132,12 +133,12 @@ class DecisionTreeClassifier(object):
 
 ### Hardcoded data ###
 attributes, labels = hp.readFile("data/train_sub.txt")
+# jsonData = {}
+# jsonData["root"] = []
 ######################
-# print(attributes)
-# print(labels)
 
 # dtClassifier = DecisionTreeClassifier()
-# dtClassifier.train(attributes, labels).tree.print(0)
+# dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
 
 # test_attributes, test_labels = hp.readFile("data/test.txt")
 # predictions = dtClassifier.predict(test_attributes)
@@ -147,3 +148,7 @@ attributes, labels = hp.readFile("data/train_sub.txt")
 #     if (ord(predictions[i]) == test_labels[i]):
 #         correct += 1
 # print(correct / len(test_labels))
+
+
+# with open('save.json', 'w') as outfile:
+#     json.dump(jsonData, outfile)

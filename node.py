@@ -40,13 +40,18 @@ class DecisionNode(Node):
         # Before pruning, there is no label stored in the Decision nodes but after pruning, the 
         # decision node is effectively a LeafNode
 
-    def print(self, layer):
+    def print(self, layer, jsonData):
         for _ in range(layer):
             print('--', end='')
         print("Decision Node: Attribute {} is smaller than {}?"
             .format(self.splitInfo.attribute, self.splitInfo.value))
-        self.childTrue.print(layer + 1)
-        self.childFalse.print(layer + 1)
+        jsonData.append({
+            "splitPoint": [self.splitInfo.attribute, int(self.splitInfo.value)],
+            "childTrue": [],
+            "childFalse": []
+        })
+        self.childTrue.print(layer + 1, jsonData[0]['childTrue'])
+        self.childFalse.print(layer + 1, jsonData[0]['childFalse'])
 
 
     def question(self, attributes):
@@ -76,10 +81,13 @@ class LeafNode(Node):
         self.predictions = hp.getFrequency(dataset)
         self.label = hp.getMajorLabel(self.predictions)
 
-    def print(self, layer):
+    def print(self, layer, jsonData):
         for _ in range(layer):
-            print('--', end='')        
+            print('--', end='')
+        jsonData.append({
+            "label": chr(self.label)
+        })        
         print("Leaf Node: Label is {}".format(chr(self.label)))
 
     def question(self, attributes):
-        return chr(self.label)
+        return self.label
