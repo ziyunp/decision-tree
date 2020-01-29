@@ -87,6 +87,7 @@ class DecisionTreeClassifier(object):
             "Training failed. x and y must have the same number of instances."
         
         dataset = hp.getData(x, y)
+        print(dataset)
         self.tree = self.induceDecisionTree(dataset)
         
         # set a flag so that we know that the classifier has been trained
@@ -129,26 +130,26 @@ class DecisionTreeClassifier(object):
         
 
 
-# Tests
+# # Tests
 
-### Hardcoded data ###
-attributes, labels = hp.readFile("data/train_sub.txt")
-# jsonData = {}
-# jsonData["root"] = []
-######################
+# ### Hardcoded data ###
+# attributes, labels = hp.readFile("data/train_sub.txt")
+# # jsonData = {}
+# # jsonData["root"] = []
+# ######################
 
-# dtClassifier = DecisionTreeClassifier()
-# dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
+# # dtClassifier = DecisionTreeClassifier()
+# # dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
 
-# test_attributes, test_labels = hp.readFile("data/test.txt")
-# predictions = dtClassifier.predict(test_attributes)
+# # test_attributes, test_labels = hp.readFile("data/test.txt")
+# # predictions = dtClassifier.predict(test_attributes)
 
-# correct = 0
-# for i in range(len(test_labels)):
-#     if (ord(predictions[i]) == test_labels[i]):
-#         correct += 1
-# print(correct / len(test_labels))
+# # correct = 0
+# # for i in range(len(test_labels)):
+# #     if (ord(predictions[i]) == test_labels[i]):
+# #         correct += 1
+# # print(correct / len(test_labels))
 
 
-# with open('save.json', 'w') as outfile:
-#     json.dump(jsonData, outfile)
+# # with open('save.json', 'w') as outfile:
+# #     json.dump(jsonData, outfile)

@@ -213,19 +213,19 @@ class Evaluator(object):
         return (f, macro_f)
    
  
-# Test
-train_attributes, train_labels = hp.readFile("data/train_full.txt")
-dtClassifier = cf.DecisionTreeClassifier()
-dtClassifier.train(train_attributes, train_labels)
+# # Test
+# train_attributes, train_labels = hp.readFile("data/train_full.txt")
+# dtClassifier = cf.DecisionTreeClassifier()
+# dtClassifier.train(train_attributes, train_labels)
 
-test_attributes, test_labels = hp.readFile("data/test.txt")
-predictions = dtClassifier.predict(test_attributes)
+# test_attributes, test_labels = hp.readFile("data/test.txt")
+# predictions = dtClassifier.predict(test_attributes)
 
-evaluator = Evaluator()
-confusion = evaluator.confusion_matrix(predictions, test_labels)
-print(confusion)
+# evaluator = Evaluator()
+# confusion = evaluator.confusion_matrix(predictions, test_labels)
+# print(confusion)
 
-print(evaluator.accuracy(confusion))
-print(evaluator.precision(confusion))
-print(evaluator.recall(confusion))
-print(evaluator.f1_score(confusion))
+# print(evaluator.accuracy(confusion))
+# print(evaluator.precision(confusion))
+# print(evaluator.recall(confusion))
+# print(evaluator.f1_score(confusion))

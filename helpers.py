@@ -22,13 +22,13 @@ def readFile(filename):
             return 
 
     data = [rawLine.split(',') for rawLine in rawData]
-    attributes = np.asarray([data[row][:-1] for row in range(len(data))], int)
-    labels = np.asarray([[ord(data[row][-1].strip())] for row in range(len(data))])
-
+    attributes = np.array([data[row][:-1] for row in range(len(data))], int)
+    labels = np.array([data[row][-1].strip() for row in range(len(data))])
+    print(labels)
     return attributes, labels
 
 def getData(attributes, labels):
-    return np.append(attributes, labels, 1)
+    return np.append(attributes, labels[:,None], axis=1)
 
 
 
@@ -50,12 +50,12 @@ def getFrequency(dataset):
 #     mergedArr = []
 #     for i in range (0, len(label)):
 #         mergedArr.append(np.insert(attr[i], 0, label[i]))
-#     return np.asarray(mergedArr)
+#     return np.array(mergedArr)
 
 
 def sortByAttrAndLabel(data, col):
         sortedList = sorted(data, key=lambda x:(x[col], x[0]))
-        sortedArr = np.asarray(sortedList)
+        sortedArr = np.array(sortedList)
         return sortedArr
 
 
@@ -99,12 +99,6 @@ def split(dataset, splitInfo):
             falseData.append(data)
     return np.array(trueData), np.array(falseData)
 
-# dataset = getData("data/toy.txt")
-# s = si.SplitInfo(0, 5)
-# trueDataset, falseDataset = split(dataset, s)
-# print(trueDataset)
-
-
 def findBestSplitPoint(dataset):
     bestIG = 0
     bestSplit = si.SplitInfo(None, None)
@@ -132,15 +126,6 @@ def findBestSplitPoint(dataset):
             prevSplitPoint = splitPoint
 
     return bestSplit
-
-
-### Hardcoded data ###
-# dataset = getData("data/toy.txt")
-######################
-
-# bestSplit = findBestSplitPoint(dataset)
-# print(bestSplit.attribute, bestSplit.value)
-
 
 def getMajorLabel(predictions):
     values = list(predictions.values())
