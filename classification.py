@@ -87,7 +87,6 @@ class DecisionTreeClassifier(object):
             "Training failed. x and y must have the same number of instances."
         
         dataset = hp.getData(x, y)
-        print(dataset)
         self.tree = self.induceDecisionTree(dataset)
         
         # set a flag so that we know that the classifier has been trained

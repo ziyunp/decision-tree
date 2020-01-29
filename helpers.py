@@ -24,7 +24,6 @@ def readFile(filename):
     data = [rawLine.split(',') for rawLine in rawData]
     attributes = np.array([data[row][:-1] for row in range(len(data))], int)
     labels = np.array([data[row][-1].strip() for row in range(len(data))])
-    print(labels)
     return attributes, labels
 
 def getData(attributes, labels):
@@ -54,7 +53,7 @@ def getFrequency(dataset):
 
 
 def sortByAttrAndLabel(data, col):
-        sortedList = sorted(data, key=lambda x:(x[col], x[0]))
+        sortedList = sorted(data, key=lambda x:(x[col], x[-1]))
         sortedArr = np.array(sortedList)
         return sortedArr
 
@@ -107,7 +106,6 @@ def findBestSplitPoint(dataset):
 
     for attr in range (len(dataset[0]) - 1):
         sortedArr = sortByAttrAndLabel(dataset, attr)
-        # print(sortedArr)
 
         # find split points
         prevSplitPoint = sortedArr[0][attr]
