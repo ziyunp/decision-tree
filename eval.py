@@ -25,7 +25,7 @@ class Evaluator(object):
     """ Class to perform evaluation
     """
     
-    def confusion_matrix(self, prediction, annotation, classLabels=None):
+    def confusion_matrix(self, prediction, annotation, classLabels=[]):
         """ Computes the confusion matrix.
         
         Parameters
@@ -49,7 +49,7 @@ class Evaluator(object):
             Rows are ground truth per class, columns are predictions.
         """
         
-        if not classLabels:
+        if (len(classLabels) == 0):
             classLabels = np.unique(annotation)
         
         confusion = np.zeros((len(classLabels), len(classLabels)), dtype=np.int)
@@ -59,12 +59,6 @@ class Evaluator(object):
             rowNum = np.where(classLabels == annotation[i])[0][0]
             colNum = np.where(classLabels == prediction[i])[0][0]
             confusion[rowNum][colNum] += 1
-
-        
-        #######################################################################
-        #                 ** TASK 3.1: COMPLETE THIS METHOD **
-        #######################################################################
-        
         
         return confusion
     
@@ -84,9 +78,6 @@ class Evaluator(object):
             The accuracy (between 0.0 to 1.0 inclusive)
         """
 
-        #######################################################################
-        #                 ** TASK 3.2: COMPLETE THIS METHOD **
-        #######################################################################
         trueTotal = 0
         total = 0
         for i in range (len(confusion)):

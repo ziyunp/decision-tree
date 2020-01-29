@@ -28,6 +28,8 @@ def splitDataset(filename, k):
 def crossValidation(filename, k):
 
     subsets = splitDataset(filename, k)
+    accuracy = [] 
+    total = 0
 
     for i in range (k):
         testDataset = []
@@ -41,50 +43,60 @@ def crossValidation(filename, k):
             else:
                 trainingDataset = np.append(trainingDataset, trainingSubset, axis=0)
             
-        run(trainingDataset, testDataset)
+        accuracy.append(run(trainingDataset, testDataset))
 
+    for i in range (len(accuracy)):
+        total += 1 - accuracy[i]
 
+    globalError = total / len(accuracy)
+
+    return globalError
 
 def run(trainingDataset, testDataset):
 
     x,y = trainingDataset[:,:-1], trainingDataset[:,-1]
     x_test, y_test = testDataset[:,:-1], testDataset[:,-1]
 
-    print("Training the decision tree...")
+    # print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
     classifier = classifier.train(x, y)
 
-    print("Testing the decision tree...")
+    # print("Testing the decision tree...")
     predictions = classifier.predict(x_test)
-    print("Predictions: {}".format(predictions))
-    print("y_test: ", y_test)
+    # print("Predictions: {}".format(predictions))
+    # print("y_test: ", y_test)
 
     # print("Evaluating test predictions...")
-    # evaluator = Evaluator()
-    # confusion = evaluator.confusion_matrix(predictions, y_test)
+    evaluator = Evaluator()
+    classLabels = classLabels = np.unique(predictions)
+    confusion = evaluator.confusion_matrix(predictions, y_test, classLabels)
     
     # print("Confusion matrix:")
     # print(confusion)
 
-    # accuracy = evaluator.accuracy(confusion)
+    accuracy = evaluator.accuracy(confusion)
     # print()
     # print("Accuracy: {}".format(accuracy))
 
-    # (p, macro_p) = evaluator.precision(confusion)
-    # (r, macro_r) = evaluator.recall(confusion)
-    # (f, macro_f) = evaluator.f1_score(confusion)
+    (p, macro_p) = evaluator.precision(confusion)
+    (r, macro_r) = evaluator.recall(confusion)
+    (f, macro_f) = evaluator.f1_score(confusion)
 
     # print()
     # print("Class: Precision, Recall, F1")
     # for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-    #     print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1));
+    #     print("{}: {:.2f}, {:.2f}, {:.2f}".format(classLabels[i], p1, r1, f1));
    
     # print() 
     # print("Macro-averaged Precision: {:.2f}".format(macro_p))
     # print("Macro-averaged Recall: {:.2f}".format(macro_r))
     # print("Macro-averaged F1")
 
-    print("======================")
+    # print("======================")
+
+    return accuracy
 
 # print(splitDataset("data/toy.txt", 11))
-crossValidation("data/toy.txt", 3)
+for i in range (2, 11):
+    print("Error for k=", i, "is", crossValidation("data/simple1.txt", i))
+    
