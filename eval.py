@@ -14,12 +14,18 @@
 
 import numpy as np
 
+import helpers as hp
+import classification as cf
+
+
+
+
 
 class Evaluator(object):
     """ Class to perform evaluation
     """
     
-    def confusion_matrix(self, prediction, annotation, class_labels=None):
+    def confusion_matrix(self, prediction, annotation, classLabels=None):
         """ Computes the confusion matrix.
         
         Parameters
@@ -30,7 +36,7 @@ class Evaluator(object):
         annotation : np.array
             an N dimensional numpy array containing the ground truth
             class labels
-        class_labels : np.array
+        classLabels : np.array
             a C dimensional numpy array containing the ordered set of class
             labels. If not provided, defaults to all unique values in
             annotation.
@@ -39,15 +45,21 @@ class Evaluator(object):
         -------
         np.array
             a C by C matrix, where C is the number of classes.
-            Classes should be ordered by class_labels.
+            Classes should be ordered by classLabels.
             Rows are ground truth per class, columns are predictions.
         """
         
-        if not class_labels:
-            class_labels = np.unique(annotation)
+        if not classLabels:
+            classLabels = np.unique(annotation)
         
-        confusion = np.zeros((len(class_labels), len(class_labels)), dtype=np.int)
+        confusion = np.zeros((len(classLabels), len(classLabels)), dtype=np.int)
         
+            
+        for i in range(len(prediction)):
+            rowNum = np.where(classLabels == annotation[i])[0][0]
+            colNum = np.where(classLabels == prediction[i])[0][0]
+            confusion[rowNum][colNum] += 1
+
         
         #######################################################################
         #                 ** TASK 3.1: COMPLETE THIS METHOD **
@@ -71,17 +83,22 @@ class Evaluator(object):
         float
             The accuracy (between 0.0 to 1.0 inclusive)
         """
-        
-        # feel free to remove this
-        accuracy = 0.0
-        
+
         #######################################################################
         #                 ** TASK 3.2: COMPLETE THIS METHOD **
         #######################################################################
-        
+        trueTotal = 0
+        total = 0
+        for i in range (len(confusion)):
+            trueTotal += confusion[i][i]
+            for j in range(len(confusion)):
+                total += confusion[i][j]
+
+        rawAccuracy = trueTotal / total
+        accuracy = round(rawAccuracy, 1)
+        # print("accuracy: ", accuracy)
         return accuracy
-        
-    
+
     def precision(self, confusion):
         """ Computes the precision score per class given a confusion matrix.
         
@@ -104,13 +121,18 @@ class Evaluator(object):
         
         # Initialise array to store precision for C classes
         p = np.zeros((len(confusion), ))
-        
-        #######################################################################
-        #                 ** TASK 3.3: COMPLETE THIS METHOD **
-        #######################################################################
 
-        # You will also need to change this        
+        for i in range (0, len(confusion)):
+            total = 0
+            TP = confusion[i][i]
+            for j in range (0, len(confusion)):
+                total += confusion[j][i]
+            p[i] = TP / total
+
         macro_p = 0
+        for i in range (0, len(p)):
+            macro_p += p[i]
+        macro_p = macro_p / len(p)
 
         return (p, macro_p)
     
@@ -139,13 +161,17 @@ class Evaluator(object):
         # Initialise array to store recall for C classes
         r = np.zeros((len(confusion), ))
         
-        #######################################################################
-        #                 ** TASK 3.4: COMPLETE THIS METHOD **
-        #######################################################################
+        for i in range(len(confusion)):
+            for j in range(len(confusion)):
+                r[i] += confusion[i][j]
+            r[i] = confusion[i][i] / r[i]
         
         # You will also need to change this        
         macro_r = 0
-        
+        for i in range(len(r)):
+            macro_r += r[i]
+        macro_r = macro_r / len(r)
+
         return (r, macro_r)
     
     
@@ -173,13 +199,33 @@ class Evaluator(object):
         # Initialise array to store recall for C classes
         f = np.zeros((len(confusion), ))
         
-        #######################################################################
-        #                 ** YOUR TASK: COMPLETE THIS METHOD **
-        #######################################################################
+        recall, _ = self.recall(confusion)
+        # precision, _ = self.precision(confusion)
+        precision, _ = self.recall(confusion)
+        f = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
         
         # You will also need to change this        
         macro_f = 0
+        for i in range(len(confusion)):
+            macro_f += f[i]
+        macro_f = macro_f / len(confusion)
         
         return (f, macro_f)
    
  
+# Test
+train_attributes, train_labels = hp.readFile("data/train_full.txt")
+dtClassifier = cf.DecisionTreeClassifier()
+dtClassifier.train(train_attributes, train_labels)
+
+test_attributes, test_labels = hp.readFile("data/test.txt")
+predictions = dtClassifier.predict(test_attributes)
+
+evaluator = Evaluator()
+confusion = evaluator.confusion_matrix(predictions, test_labels)
+print(confusion)
+
+print(evaluator.accuracy(confusion))
+print(evaluator.precision(confusion))
+print(evaluator.recall(confusion))
+print(evaluator.f1_score(confusion))

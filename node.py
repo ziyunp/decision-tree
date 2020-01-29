@@ -90,4 +90,4 @@ class LeafNode(Node):
         print("Leaf Node: Label is {}".format(chr(self.label)))
 
     def question(self, attributes):
-        return chr(self.label)
+        return self.label

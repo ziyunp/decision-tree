@@ -133,22 +133,22 @@ class DecisionTreeClassifier(object):
 
 ### Hardcoded data ###
 attributes, labels = hp.readFile("data/train_sub.txt")
-jsonData = {}
-jsonData["root"] = []
+# jsonData = {}
+# jsonData["root"] = []
 ######################
 
-dtClassifier = DecisionTreeClassifier()
-dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
+# dtClassifier = DecisionTreeClassifier()
+# dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
 
-test_attributes, test_labels = hp.readFile("data/test.txt")
-predictions = dtClassifier.predict(test_attributes)
+# test_attributes, test_labels = hp.readFile("data/test.txt")
+# predictions = dtClassifier.predict(test_attributes)
 
-correct = 0
-for i in range(len(test_labels)):
-    if (ord(predictions[i]) == test_labels[i]):
-        correct += 1
-print(correct / len(test_labels))
+# correct = 0
+# for i in range(len(test_labels)):
+#     if (ord(predictions[i]) == test_labels[i]):
+#         correct += 1
+# print(correct / len(test_labels))
 
 
-with open('save.json', 'w') as outfile:
-    json.dump(jsonData, outfile)
+# with open('save.json', 'w') as outfile:
+#     json.dump(jsonData, outfile)
