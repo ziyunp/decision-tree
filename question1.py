@@ -1,5 +1,5 @@
 import numpy as np 
-import operator
+# import operator
 
 def countFrequency(a_list):
     freq = {}
@@ -35,22 +35,23 @@ def readFile(filename):
     # attributes - a [data_num X attribute_num] array
     # label -  a [data_num X 1] array
 
-    attributes_max = np.amax(attributes, axis = 0)
-    attributes_min = np.amin(attributes, axis = 0)
-    attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
+    # attributes_max = np.amax(attributes, axis = 0)
+    # attributes_min = np.amin(attributes, axis = 0)
+    # attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
 
-    label_freq = countFrequency(label)
+    # label_freq = countFrequency(label)
 
-    print("Number of data is " + str(data_num))
-    print("Number of attributes is " + str(attribute_num))
-    print("\nRange of attributes are ")
-    for i in range(attribute_num): 
-        print("Attr {} : {}.".format(i, attributes_range[i]))
-    print("\nFrequency of labels are ")
-    for key, value in label_freq.items():
-        print("Label '{}' : {}".format(key, value))
+    # print("Number of data is " + str(data_num))
+    # print("Number of attributes is " + str(attribute_num))
+    # print("\nRange of attributes are ")
+    # for i in range(attribute_num): 
+    #     print("Attr {} : {}.".format(i, attributes_range[i]))
+    # print("\nFrequency of labels are ")
+    # for key, value in label_freq.items():
+    #     print("Label '{}' : {}".format(key, value))
 
-    return attributes, label
+    return label, attributes
+
 
 # print("\n********** Information of train_full.txt **********")
 # readFile("data/train_full.txt")

@@ -9,6 +9,11 @@
 
 import numpy as np
 
+# own libraries
+import helpers as hp
+import node as nd
+import json
+
 
 class DecisionTreeClassifier(object):
     """
@@ -31,6 +36,33 @@ class DecisionTreeClassifier(object):
     def __init__(self):
         self.is_trained = False
     
+
+    def induceDecisionTree(self, dataset):
+        """ Recursively inducing a decision tree
+        
+        Parameters
+        ----------
+        dataset : numpy.array
+            An N by K+1 numpy array (N is the number of instances, K is the 
+            number of attributes and the first column is labels)
+        
+        Returns
+        -------
+        Node
+            The root node of the induced decision tree
+        
+        """
+        # recursively inducing a decision tree
+        bestSplit = hp.findBestSplitPoint(dataset)
+        if (bestSplit.attribute == None): # all samples have the same label or cannot be split
+            node = nd.LeafNode(dataset)
+        else :
+            trueData, falseData = hp.split(dataset, bestSplit)
+            childTrue = self.induceDecisionTree(trueData)
+            childFalse = self.induceDecisionTree(falseData)
+            node = nd.DecisionNode(bestSplit, childTrue, childFalse)
+
+        return node 
     
     def train(self, x, y):
         """ Constructs a decision tree classifier from data
@@ -54,13 +86,8 @@ class DecisionTreeClassifier(object):
         assert x.shape[0] == len(y), \
             "Training failed. x and y must have the same number of instances."
         
-        
-
-        #######################################################################
-        #                 ** TASK 2.1: COMPLETE THIS METHOD **
-        #######################################################################
-        
-        
+        dataset = hp.getData(x, y)
+        self.tree = self.induceDecisionTree(dataset)
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -94,13 +121,34 @@ class DecisionTreeClassifier(object):
         # feel free to change this if needed
         predictions = np.zeros((x.shape[0],), dtype=np.object)
         
-        
-        #######################################################################
-        #                 ** TASK 2.2: COMPLETE THIS METHOD **
-        #######################################################################
-        
+        for i in range(len(x)):
+            predictions[i] = self.tree.question(x[i])
     
         # remember to change this if you rename the variable
         return predictions
         
 
+
+# Tests
+
+### Hardcoded data ###
+attributes, labels = hp.readFile("data/train_sub.txt")
+jsonData = {}
+jsonData["root"] = []
+######################
+
+dtClassifier = DecisionTreeClassifier()
+dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
+
+test_attributes, test_labels = hp.readFile("data/test.txt")
+predictions = dtClassifier.predict(test_attributes)
+
+correct = 0
+for i in range(len(test_labels)):
+    if (ord(predictions[i]) == test_labels[i]):
+        correct += 1
+print(correct / len(test_labels))
+
+
+with open('save.json', 'w') as outfile:
+    json.dump(jsonData, outfile)
