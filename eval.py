@@ -56,7 +56,6 @@ class Evaluator(object):
         
             
         for i in range(len(predictions)):
-            
             rowNum = np.where(classLabels == annotation[i])[0][0]
             colNum = np.where(classLabels == prediction[i])[0][0]
             print(rowNum, colNum)
@@ -85,17 +84,22 @@ class Evaluator(object):
         float
             The accuracy (between 0.0 to 1.0 inclusive)
         """
-        
-        # feel free to remove this
-        accuracy = 0.0
-        
+
         #######################################################################
         #                 ** TASK 3.2: COMPLETE THIS METHOD **
         #######################################################################
-        
+        trueTotal = 0
+        total = 0
+        for i in range (len(confusion)):
+            trueTotal += confusion[i][i]
+            for j in range(len(confusion)):
+                total += confusion[i][j]
+
+        rawAccuracy = trueTotal / total
+        accuracy = round(rawAccuracy, 1)
+        # print("accuracy: ", accuracy)
         return accuracy
-        
-    
+
     def precision(self, confusion):
         """ Computes the precision score per class given a confusion matrix.
         
