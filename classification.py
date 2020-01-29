@@ -12,7 +12,6 @@ import numpy as np
 # own libraries
 import helpers as hp
 import node as nd
-import question1 as q1
 
 
 class DecisionTreeClassifier(object):
@@ -57,10 +56,11 @@ class DecisionTreeClassifier(object):
         if (bestSplit.attribute == None): # all samples have the same label or cannot be split
             node = nd.LeafNode(dataset)
         else :
-            node = nd.DecisionNode(bestSplit)
-            trueData, falseData = hp.split(dataset, bestSplit.attribute, bestSplit.value)
-            node.childTrue = self.induceDecisionTree(trueData)
-            node.childFalse = self.induceDecisionTree(falseData)
+            trueData, falseData = hp.split(dataset, bestSplit)
+            childTrue = self.induceDecisionTree(trueData)
+            childFalse = self.induceDecisionTree(falseData)
+            node = nd.DecisionNode(bestSplit, childTrue, childFalse)
+
         return node 
     
     def train(self, x, y):
@@ -85,8 +85,8 @@ class DecisionTreeClassifier(object):
         assert x.shape[0] == len(y), \
             "Training failed. x and y must have the same number of instances."
         
-        dataSet = hp.mergeArrays(hp.convertToAscii(y), x)
-        self.tree = self.induceDecisionTree(dataSet)
+        dataset = hp.getData(x, y)
+        self.tree = self.induceDecisionTree(dataset)
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -131,16 +131,19 @@ class DecisionTreeClassifier(object):
 # Tests
 
 ### Hardcoded data ###
-labels, attributes = q1.readFile("data/train_sub.txt")
+attributes, labels = hp.readFile("data/train_sub.txt")
 ######################
+print(attributes)
+print(labels)
 
 dtClassifier = DecisionTreeClassifier()
 dtClassifier.train(attributes, labels).tree.print(0)
 
-test_labels, test_attributes = q1.readFile("data/test.txt")
-preditions = dtClassifier.predict(test_attributes)
+test_attributes, test_labels = hp.readFile("data/test.txt")
+predictions = dtClassifier.predict(test_attributes)
+
 correct = 0
 for i in range(len(test_labels)):
-    if (preditions[i] == test_labels[i]):
+    if (ord(predictions[i]) == test_labels[i]):
         correct += 1
 print(correct / len(test_labels))
