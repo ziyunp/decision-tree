@@ -36,8 +36,23 @@ class DecisionTreeClassifier(object):
     def __init__(self):
         self.is_trained = False
     
-    # recursively inducing a decision tree
+
     def induceDecisionTree(self, dataset):
+        """ Recursively inducing a decision tree
+        
+        Parameters
+        ----------
+        dataset : numpy.array
+            An N by K+1 numpy array (N is the number of instances, K is the 
+            number of attributes and the first column is labels)
+        
+        Returns
+        -------
+        Node
+            The root node of the induced decision tree
+        
+        """
+        # recursively inducing a decision tree
         bestSplit = hp.findBestSplitPoint(dataset)
         if (bestSplit.attribute == None): # all samples have the same label or cannot be split
             node = nd.LeafNode(dataset)
@@ -105,11 +120,8 @@ class DecisionTreeClassifier(object):
         # feel free to change this if needed
         predictions = np.zeros((x.shape[0],), dtype=np.object)
         
-        
-        #######################################################################
-        #                 ** TASK 2.2: COMPLETE THIS METHOD **
-        #######################################################################
-        
+        for i in range(len(x)):
+            predictions[i] = self.tree.question(x[i])
     
         # remember to change this if you rename the variable
         return predictions
@@ -119,8 +131,16 @@ class DecisionTreeClassifier(object):
 # Tests
 
 ### Hardcoded data ###
-labels, attributes = q1.readFile("data/toy.txt")
+labels, attributes = q1.readFile("data/train_sub.txt")
 ######################
 
 dtClassifier = DecisionTreeClassifier()
 dtClassifier.train(attributes, labels).tree.print(0)
+
+test_labels, test_attributes = q1.readFile("data/test.txt")
+preditions = dtClassifier.predict(test_attributes)
+correct = 0
+for i in range(len(test_labels)):
+    if (preditions[i] == test_labels[i]):
+        correct += 1
+print(correct / len(test_labels))

@@ -5,12 +5,14 @@ class Node:
         self.entropy = 0
     
     def print(self):
-        ...
+        raise NotImplementedError
+
+    def question(self, attributes):
+        raise NotImplementedError
 
 
 # potentially add:
     # pointers to sub nodes 
-    # splittingRule - what's the format of this
 class DecisionNode(Node):
     """
     A decision node
@@ -27,6 +29,8 @@ class DecisionNode(Node):
         Given a split, compare the sum of the entropies from subLabel1 and subLabel2 with parent entropy
 
     """
+
+    splitInfo = si.SplitInfo(None, None)
     childTrue = Node()
     childFalse = Node()
 
@@ -50,6 +54,13 @@ class DecisionNode(Node):
             .format(self.splitInfo.attribute, self.splitInfo.value))
         self.childTrue.print(layer + 1)
         self.childFalse.print(layer + 1)
+
+
+    def question(self, attributes):
+        if (attributes[self.splitInfo.attribute - 1] < self.splitInfo.value):
+            return self.childTrue.question(attributes)
+        else:
+            return self.childFalse.question(attributes)
         
 
     # splitPoint
@@ -89,3 +100,6 @@ class LeafNode(Node):
         for _ in range(layer):
             print('--', end='')        
         print("Leaf Node: Label is {}".format(chr(self.label)))
+
+    def question(self, attributes):
+        return chr(self.label)
