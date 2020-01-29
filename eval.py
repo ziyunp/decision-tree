@@ -15,11 +15,14 @@
 import numpy as np
 
 
+
+
+
 class Evaluator(object):
     """ Class to perform evaluation
     """
     
-    def confusion_matrix(self, prediction, annotation, class_labels=None):
+    def confusion_matrix(self, prediction, annotation, classLabels=None):
         """ Computes the confusion matrix.
         
         Parameters
@@ -30,7 +33,7 @@ class Evaluator(object):
         annotation : np.array
             an N dimensional numpy array containing the ground truth
             class labels
-        class_labels : np.array
+        classLabels : np.array
             a C dimensional numpy array containing the ordered set of class
             labels. If not provided, defaults to all unique values in
             annotation.
@@ -39,15 +42,23 @@ class Evaluator(object):
         -------
         np.array
             a C by C matrix, where C is the number of classes.
-            Classes should be ordered by class_labels.
+            Classes should be ordered by classLabels.
             Rows are ground truth per class, columns are predictions.
         """
         
-        if not class_labels:
-            class_labels = np.unique(annotation)
+        if not classLabels:
+            classLabels = np.unique(annotation)
         
-        confusion = np.zeros((len(class_labels), len(class_labels)), dtype=np.int)
+        confusion = np.zeros((len(classLabels), len(classLabels)), dtype=np.int)
         
+            
+        for i in range(len(predictions)):
+            
+            rowNum = np.where(classLabels == annotation[i])[0][0]
+            colNum = np.where(classLabels == prediction[i])[0][0]
+            print(rowNum, colNum)
+            confusion[rowNum][colNum] += 1
+
         
         #######################################################################
         #                 ** TASK 3.1: COMPLETE THIS METHOD **
