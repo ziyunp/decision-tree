@@ -157,13 +157,17 @@ class Evaluator(object):
         # Initialise array to store recall for C classes
         r = np.zeros((len(confusion), ))
         
-        #######################################################################
-        #                 ** TASK 3.4: COMPLETE THIS METHOD **
-        #######################################################################
+        for i in range(len(confusion)):
+            for j in range(len(confusion)):
+                r[i] += confusion[i][j]
+            r[i] = confusion[i][i] / r[i]
         
         # You will also need to change this        
         macro_r = 0
-        
+        for i in range(len(r)):
+            macro_r += r[i]
+        macro_r = macro_r / len(r)
+
         return (r, macro_r)
     
     
@@ -191,12 +195,16 @@ class Evaluator(object):
         # Initialise array to store recall for C classes
         f = np.zeros((len(confusion), ))
         
-        #######################################################################
-        #                 ** YOUR TASK: COMPLETE THIS METHOD **
-        #######################################################################
+        recall, _ = self.recall(confusion)
+        # precision, _ = self.precision(confusion)
+        precision, _ = self.recall(confusion)
+        f = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
         
         # You will also need to change this        
         macro_f = 0
+        for i in range(len(confusion)):
+            macro_f += f[i]
+        macro_f = macro_f / len(confusion)
         
         return (f, macro_f)
    
@@ -212,3 +220,8 @@ preditions = dtClassifier.predict(test_attributes)
 evaluator = Evaluator()
 confusion = evaluator.confusion_matrix(preditions, test_labels)
 print(confusion)
+
+# confusion = np.array([[70, 30],
+#                       [10, 90]])
+print(evaluator.recall(confusion))
+print(evaluator.f1_score(confusion))
