@@ -192,8 +192,7 @@ class Evaluator(object):
         f1 = np.zeros((len(confusion), ))
         
         recall, _ = self.recall(confusion)
-        # precision, _ = self.precision(confusion)
-        precision, _ = self.recall(confusion)
+        precision, _ = self.precision(confusion)
         f1 = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
         
         # You will also need to change this        
