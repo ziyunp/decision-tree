@@ -37,7 +37,7 @@ class DecisionTreeClassifier(object):
         self.is_trained = False
     
 
-    def induceDecisionTree(self, dataset):
+    def induce_decision_tree(self, dataset):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -53,14 +53,14 @@ class DecisionTreeClassifier(object):
         
         """
         # recursively inducing a decision tree
-        bestSplit = hp.findBestSplitPoint(dataset)
-        if (bestSplit.attribute == None): # all samples have the same label or cannot be split
+        best_split = hp.find_best_split(dataset)
+        if (best_split.attribute == None): # all samples have the same label or cannot be split
             node = nd.LeafNode(dataset)
         else :
-            trueData, falseData = hp.split(dataset, bestSplit)
-            childTrue = self.induceDecisionTree(trueData)
-            childFalse = self.induceDecisionTree(falseData)
-            node = nd.DecisionNode(bestSplit, childTrue, childFalse)
+            true_data, false_data = hp.split(dataset, best_split)
+            child_true = self.induce_decision_tree(true_data)
+            child_false = self.induce_decision_tree(false_data)
+            node = nd.DecisionNode(best_split, child_true, child_false)
 
         return node 
     
@@ -86,8 +86,8 @@ class DecisionTreeClassifier(object):
         assert x.shape[0] == len(y), \
             "Training failed. x and y must have the same number of instances."
         
-        dataset = hp.getData(x, y)
-        self.tree = self.induceDecisionTree(dataset)
+        dataset = hp.get_data(x, y)
+        self.tree = self.induce_decision_tree(dataset)
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -132,15 +132,15 @@ class DecisionTreeClassifier(object):
 # Tests
 
 ### Hardcoded data ###
-attributes, labels = hp.readFile("data/train_sub.txt")
-# jsonData = {}
-# jsonData["root"] = []
+# attributes, labels = hp.read_file("data/train_sub.txt")
+# json_data = {}
+# json_data["root"] = []
 ######################
 
 # dtClassifier = DecisionTreeClassifier()
-# dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
+# dtClassifier.train(attributes, labels).tree.print(0, json_data["root"])
 
-# test_attributes, test_labels = hp.readFile("data/test.txt")
+# test_attributes, test_labels = hp.read_file("data/test.txt")
 # predictions = dtClassifier.predict(test_attributes)
 
 # correct = 0
@@ -151,4 +151,4 @@ attributes, labels = hp.readFile("data/train_sub.txt")
 
 
 # with open('save.json', 'w') as outfile:
-#     json.dump(jsonData, outfile)
+#     json.dump(json_data, outfile)

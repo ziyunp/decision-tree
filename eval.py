@@ -214,11 +214,11 @@ class Evaluator(object):
    
  
 # Test
-train_attributes, train_labels = hp.readFile("data/train_full.txt")
+train_attributes, train_labels = hp.read_file("data/train_full.txt")
 dtClassifier = cf.DecisionTreeClassifier()
 dtClassifier.train(train_attributes, train_labels)
 
-test_attributes, test_labels = hp.readFile("data/test.txt")
+test_attributes, test_labels = hp.read_file("data/test.txt")
 predictions = dtClassifier.predict(test_attributes)
 
 evaluator = Evaluator()
