@@ -31,12 +31,12 @@ def get_data(attributes, labels):
     return np.append(attributes, labels, 1)
 
 
-def get_frequency(dataset):
+def get_frequency(a_list):
     freq = {}
-    for item in dataset:
-        if item[-1] not in freq:
-            freq[item[-1]] = 0
-        freq[item[-1]] += 1
+    for item in a_list:
+        if item not in freq:
+            freq[item] = 0
+        freq[item] += 1
     return freq
 
 # def convertToAscii(label):
@@ -58,7 +58,7 @@ def sort_by_attr_and_label(data, attr):
 
 
 def calc_entropy(dataset):
-    freq = get_frequency(dataset)
+    freq = get_frequency(dataset[:,-1])
     total = sum(freq.values())
     entropy = 0
 
@@ -129,20 +129,19 @@ def find_best_split(dataset):
 
     return best_split
 
+def get_major_label(predictions):
+    values = list(predictions.values())
+    keys = list(predictions.keys())
+    return keys[values.index(max(values))]
 
-# ### Hardcoded data ###
-# label, attributes = read_file("data/train_full.txt")
-# dataset = get_data(label, attributes)
-# ######################
+### Hardcoded data ###
+label, attributes = read_file("data/train_full.txt")
+dataset = get_data(label, attributes)
+######################
 
-# best_split = find_best_split(dataset)
-# print(best_split.attribute, best_split.value)
+best_split = find_best_split(dataset)
+print(best_split.attribute, best_split.value)
 
-
-# def getMajorLabel(predictions):
-#     values = list(predictions.values())
-#     keys = list(predictions.keys())
-#     return keys[values.index(max(values))]
 
 
 

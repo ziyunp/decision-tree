@@ -1,14 +1,5 @@
 import numpy as np 
-
-def count_frequency(a_list):
-    freq = {}
-    for item in a_list:
-        if (item in freq):
-            freq[item] += 1
-        else:
-            freq[item] = 1
-    return freq
-
+import helpers as hp
 def read_file(filename):
     raw_data = open(filename).readlines() # a list of lines
 
@@ -38,7 +29,7 @@ def read_file(filename):
     # attributes_min = np.amin(attributes, axis = 0)
     # attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
 
-    # label_freq = count_frequency(label)
+    # label_freq = hp.get_frequency(label)
 
     # print("Number of data is " + str(data_num))
     # print("Number of attributes is " + str(attribute_num))
