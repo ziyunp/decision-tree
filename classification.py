@@ -37,7 +37,7 @@ class DecisionTreeClassifier(object):
         self.is_trained = False
     
 
-    def induceDecisionTree(self, dataset):
+    def induceDecisionTree(self, dataset, freq = {}):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -55,11 +55,11 @@ class DecisionTreeClassifier(object):
         # recursively inducing a decision tree
         bestSplit = hp.findBestSplitPoint(dataset)
         if (bestSplit.attribute == None): # all samples have the same label or cannot be split
-            node = nd.LeafNode(dataset)
+            node = nd.LeafNode(dataset, freq)
         else :
             trueData, falseData = hp.split(dataset, bestSplit)
-            childTrue = self.induceDecisionTree(trueData)
-            childFalse = self.induceDecisionTree(falseData)
+            childTrue = self.induceDecisionTree(trueData, freq)
+            childFalse = self.induceDecisionTree(falseData, freq)
             node = nd.DecisionNode(bestSplit, childTrue, childFalse)
 
         return node 

@@ -76,10 +76,10 @@ class DecisionNode(Node):
 
 class LeafNode(Node):
 
-    def __init__(self, dataset):
+    def __init__(self, dataset, freq):
         super().__init__()
         self.predictions = hp.getFrequency(dataset)
-        self.label = hp.getMajorLabel(self.predictions)
+        self.label = hp.getMajorLabel(self.predictions, freq)
 
     def print(self, layer, jsonData):
         for _ in range(layer):
