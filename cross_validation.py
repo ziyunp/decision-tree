@@ -3,10 +3,10 @@ from classification import *
 from helpers import *
 from eval import *
 
-def splitDataset(filename, k):
+def split_dataset(filename, k):
 
-    attributes, labels = readFile(filename)
-    dataset = getData(attributes, labels)
+    attributes, labels = read_file(filename)
+    dataset = get_data(attributes, labels)
     length = len(dataset)
 
     if ((k <= 0) or (k > length)):
@@ -14,48 +14,41 @@ def splitDataset(filename, k):
         return
 
     subsets = []
-    divider = int(length / k)
-
+    divider = length // k
     for i in range (k):
-        if (i == (k - 1)):
-            subsets.append(dataset[(k-1)*divider:])
-        else :
-            subsets.append(dataset[i*divider:(i+1)*divider])
+        subsets.append(dataset[i*divider:(i+1)*divider])
 
     return np.array(subsets)
 
 
-def crossValidation(filename, k):
+def cross_validation(filename, k):
 
-    subsets = splitDataset(filename, k)
+    subsets = split_dataset(filename, k)
     accuracy = [] 
     total = 0
 
     for i in range (k):
-        testDataset = []
-        trainingDataset = []
-
-        testDataset = subsets[i]
-
-        for trainingSubset in np.delete(subsets, i, 0):
-            if (len(trainingDataset) == 0):
-                trainingDataset = trainingSubset
+        test_dataset = []
+        training_dataset = []
+        test_dataset = subsets[i]
+        for training_subset in np.delete(subsets, i, 0):
+            if (len(training_dataset) == 0):
+                training_dataset = training_subset
             else:
-                trainingDataset = np.append(trainingDataset, trainingSubset, axis=0)
-            
-        accuracy.append(run(trainingDataset, testDataset))
+                training_dataset = np.append(training_dataset, training_subset, axis=0)
+        accuracy.append(run(training_dataset, test_dataset))
 
     for i in range (len(accuracy)):
         total += 1 - accuracy[i]
 
-    globalError = total / len(accuracy)
+    global_error = total / len(accuracy)
 
-    return globalError
+    return global_error
 
-def run(trainingDataset, testDataset):
+def run(training_dataset, test_dataset):
 
-    x,y = trainingDataset[:,:-1], trainingDataset[:,-1]
-    x_test, y_test = testDataset[:,:-1], testDataset[:,-1]
+    x,y = training_dataset[:,:-1], training_dataset[:,-1]
+    x_test, y_test = test_dataset[:,:-1], test_dataset[:,-1]
 
     # print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
@@ -68,8 +61,8 @@ def run(trainingDataset, testDataset):
 
     # print("Evaluating test predictions...")
     evaluator = Evaluator()
-    classLabels = classLabels = np.unique(predictions)
-    confusion = evaluator.confusion_matrix(predictions, y_test, classLabels)
+    class_labels = np.unique(predictions)
+    confusion = evaluator.confusion_matrix(predictions, y_test, class_labels)
     
     # print("Confusion matrix:")
     # print(confusion)
@@ -85,7 +78,7 @@ def run(trainingDataset, testDataset):
     # print()
     # print("Class: Precision, Recall, F1")
     # for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-    #     print("{}: {:.2f}, {:.2f}, {:.2f}".format(classLabels[i], p1, r1, f1));
+    #     print("{}: {:.2f}, {:.2f}, {:.2f}".format(class_labels[i], p1, r1, f1));
    
     # print() 
     # print("Macro-averaged Precision: {:.2f}".format(macro_p))
@@ -98,5 +91,5 @@ def run(trainingDataset, testDataset):
 
 # print(splitDataset("data/toy.txt", 11))
 for i in range (2, 11):
-    print("Error for k=", i, "is", crossValidation("data/simple1.txt", i))
+    print("Error for k=", i, "is", cross_validation("data/simple1.txt", i))
     

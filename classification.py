@@ -86,7 +86,7 @@ class DecisionTreeClassifier(object):
         assert x.shape[0] == len(y), \
             "Training failed. x and y must have the same number of instances."
         
-        dataset = hp.getData(x, y)
+        dataset = hp.get_data(x, y)
         self.tree = self.induceDecisionTree(dataset)
         
         # set a flag so that we know that the classifier has been trained
@@ -132,7 +132,7 @@ class DecisionTreeClassifier(object):
 # # Tests
 
 # ### Hardcoded data ###
-# attributes, labels = hp.readFile("data/train_sub.txt")
+# attributes, labels = hp.read_file("data/train_sub.txt")
 # # jsonData = {}
 # # jsonData["root"] = []
 # ######################
@@ -140,7 +140,7 @@ class DecisionTreeClassifier(object):
 # # dtClassifier = DecisionTreeClassifier()
 # # dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
 
-# # test_attributes, test_labels = hp.readFile("data/test.txt")
+# # test_attributes, test_labels = hp.read_file("data/test.txt")
 # # predictions = dtClassifier.predict(test_attributes)
 
 # # correct = 0

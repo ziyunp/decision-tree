@@ -25,7 +25,7 @@ class Evaluator(object):
     """ Class to perform evaluation
     """
     
-    def confusion_matrix(self, prediction, annotation, classLabels=[]):
+    def confusion_matrix(self, prediction, annotation, class_labels=[]):
         """ Computes the confusion matrix.
         
         Parameters
@@ -36,7 +36,7 @@ class Evaluator(object):
         annotation : np.array
             an N dimensional numpy array containing the ground truth
             class labels
-        classLabels : np.array
+        class_labels : np.array
             a C dimensional numpy array containing the ordered set of class
             labels. If not provided, defaults to all unique values in
             annotation.
@@ -45,20 +45,20 @@ class Evaluator(object):
         -------
         np.array
             a C by C matrix, where C is the number of classes.
-            Classes should be ordered by classLabels.
+            Classes should be ordered by class_labels.
             Rows are ground truth per class, columns are predictions.
         """
         
-        if (len(classLabels) == 0):
-            classLabels = np.unique(annotation)
+        if (len(class_labels) == 0):
+            class_labels = np.unique(annotation)
         
-        confusion = np.zeros((len(classLabels), len(classLabels)), dtype=np.int)
+        confusion = np.zeros((len(class_labels), len(class_labels)), dtype=np.int)
         
             
         for i in range(len(prediction)):
-            rowNum = np.where(classLabels == annotation[i])[0][0]
-            colNum = np.where(classLabels == prediction[i])[0][0]
-            confusion[rowNum][colNum] += 1
+            row_num = np.where(class_labels == annotation[i])[0][0]
+            col_num = np.where(class_labels == prediction[i])[0][0]
+            confusion[row_num][col_num] += 1
         
         return confusion
     
@@ -78,16 +78,16 @@ class Evaluator(object):
             The accuracy (between 0.0 to 1.0 inclusive)
         """
 
-        trueTotal = 0
+        true_total = 0
         total = 0
         for i in range (len(confusion)):
-            trueTotal += confusion[i][i]
+            true_total += confusion[i][i]
             for j in range(len(confusion)):
                 total += confusion[i][j]
 
-        rawAccuracy = trueTotal / total
-        accuracy = round(rawAccuracy, 1)
-        # print("accuracy: ", accuracy)
+        raw_accuracy = true_total / total
+        accuracy = round(raw_accuracy, 1)
+
         return accuracy
 
     def precision(self, confusion):
@@ -111,21 +111,21 @@ class Evaluator(object):
         """
         
         # Initialise array to store precision for C classes
-        p = np.zeros((len(confusion), ))
+        precision = np.zeros((len(confusion), ))
 
-        for i in range (0, len(confusion)):
-            total = 0
-            TP = confusion[i][i]
-            for j in range (0, len(confusion)):
-                total += confusion[j][i]
-            p[i] = TP / total
+        for i in range (len(confusion)):
+            total_predicted_positive = 0
+            true_positive = confusion[i][i]
+            for j in range (len(confusion)):
+                total_predicted_positive += confusion[j][i]
+            precision[i] = true_positive / total_predicted_positive
 
-        macro_p = 0
-        for i in range (0, len(p)):
-            macro_p += p[i]
-        macro_p = macro_p / len(p)
+        macro_precision = 0
+        for i in range (len(precision)):
+            macro_precision += precision[i]
+        macro_precision = macro_precision / len(precision)
 
-        return (p, macro_p)
+        return (precision, macro_precision)
     
     
     def recall(self, confusion):
@@ -150,20 +150,21 @@ class Evaluator(object):
         """
         
         # Initialise array to store recall for C classes
-        r = np.zeros((len(confusion), ))
+        recall = np.zeros((len(confusion), ))
         
         for i in range(len(confusion)):
+            total_actual_positive = 0
             for j in range(len(confusion)):
-                r[i] += confusion[i][j]
-            r[i] = confusion[i][i] / r[i]
+                total_actual_positive += confusion[i][j]
+            recall[i] = confusion[i][i] / total_actual_positive
         
         # You will also need to change this        
-        macro_r = 0
-        for i in range(len(r)):
-            macro_r += r[i]
-        macro_r = macro_r / len(r)
+        macro_recall = 0
+        for i in range(len(recall)):
+            macro_recall += recall[i]
+        macro_recall = macro_recall / len(recall)
 
-        return (r, macro_r)
+        return (recall, macro_recall)
     
     
     def f1_score(self, confusion):
@@ -188,35 +189,35 @@ class Evaluator(object):
         """
         
         # Initialise array to store recall for C classes
-        f = np.zeros((len(confusion), ))
+        f1 = np.zeros((len(confusion), ))
         
         recall, _ = self.recall(confusion)
         # precision, _ = self.precision(confusion)
         precision, _ = self.recall(confusion)
-        f = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
+        f1 = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
         
         # You will also need to change this        
-        macro_f = 0
+        macro_f1 = 0
         for i in range(len(confusion)):
-            macro_f += f[i]
-        macro_f = macro_f / len(confusion)
+            macro_f1 += f1[i]
+        macro_f1 = macro_f1 / len(confusion)
         
-        return (f, macro_f)
+        return (f1, macro_f1)
    
  
 # # Test
-# train_attributes, train_labels = hp.readFile("data/train_full.txt")
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
 # dtClassifier = cf.DecisionTreeClassifier()
 # dtClassifier.train(train_attributes, train_labels)
 
-# test_attributes, test_labels = hp.readFile("data/test.txt")
+# test_attributes, test_labels = hp.read_file("data/test.txt")
 # predictions = dtClassifier.predict(test_attributes)
 
 # evaluator = Evaluator()
 # confusion = evaluator.confusion_matrix(predictions, test_labels)
 # print(confusion)
 
-# print(evaluator.accuracy(confusion))
-# print(evaluator.precision(confusion))
-# print(evaluator.recall(confusion))
-# print(evaluator.f1_score(confusion))
+# print("acc: ", evaluator.accuracy(confusion))
+# print("prec: ", evaluator.precision(confusion))
+# print("recall: ", evaluator.recall(confusion))
+# print("f1: ", evaluator.f1_score(confusion))

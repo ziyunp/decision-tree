@@ -3,7 +3,7 @@ import math
 import SplitInfo as si
 
 
-def readFile(filename):
+def read_file(filename):
     rawData = open(filename).read().splitlines() # a list of lines
 
     # check whether there is data
@@ -26,7 +26,7 @@ def readFile(filename):
     labels = np.array([data[row][-1].strip() for row in range(len(data))])
     return attributes, labels
 
-def getData(attributes, labels):
+def get_data(attributes, labels):
     return np.append(attributes, labels[:,None], axis=1)
 
 
