@@ -142,19 +142,19 @@ def findBestSplitPoint(dataset):
 # print(bestSplit.attribute, bestSplit.value)
 
 
-def getMajorLabel(predictions, freq):
+def getMajorLabel(probabilities):
     
-    weights = {}
-    if bool(freq):
-        for item in predictions:
-            weights[item] = predictions[item] / freq[item]
-    else:
-        weights = predictions
-
-    values = list(weights.values())
-    keys = list(weights.keys())
+    values = list(probabilities.values())
+    keys = list(probabilities.keys())
     return keys[values.index(max(values))]
 
 
+def getProbabilities(currentFrequency, initialFrequency):
 
+    probabilities = {}
+    total = sum(currentFrequency.values())
 
+    for item in currentFrequency:
+        probabilities[item] = currentFrequency[item] / (initialFrequency[item] if bool(initialFrequency) else total)
+
+    return probabilities

@@ -95,9 +95,9 @@ class Evaluator(object):
                 total += confusion[i][j]
 
         rawAccuracy = trueTotal / total
-        accuracy = round(rawAccuracy, 1)
+        accuracy = round(rawAccuracy, 8)
         # print("accuracy: ", accuracy)
-        return accuracy
+        return format(rawAccuracy, '.5f')
 
     def precision(self, confusion):
         """ Computes the precision score per class given a confusion matrix.
@@ -214,7 +214,7 @@ class Evaluator(object):
    
  
 # Test
-train_attributes, train_labels = hp.readFile("data/train_full.txt")
+train_attributes, train_labels = hp.readFile("data/train_noisy.txt")
 dtClassifier = cf.DecisionTreeClassifier()
 dtClassifier.train(train_attributes, train_labels)
 

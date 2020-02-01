@@ -12,6 +12,7 @@ import numpy as np
 # own libraries
 import helpers as hp
 import node as nd
+import eval as ev
 import json
 
 
@@ -37,7 +38,7 @@ class DecisionTreeClassifier(object):
         self.is_trained = False
     
 
-    def induceDecisionTree(self, dataset, freq = {}):
+    def induceDecisionTree(self, dataset, freq = {}, accuracy = 0):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -53,8 +54,10 @@ class DecisionTreeClassifier(object):
         
         """
         # recursively inducing a decision tree
+        currentShares = hp.getProbabilities(hp.getFrequency(dataset), freq)
+        maxShare = max(currentShares.values())
         bestSplit = hp.findBestSplitPoint(dataset)
-        if (bestSplit.attribute == None): # all samples have the same label or cannot be split
+        if (bestSplit.attribute == None or maxShare < 0.01): # all samples have the same label or cannot be split
             node = nd.LeafNode(dataset, freq)
         else :
             trueData, falseData = hp.split(dataset, bestSplit)
@@ -87,7 +90,7 @@ class DecisionTreeClassifier(object):
             "Training failed. x and y must have the same number of instances."
         
         dataset = hp.getData(x, y)
-        self.tree = self.induceDecisionTree(dataset)
+        self.tree = self.induceDecisionTree(dataset, hp.getFrequency(dataset))
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -126,13 +129,25 @@ class DecisionTreeClassifier(object):
     
         # remember to change this if you rename the variable
         return predictions
-        
+
+
+
+
+# superTest = np.asarray([['A'], ['A'], ['A'], ['B'], ['A'], ['A'], ['B'], ['B']])
+# test = np.asarray([['A'], ['A'], ['A'], ['B']])
+# currentShares = hp.getProbabilities(hp.getFrequency(test), hp.getFrequency(superTest))
+# print(hp.getFrequency(test))
+
+# maxShare = max(currentShares.values())
+# print(maxShare)
+
+
 
 
 # Tests
 
 ### Hardcoded data ###
-attributes, labels = hp.readFile("data/train_sub.txt")
+# attributes, labels = hp.readFile("data/train_sub.txt")
 # jsonData = {}
 # jsonData["root"] = []
 ######################
