@@ -2,6 +2,7 @@ import numpy as np
 import math
 import SplitInfo as si
 
+LABEL_COL = -1
 
 def read_file(filename):
     rawData = open(filename).read().splitlines() # a list of lines
@@ -31,12 +32,12 @@ def get_data(attributes, labels):
     return np.append(attributes, labels, 1)
 
 
-def get_frequency(a_list):
+def get_frequency(dataset):
     freq = {}
-    for item in a_list:
-        if item not in freq:
-            freq[item] = 0
-        freq[item] += 1
+    for item in dataset:
+        if item[LABEL_COL] not in freq:
+            freq[item[LABEL_COL]] = 0
+        freq[item[LABEL_COL]] += 1
     return freq
 
 # def convertToAscii(label):
@@ -58,7 +59,7 @@ def sort_by_attr_and_label(data, attr):
 
 
 def calc_entropy(dataset):
-    freq = get_frequency(dataset[:,-1])
+    freq = get_frequency(dataset)
     total = sum(freq.values())
     entropy = 0
 

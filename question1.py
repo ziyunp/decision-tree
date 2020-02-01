@@ -29,7 +29,6 @@ def read_file(filename):
     # attributes_min = np.amin(attributes, axis = 0)
     # attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
 
-    # label_freq = hp.get_frequency(label)
 
     # print("Number of data is " + str(data_num))
     # print("Number of attributes is " + str(attribute_num))

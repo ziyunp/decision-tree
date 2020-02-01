@@ -78,7 +78,7 @@ class LeafNode(Node):
 
     def __init__(self, dataset):
         super().__init__()
-        self.predictions = hp.get_frequency(dataset[:,1])
+        self.predictions = hp.get_frequency(dataset)
         self.label = hp.get_major_label(self.predictions)
 
     def print(self, layer, json_data):
