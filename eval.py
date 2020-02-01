@@ -56,10 +56,13 @@ class Evaluator(object):
         
             
         for i in range(len(prediction)):
-            row_num = np.where(class_labels == annotation[i])[0][0]
-            col_num = np.where(class_labels == prediction[i])[0][0]
-            confusion[row_num][col_num] += 1
-        
+            annotation_index = np.where(class_labels == annotation[i])
+            prediction_index = np.where(class_labels == prediction[i])
+            if(len(annotation_index[0]) > 0 and len(prediction_index[0]) > 0):
+                row_num = annotation_index[0][0]
+                col_num = prediction_index[0][0]
+                confusion[row_num][col_num] += 1
+        # TODO: throw error if prediction is not found in the class_labels?
         return confusion
     
     
@@ -77,16 +80,16 @@ class Evaluator(object):
         float
             The accuracy (between 0.0 to 1.0 inclusive)
         """
-
+        accuracy = 0.0
         true_total = 0
         total = 0
         for i in range (len(confusion)):
             true_total += confusion[i][i]
             for j in range(len(confusion)):
                 total += confusion[i][j]
-
-        raw_accuracy = true_total / total
-        accuracy = round(raw_accuracy, 1)
+        if total > 0:
+            raw_accuracy = true_total / total
+            accuracy = round(raw_accuracy, 1)
 
         return accuracy
 
@@ -118,8 +121,9 @@ class Evaluator(object):
             true_positive = confusion[i][i]
             for j in range (len(confusion)):
                 total_predicted_positive += confusion[j][i]
-            precision[i] = true_positive / total_predicted_positive
-
+            if total_predicted_positive > 0:
+                precision[i] = true_positive / total_predicted_positive
+    
         macro_precision = 0
         for i in range (len(precision)):
             macro_precision += precision[i]
@@ -156,7 +160,8 @@ class Evaluator(object):
             total_actual_positive = 0
             for j in range(len(confusion)):
                 total_actual_positive += confusion[i][j]
-            recall[i] = confusion[i][i] / total_actual_positive
+            if total_actual_positive > 0: 
+                recall[i] = confusion[i][i] / total_actual_positive
         
         # You will also need to change this        
         macro_recall = 0

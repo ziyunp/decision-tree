@@ -61,8 +61,7 @@ def run(training_dataset, test_dataset):
 
     # print("Evaluating test predictions...")
     evaluator = Evaluator()
-    class_labels = np.unique(predictions)
-    confusion = evaluator.confusion_matrix(predictions, y_test, class_labels)
+    confusion = evaluator.confusion_matrix(predictions, y_test)
     
     # print("Confusion matrix:")
     # print(confusion)
@@ -90,6 +89,7 @@ def run(training_dataset, test_dataset):
     return accuracy
 
 # print(splitDataset("data/toy.txt", 11))
+# print("Error for k=", 2, "is", cross_validation("data/toy.txt", 2))
 for i in range (2, 11):
     print("Error for k=", i, "is", cross_validation("data/simple1.txt", i))
     
