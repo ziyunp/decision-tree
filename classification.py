@@ -12,7 +12,6 @@ import numpy as np
 # own libraries
 import helpers as hp
 import node as nd
-import eval as ev
 import json
 
 
@@ -57,14 +56,13 @@ class DecisionTreeClassifier(object):
         currentShares = hp.getProbabilities(hp.getFrequency(dataset), freq)
         maxShare = max(currentShares.values())
         bestSplit = hp.findBestSplitPoint(dataset)
-        if (bestSplit.attribute == None or maxShare < 0.01): # all samples have the same label or cannot be split
+        if (bestSplit.attribute == None or maxShare < 0.00): # all samples have the same label or cannot be split
             node = nd.LeafNode(dataset, freq)
         else :
             trueData, falseData = hp.split(dataset, bestSplit)
             childTrue = self.induceDecisionTree(trueData, freq)
             childFalse = self.induceDecisionTree(falseData, freq)
             node = nd.DecisionNode(bestSplit, childTrue, childFalse)
-
         return node 
     
     def train(self, x, y):

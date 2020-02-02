@@ -78,6 +78,8 @@ class LeafNode(Node):
 
     def __init__(self, dataset, freq):
         super().__init__()
+        self.dataset = dataset
+        self.freq = freq
         self.predictions = hp.getProbabilities(hp.getFrequency(dataset), freq)
         self.label = hp.getMajorLabel(self.predictions)
 
