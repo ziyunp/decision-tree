@@ -2,8 +2,9 @@ import numpy as np
 import math
 import SplitInfo as si
 
+LABEL_COL = -1
 
-def readFile(filename):
+def read_file(filename):
     rawData = open(filename).read().splitlines() # a list of lines
 
     # check whether there is data
@@ -27,17 +28,16 @@ def readFile(filename):
 
     return attributes, labels
 
-def getData(attributes, labels):
+def get_data(attributes, labels):
     return np.append(attributes, labels, 1)
 
 
-
-def getFrequency(dataset):
+def get_frequency(dataset):
     freq = {}
     for item in dataset:
-        if item[-1] not in freq:
-            freq[item[-1]] = 0
-        freq[item[-1]] += 1
+        if item[LABEL_COL] not in freq:
+            freq[item[LABEL_COL]] = 0
+        freq[item[LABEL_COL]] += 1
     return freq
 
 # def convertToAscii(label):
@@ -53,14 +53,13 @@ def getFrequency(dataset):
 #     return np.asarray(mergedArr)
 
 
-def sortByAttrAndLabel(data, col):
-        sortedList = sorted(data, key=lambda x:(x[col], x[0]))
-        sortedArr = np.asarray(sortedList)
-        return sortedArr
+def sort_by_attr_and_label(data, attr):
+        sorted_list = sorted(data, key=lambda x:(x[attr], x[0]))
+        return np.asarray(sorted_list)
 
 
-def calcEntropy(dataset):
-    freq = getFrequency(dataset)
+def calc_entropy(dataset):
+    freq = get_frequency(dataset)
     total = sum(freq.values())
     entropy = 0
 
@@ -70,82 +69,80 @@ def calcEntropy(dataset):
     return entropy
 
 
-def calcIG(baseEntropy, trueData, falseData):
-    
-    dataCount = len(trueData) + len(falseData)
-    p = len(trueData) / dataCount
-    childEntropy = p * calcEntropy(trueData) + (1-p) * calcEntropy(falseData)
-    return baseEntropy - childEntropy
+def calc_info_gain(base_entropy, true_data, false_data):
+    data_count= len(true_data) + len(false_data)
+    p = len(true_data) / data_count
+    child_entropy = p * calc_entropy(true_data) + (1-p) * calc_entropy(false_data)
+    return base_entropy - child_entropy
 
-# def checkIG(data, attr, splitPoint):
+# def checkIG(data, attr, split_point):
 #     # split in 2 subsets
 #     subset1 = []
 #     subset2 = []
-#     subset1, subset2 = split(data, attr, splitPoint)
-#     return calcIG(data[:,0], subset1[:,0], subset2[:,0])
+#     subset1, subset2 = split(data, attr, split_point)
+#     return calc_info_gain(data[:,0], subset1[:,0], subset2[:,0])
 
 
 # @param dataset NxAttr array
-# @param splitInfo = [splitAttribute, splitPoint]
-# @retrun an splitPoint x Attr array and an (N - splitPoint) x Attr array
-def split(dataset, splitInfo):
-    trueData = []
-    falseData = []
+# @param split_info = [splitAttribute, split_point]
+# @retrun an split_point x Attr array and an (N - split_point) x Attr array
+def split(dataset, split_info):
+    true_data = []
+    false_data = []
 
     for data in dataset:
-        if (splitInfo.match(data)):
-            trueData.append(data)  
+        if (split_info.match(data)):
+            true_data.append(data)  
         else: 
-            falseData.append(data)
-    return np.array(trueData), np.array(falseData)
+            false_data.append(data)
+    return np.array(true_data), np.array(false_data)
 
-# dataset = getData("data/toy.txt")
+# dataset = get_data("data/toy.txt")
 # s = si.SplitInfo(0, 5)
-# trueDataset, falseDataset = split(dataset, s)
-# print(trueDataset)
+# true_dataset, false_dataset = split(dataset, s)
+# print(true_dataset)
 
 
-def findBestSplitPoint(dataset):
-    bestIG = 0
-    bestSplit = si.SplitInfo(None, None)
+def find_best_split(dataset):
+    best_info_gain = 0
+    best_split = si.SplitInfo(None, None)
 
-    baseEntropy = calcEntropy(dataset)
+    base_entropy = calc_entropy(dataset)
 
     for attr in range (len(dataset[0]) - 1):
-        sortedArr = sortByAttrAndLabel(dataset, attr)
-        # print(sortedArr)
+        sorted_arr = sort_by_attr_and_label(dataset, attr)
 
         # find split points
-        prevSplitPoint = sortedArr[0][attr]
+        prev_split_point = sorted_arr[0][attr]
         # start checking from 1st value because splitting at 0th index will return the original array
-        for row in range (1, len(sortedArr)):
+        for row in range (1, len(sorted_arr)):
 
-            splitPoint = sortedArr[row][attr]
+            split_point = sorted_arr[row][attr]
 
-            if ((prevSplitPoint != splitPoint)):
-                # check IG
-                trueData, falseData = split(dataset, si.SplitInfo(attr, splitPoint))
-                currIG = calcIG(baseEntropy, trueData, falseData)
-                if currIG > bestIG:
-                    bestIG = currIG
-                    bestSplit = si.SplitInfo(attr, splitPoint)
-            prevSplitPoint = splitPoint
+            if ((prev_split_point != split_point)):
+                # check info gain
+                true_data, false_data = split(dataset, si.SplitInfo(attr, split_point))
+                info_gain = calc_info_gain(base_entropy, true_data, false_data)
+                if info_gain > best_info_gain:
+                    best_info_gain = info_gain
+                    best_split = si.SplitInfo(attr, split_point)
+            prev_split_point = split_point
 
-    return bestSplit
+    return best_split
 
-
-### Hardcoded data ###
-# dataset = getData("data/toy.txt")
-######################
-
-# bestSplit = findBestSplitPoint(dataset)
-# print(bestSplit.attribute, bestSplit.value)
-
-
-def getMajorLabel(predictions):
+def get_major_label(predictions):
     values = list(predictions.values())
     keys = list(predictions.keys())
     return keys[values.index(max(values))]
+
+### Hardcoded data ###
+label, attributes = read_file("data/train_full.txt")
+dataset = get_data(label, attributes)
+######################
+
+best_split = find_best_split(dataset)
+print(best_split.attribute, best_split.value)
+
 
 
 

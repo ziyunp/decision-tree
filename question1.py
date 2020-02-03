@@ -1,17 +1,7 @@
 import numpy as np 
-# import operator
-
-def countFrequency(a_list):
-    freq = {}
-    for item in a_list:
-        if (item in freq):
-            freq[item] += 1
-        else:
-            freq[item] = 1
-    return freq
-
-def readFile(filename):
-    raw_data = open(filename).read().splitlines() # a list of lines
+import helpers as hp
+def read_file(filename):
+    raw_data = open(filename).readlines() # a list of lines
 
     # check whether there is data
     data_num = len(raw_data)
@@ -39,7 +29,6 @@ def readFile(filename):
     # attributes_min = np.amin(attributes, axis = 0)
     # attributes_range = [(attributes_min[i], attributes_max[i]) for i in range(attribute_num)]
 
-    # label_freq = countFrequency(label)
 
     # print("Number of data is " + str(data_num))
     # print("Number of attributes is " + str(attribute_num))
@@ -54,33 +43,33 @@ def readFile(filename):
 
 
 # print("\n********** Information of train_full.txt **********")
-# readFile("data/train_full.txt")
+# read_file("data/train_full.txt")
 # print("***********************************************\n")
 
 # print("\n********** Information of tran_sub.txt **********")
-# readFile("data/train_sub.txt")
+# read_file("data/train_sub.txt")
 # print("***********************************************\n")
 
 # print("\n********** Information of tran_noisy.txt **********")
-# readFile("data/train_noisy.txt")
+# read_file("data/train_noisy.txt")
 # print("***********************************************\n")
 
 # print("\n********** Information of validation.txt **********")
-# readFile("data/validation.txt")
+# read_file("data/validation.txt")
 # print("***********************************************\n")
 
 # print("\n********** Information of simple1.txt **********")
-# readFile("data/simple1.txt")
+# read_file("data/simple1.txt")
 # print("***********************************************\n")
 
 # print("\n********** Information of simple2.txt **********")
-# readFile("data/simple2.txt")
+# read_file("data/simple2.txt")
 # print("***********************************************\n")
 
 # print("\n********** Information of test.txt **********")
-# readFile("data/test.txt")
+# read_file("data/test.txt")
 # print("***********************************************\n")
 
 # print("\n********** Information of toy.txt **********")
-# readFile("data/toy.txt")
+# read_file("data/toy.txt")
 # print("***********************************************\n")
