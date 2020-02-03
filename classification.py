@@ -129,7 +129,7 @@ class DecisionTreeClassifier(object):
         
 
 
-# Tests
+# # Tests
 
 ### Hardcoded data ###
 # attributes, labels = hp.read_file("data/train_sub.txt")
@@ -143,11 +143,11 @@ class DecisionTreeClassifier(object):
 # test_attributes, test_labels = hp.read_file("data/test.txt")
 # predictions = dtClassifier.predict(test_attributes)
 
-# correct = 0
-# for i in range(len(test_labels)):
-#     if (ord(predictions[i]) == test_labels[i]):
-#         correct += 1
-# print(correct / len(test_labels))
+# # correct = 0
+# # for i in range(len(test_labels)):
+# #     if (ord(predictions[i]) == test_labels[i]):
+# #         correct += 1
+# # print(correct / len(test_labels))
 
 
 # with open('save.json', 'w') as outfile:

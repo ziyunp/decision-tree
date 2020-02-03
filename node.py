@@ -54,25 +54,11 @@ class DecisionNode(Node):
         self.child_false.print(layer + 1, json_data[0]['child_false'])
 
 
-    def question(self, attributes):
-        if (attributes[self.split_info.attribute] < self.split_info.value):
+    def question(self, attributes):        
+        if (int(attributes[self.split_info.attribute]) < int(self.split_info.value)):
             return self.child_true.question(attributes)
         else:
             return self.child_false.question(attributes)
-        
-
-
-        
-# attributes, labels = read_file("data/toy.txt")
-
-# root = DecisionNode(attributes, labels)
-# print("Root has entropy: " + str(root.entropy))
-
-# attributes1, labels1 = read_file("data/toy_sub1.txt")
-# attributes2, labels2 = read_file("data/toy_sub2.txt")
-# test = root.calc_info_gain(labels1, labels2)
-# print(test)
-
 
 class LeafNode(Node):
 

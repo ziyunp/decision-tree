@@ -23,13 +23,12 @@ def read_file(filename):
             return 
 
     data = [rawLine.split(',') for rawLine in rawData]
-    attributes = np.asarray([data[row][:-1] for row in range(len(data))], int)
-    labels = np.asarray([[ord(data[row][-1].strip())] for row in range(len(data))])
-
+    attributes = np.array([data[row][:-1] for row in range(len(data))], int)
+    labels = np.array([data[row][-1].strip() for row in range(len(data))])
     return attributes, labels
 
 def get_data(attributes, labels):
-    return np.append(attributes, labels, 1)
+    return np.append(attributes, labels[:,None], axis=1)
 
 
 def get_frequency(dataset):
@@ -50,12 +49,13 @@ def get_frequency(dataset):
 #     mergedArr = []
 #     for i in range (0, len(label)):
 #         mergedArr.append(np.insert(attr[i], 0, label[i]))
-#     return np.asarray(mergedArr)
+#     return np.array(mergedArr)
 
 
-def sort_by_attr_and_label(data, attr):
-        sorted_list = sorted(data, key=lambda x:(x[attr], x[0]))
-        return np.asarray(sorted_list)
+def sort_by_attr_and_label(data, col):
+        sortedList = sorted(data, key=lambda x:(x[col], x[-1]))
+        sortedArr = np.array(sortedList)
+        return sortedArr
 
 
 def calc_entropy(dataset):
@@ -97,12 +97,6 @@ def split(dataset, split_info):
             false_data.append(data)
     return np.array(true_data), np.array(false_data)
 
-# dataset = get_data("data/toy.txt")
-# s = si.SplitInfo(0, 5)
-# true_dataset, false_dataset = split(dataset, s)
-# print(true_dataset)
-
-
 def find_best_split(dataset):
     best_info_gain = 0
     best_split = si.SplitInfo(None, None)
@@ -134,15 +128,6 @@ def get_major_label(predictions):
     values = list(predictions.values())
     keys = list(predictions.keys())
     return keys[values.index(max(values))]
-
-### Hardcoded data ###
-label, attributes = read_file("data/train_full.txt")
-dataset = get_data(label, attributes)
-######################
-
-best_split = find_best_split(dataset)
-print(best_split.attribute, best_split.value)
-
 
 
 

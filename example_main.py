@@ -10,7 +10,7 @@ from classification import DecisionTreeClassifier
 from eval import Evaluator
 
 if __name__ == "__main__":
-    print("Loading the training dataset...");
+    print("Loading the training dataset...")
     x = np.array([
             [5,7,1],
             [4,6,2],
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     predictions = classifier.predict(x_test)
     print("Predictions: {}".format(predictions))
     
-    classes = ["A", "C"];
+    classes = ["A", "C"]
     
     print("Evaluating test predictions...")
     evaluator = Evaluator()
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     print()
     print("Class: Precision, Recall, F1")
     for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-        print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1));
+        print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1))
    
     print() 
     print("Macro-averaged Precision: {:.2f}".format(macro_p))
