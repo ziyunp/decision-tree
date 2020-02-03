@@ -213,7 +213,7 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 
     print('going into function', node, 'with', node.child_true)
     if count == 0:
-        prevNode.child_true = nd.LeafNode(dataset, freq)
+        prevNode.child_true = nd.Leaf_node(dataset, freq)
         # print('new node', node)
         return
 
@@ -223,21 +223,21 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 
 
 # Test        
-# train_attributes, train_labels = hp.readFile("data/train_full.txt")
-# dataset = hp.getData(train_attributes, train_labels)
-# freq = hp.getFrequency(dataset)
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
+# dataset = hp.get_data(train_attributes, train_labels)
+# freq = hp.get_frequency(dataset)
 # dtClassifier = cf.DecisionTreeClassifier()
 # dtClassifier.train(train_attributes, train_labels)
-# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
 # testrecursion(dtClassifier.tree, dataset, freq)
-# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
 
 
 # Test
-# train_attributes, train_labels = hp.readFile("data/train_full.txt")
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
 # dtClassifier = cf.DecisionTreeClassifier()
 # dtClassifier.train(train_attributes, train_labels)
-# test_attributes, test_labels = hp.readFile("data/test.txt")
+# test_attributes, test_labels = hp.read_file("data/test.txt")
 # predictions = dtClassifier.predict(test_attributes)
 
 # evaluator = Evaluator()
@@ -246,15 +246,15 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 
 # print(evaluator.accuracy(confusion))
 
-# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
-# print(isinstance(dtClassifier.tree.child_false, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
 
-# dataset = hp.getData(train_attributes, train_labels)
-# freq = hp.getFrequency(dataset)
+# dataset = hp.get_data(train_attributes, train_labels)
+# freq = hp.get_frequency(dataset)
 
 # saved = dtClassifier.tree.child_true
-# dtClassifier.tree.child_true = nd.LeafNode(dataset, freq)
-# dtClassifier.tree.child_false = nd.LeafNode(dataset, freq)
+# dtClassifier.tree.child_true = nd.Leaf_node(dataset, freq)
+# dtClassifier.tree.child_false = nd.Leaf_node(dataset, freq)
 
 
 # predictions = dtClassifier.predict(test_attributes)
@@ -265,8 +265,8 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 
 # print(evaluator.accuracy(confusion))
 
-# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
-# print(isinstance(dtClassifier.tree.child_false, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
 
 # dtClassifier.tree.child_true = saved
 
@@ -279,19 +279,19 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 # print(evaluator.accuracy(confusion))
 
 
-# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
-# print(isinstance(dtClassifier.tree.child_false, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
 
 
 
 
 # test
 
-# train_attributes, train_labels = hp.readFile("data/train_full.txt")
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
 # dtClassifier = cf.DecisionTreeClassifier()
 # dtClassifier.train(train_attributes, train_labels)
 
-# test_attributes, test_labels = hp.readFile("data/test.txt")
+# test_attributes, test_labels = hp.read_file("data/test.txt")
 # predictions = dtClassifier.predict(test_attributes)
 
 # evaluator = Evaluator()

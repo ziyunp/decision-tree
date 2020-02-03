@@ -9,10 +9,10 @@ import copy as cp
 
 def prune(tree, node, validation, annotation, prev_node = None, left = None):
 
-    if isinstance(node, nd.LeafNode):
+    if isinstance(node, nd.Leaf_node):
         return True
 
-    if isinstance(node, nd.DecisionNode):
+    if isinstance(node, nd.Decision_node):
         
         true_branch = prune(tree, node.child_true, validation, annotation, node, True)
         false_branch = prune(tree, node.child_false, validation, annotation, node, False) 
@@ -30,10 +30,10 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
             # print(prev_node, 'before reassign', prev_node.child_true, prev_node.child_false)
             if left:
                 saved = cp.deepcopy(prev_node.child_true)
-                prev_node.child_true = nd.LeafNode(dataset, freq)
+                prev_node.child_true = nd.Leaf_node(dataset, freq)
             elif not left:
                 saved = cp.deepcopy(prev_node.child_false)
-                prev_node.child_false = nd.LeafNode(dataset, freq)
+                prev_node.child_false = nd.Leaf_node(dataset, freq)
 
             # print(prev_node, 'after reassign', prev_node.child_true, prev_node.child_false)
 
@@ -58,15 +58,15 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
 
 # test
 
-train_attributes, train_labels = hp.readFile("data/train_full.txt")
+train_attributes, train_labels = hp.read_file("data/train_full.txt")
 dtClassifier = cf.DecisionTreeClassifier()
 dtClassifier.train(train_attributes, train_labels)
 
-val_attributes, val_labels = hp.readFile("data/validation.txt")
+val_attributes, val_labels = hp.read_file("data/validation.txt")
 # val_attributes = np.append(val_attributes, train_attributes, axis=0)
 # val_labels = np.append(val_labels, train_labels, axis=0)
 
-test_attributes, test_labels = hp.readFile("data/test.txt")
+test_attributes, test_labels = hp.read_file("data/test.txt")
 
 predictions = dtClassifier.predict(test_attributes)
 evaluator = ev.Evaluator()

@@ -132,7 +132,7 @@ def get_major_label(probabilities):
     return keys[values.index(max(values))]
 
 
-def getProbabilities(currentFrequency, initialFrequency):
+def get_probabilities(currentFrequency, initialFrequency):
 
     probabilities = {}
     total = sum(currentFrequency.values())

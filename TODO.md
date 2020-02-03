@@ -38,10 +38,10 @@ function getLabel(ascii):
 class Node: (abstract class) (subset)
     entropy
 
-class DecisionNode:
+class Decision_node:
     splitPoint
     subset1
     subset2
 
-class LeafNode:
+class Leaf_node:
     set

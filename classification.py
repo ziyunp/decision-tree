@@ -53,16 +53,16 @@ class DecisionTreeClassifier(object):
         
         """
         # recursively inducing a decision tree
-        current_shares = hp.getProbabilities(hp.getFrequency(dataset), freq)
+        current_shares = hp.get_probabilities(hp.get_frequency(dataset), freq)
         max_share = max(current_shares.values())
-        best_split = hp.findbest_splitPoint(dataset)
+        best_split = hp.find_best_split(dataset)
         if (best_split.attribute == None or max_share < 0.00): # all samples have the same label or cannot be split
-            node = nd.LeafNode(dataset, freq)
+            node = nd.Leaf_node(dataset, freq)
         else :
             true_data, false_data = hp.split(dataset, best_split)
             child_true = self.induce_decision_tree(true_data, freq)
             child_false = self.induce_decision_tree(false_data, freq)
-            node = nd.DecisionNode(best_split, child_true, child_false)
+            node = nd.Decision_node(best_split, child_true, child_false)
         return node 
     
     def train(self, x, y):
@@ -87,8 +87,8 @@ class DecisionTreeClassifier(object):
         assert x.shape[0] == len(y), \
             "Training failed. x and y must have the same number of instances."
         
-        dataset = hp.getData(x, y)
-        self.tree = self.induce_decision_tree(dataset, hp.getFrequency(dataset))
+        dataset = hp.get_data(x, y)
+        self.tree = self.induce_decision_tree(dataset, hp.get_frequency(dataset))
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -133,8 +133,8 @@ class DecisionTreeClassifier(object):
 
 # superTest = np.asarray([['A'], ['A'], ['A'], ['B'], ['A'], ['A'], ['B'], ['B']])
 # test = np.asarray([['A'], ['A'], ['A'], ['B']])
-# current_shares = hp.getProbabilities(hp.getFrequency(test), hp.getFrequency(superTest))
-# print(hp.getFrequency(test))
+# current_shares = hp.get_probabilities(hp.get_frequency(test), hp.get_frequency(superTest))
+# print(hp.get_frequency(test))
 
 # max_share = max(current_shares.values())
 # print(max_share)
@@ -145,7 +145,7 @@ class DecisionTreeClassifier(object):
 # # Tests
 
 ### Hardcoded data ###
-# attributes, labels = hp.readFile("data/train_sub.txt")
+# attributes, labels = hp.read_file("data/train_sub.txt")
 # jsonData = {}
 # jsonData["root"] = []
 ######################

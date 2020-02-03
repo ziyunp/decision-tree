@@ -10,7 +10,7 @@ class Node:
         raise NotImplementedError
 
 
-class DecisionNode(Node):
+class Decision_node(Node):
     """
     A decision node
     
@@ -38,7 +38,7 @@ class DecisionNode(Node):
         self.child_false = child_false
 
         # Before pruning, there is no label stored in the Decision nodes but after pruning, the 
-        # decision node is effectively a LeafNode
+        # decision node is effectively a Leaf_node
 
     def print(self, layer, json_data):
         for _ in range(layer):
@@ -60,14 +60,14 @@ class DecisionNode(Node):
         else:
             return self.child_false.question(attributes)
 
-class LeafNode(Node):
+class Leaf_node(Node):
 
     def __init__(self, dataset, freq):
         super().__init__()
         self.dataset = dataset
         self.freq = freq
-        self.predictions = hp.getProbabilities(hp.getFrequency(dataset), freq)
-        self.label = hp.getMajorLabel(self.predictions)
+        self.predictions = hp.get_probabilities(hp.get_frequency(dataset), freq)
+        self.label = hp.get_major_label(self.predictions)
 
     def print(self, layer, json_data):
         for _ in range(layer):
