@@ -5,24 +5,24 @@ import SplitInfo as si
 LABEL_COL = -1
 
 def read_file(filename):
-    rawData = open(filename).read().splitlines() # a list of lines
+    raw_data = open(filename).read().splitlines() # a list of lines
 
     # check whether there is data
-    dataNum = len(rawData)
+    dataNum = len(raw_data)
     if (dataNum == 0):
         print("No data found in the given file")
         return
 
     # check whether attributes of each line is consistent
-    attributeNum = len(rawData[0].split(",")) - 1 
+    attributeNum = len(raw_data[0].split(",")) - 1 
     # the last column is label
-    for rawLine in rawData:
+    for rawLine in raw_data:
         line = rawLine.split(",")
         if (attributeNum != len(line) - 1):
             print("Attribute numbers of each line is not consistent")
             return 
 
-    data = [rawLine.split(',') for rawLine in rawData]
+    data = [rawLine.split(',') for rawLine in raw_data]
     attributes = np.array([data[row][:-1] for row in range(len(data))], int)
     labels = np.array([data[row][-1].strip() for row in range(len(data))])
     return attributes, labels
