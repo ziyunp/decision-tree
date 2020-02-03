@@ -16,7 +16,7 @@ import numpy as np
 
 import helpers as hp
 import classification as cf
-
+import node as nd
 
 
 
@@ -209,19 +209,84 @@ class Evaluator(object):
         return (f1, macro_f1)
    
  
+
+# Test        
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
+# dataset = hp.get_data(train_attributes, train_labels)
+# freq = hp.get_frequency(dataset)
+# dtClassifier = cf.DecisionTreeClassifier()
+# dtClassifier.train(train_attributes, train_labels)
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+# testrecursion(dtClassifier.tree, dataset, freq)
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+
+
 # Test
-train_attributes, train_labels = hp.read_file("data/train_full.txt")
-dtClassifier = cf.DecisionTreeClassifier()
-dtClassifier.train(train_attributes, train_labels)
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
+# dtClassifier = cf.DecisionTreeClassifier()
+# dtClassifier.train(train_attributes, train_labels)
+# test_attributes, test_labels = hp.read_file("data/test.txt")
+# predictions = dtClassifier.predict(test_attributes)
 
-test_attributes, test_labels = hp.read_file("data/test.txt")
-predictions = dtClassifier.predict(test_attributes)
+# evaluator = Evaluator()
+# confusion = evaluator.confusion_matrix(predictions, test_labels)
+# print(confusion)
 
-evaluator = Evaluator()
-confusion = evaluator.confusion_matrix(predictions, test_labels)
-print(confusion)
+# print(evaluator.accuracy(confusion))
 
-print(evaluator.accuracy(confusion))
-print(evaluator.precision(confusion))
-print(evaluator.recall(confusion))
-print(evaluator.f1_score(confusion))
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
+
+# dataset = hp.get_data(train_attributes, train_labels)
+# freq = hp.get_frequency(dataset)
+
+# saved = dtClassifier.tree.child_true
+# dtClassifier.tree.child_true = nd.Leaf_node(dataset, freq)
+# dtClassifier.tree.child_false = nd.Leaf_node(dataset, freq)
+
+
+# predictions = dtClassifier.predict(test_attributes)
+
+# evaluator = Evaluator()
+# confusion = evaluator.confusion_matrix(predictions, test_labels)
+# print(confusion)
+
+# print(evaluator.accuracy(confusion))
+
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
+
+# dtClassifier.tree.child_true = saved
+
+# predictions = dtClassifier.predict(test_attributes)
+
+# evaluator = Evaluator()
+# confusion = evaluator.confusion_matrix(predictions, test_labels)
+# print(confusion)
+
+# print(evaluator.accuracy(confusion))
+
+
+# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
+# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
+
+
+
+
+# test
+
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
+# dtClassifier = cf.DecisionTreeClassifier()
+# dtClassifier.train(train_attributes, train_labels)
+
+# test_attributes, test_labels = hp.read_file("data/test.txt")
+# predictions = dtClassifier.predict(test_attributes)
+
+# evaluator = Evaluator()
+# confusion = evaluator.confusion_matrix(predictions, test_labels)
+# print(confusion)
+
+# print(evaluator.accuracy(confusion))
+# print(evaluator.precision(confusion))
+# print(evaluator.recall(confusion))
+# print(evaluator.f1_score(confusion))

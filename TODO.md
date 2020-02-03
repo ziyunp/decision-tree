@@ -16,9 +16,9 @@ function split(splitPoint):
 
 
 
-function findBestSplitPoint():
+function findbest_splitPoint():
     <!-- compute base entropy here -->
-   return bestSplitPoint
+   return best_splitPoint
 
 
 
@@ -38,10 +38,10 @@ function getLabel(ascii):
 class Node: (abstract class) (subset)
     entropy
 
-class DecisionNode:
+class Decision_node:
     splitPoint
     subset1
     subset2
 
-class LeafNode:
+class Leaf_node:
     set
