@@ -89,9 +89,9 @@ class Evaluator(object):
                 total += confusion[i][j]
         if total > 0:
             raw_accuracy = true_total / total
-            accuracy = round(raw_accuracy, 1)
+            # accuracy = round(raw_accuracy, 1)
 
-        return accuracy
+        return raw_accuracy
 
     def precision(self, confusion):
         """ Computes the precision score per class given a confusion matrix.
