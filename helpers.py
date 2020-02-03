@@ -8,21 +8,21 @@ def read_file(filename):
     raw_data = open(filename).read().splitlines() # a list of lines
 
     # check whether there is data
-    dataNum = len(raw_data)
-    if (dataNum == 0):
+    data_num = len(raw_data)
+    if (data_num == 0):
         print("No data found in the given file")
         return
 
     # check whether attributes of each line is consistent
-    attributeNum = len(raw_data[0].split(",")) - 1 
+    attribute_num = len(raw_data[0].split(",")) - 1 
     # the last column is label
-    for rawLine in raw_data:
-        line = rawLine.split(",")
-        if (attributeNum != len(line) - 1):
+    for raw_line in raw_data:
+        line = raw_line.split(",")
+        if (attribute_num != len(line) - 1):
             print("Attribute numbers of each line is not consistent")
             return 
 
-    data = [rawLine.split(',') for rawLine in raw_data]
+    data = [raw_line.split(',') for raw_line in raw_data]
     attributes = np.array([data[row][:-1] for row in range(len(data))], int)
     labels = np.array([data[row][-1].strip() for row in range(len(data))])
     return attributes, labels
@@ -85,7 +85,7 @@ def calc_info_gain(base_entropy, true_data, false_data):
 
 # @param dataset NxAttr array
 # @param split_info = [splitAttribute, split_point]
-# @retrun an split_point x Attr array and an (N - split_point) x Attr array
+# @return an split_point x Attr array and an (N - split_point) x Attr array
 def split(dataset, split_info):
     true_data = []
     false_data = []
