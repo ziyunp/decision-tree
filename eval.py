@@ -209,18 +209,6 @@ class Evaluator(object):
         return (f1, macro_f1)
    
  
-def testrecursion(node, dataset, freq, prevNode = None, count = 1):
-
-    print('going into function', node, 'with', node.child_true)
-    if count == 0:
-        prevNode.child_true = nd.Leaf_node(dataset, freq)
-        # print('new node', node)
-        return
-
-    print(count, 'passing in', node, 'with', node.child_true)
-    testrecursion(node.child_true, dataset, freq, node, count - 1)
-    print(count, 'after', node, 'with', node.child_true)
-
 
 # Test        
 # train_attributes, train_labels = hp.read_file("data/train_full.txt")
