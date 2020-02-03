@@ -37,7 +37,7 @@ class DecisionTreeClassifier(object):
         self.is_trained = False
     
 
-    def induceDecisionTree(self, dataset, freq = {}, accuracy = 0):
+    def induce_decision_tree(self, dataset, freq = {}, accuracy = 0):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -53,16 +53,16 @@ class DecisionTreeClassifier(object):
         
         """
         # recursively inducing a decision tree
-        currentShares = hp.getProbabilities(hp.getFrequency(dataset), freq)
-        maxShare = max(currentShares.values())
-        bestSplit = hp.findBestSplitPoint(dataset)
-        if (bestSplit.attribute == None or maxShare < 0.00): # all samples have the same label or cannot be split
+        current_shares = hp.getProbabilities(hp.getFrequency(dataset), freq)
+        max_share = max(current_shares.values())
+        best_split = hp.findbest_splitPoint(dataset)
+        if (best_split.attribute == None or max_share < 0.00): # all samples have the same label or cannot be split
             node = nd.LeafNode(dataset, freq)
         else :
-            trueData, falseData = hp.split(dataset, bestSplit)
-            childTrue = self.induceDecisionTree(trueData, freq)
-            childFalse = self.induceDecisionTree(falseData, freq)
-            node = nd.DecisionNode(bestSplit, childTrue, childFalse)
+            true_data, false_data = hp.split(dataset, best_split)
+            child_true = self.induce_decision_tree(true_data, freq)
+            child_false = self.induce_decision_tree(false_data, freq)
+            node = nd.DecisionNode(best_split, child_true, child_false)
         return node 
     
     def train(self, x, y):
@@ -88,7 +88,7 @@ class DecisionTreeClassifier(object):
             "Training failed. x and y must have the same number of instances."
         
         dataset = hp.getData(x, y)
-        self.tree = self.induceDecisionTree(dataset, hp.getFrequency(dataset))
+        self.tree = self.induce_decision_tree(dataset, hp.getFrequency(dataset))
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -123,7 +123,7 @@ class DecisionTreeClassifier(object):
         predictions = np.zeros((x.shape[0],), dtype=np.object)
         
         for i in range(len(x)):
-            predictions[i] = self.tree.question(x[i])
+            predictions[i] = chr(self.tree.question(x[i]))
     
         # remember to change this if you rename the variable
         return predictions
@@ -133,16 +133,16 @@ class DecisionTreeClassifier(object):
 
 # superTest = np.asarray([['A'], ['A'], ['A'], ['B'], ['A'], ['A'], ['B'], ['B']])
 # test = np.asarray([['A'], ['A'], ['A'], ['B']])
-# currentShares = hp.getProbabilities(hp.getFrequency(test), hp.getFrequency(superTest))
+# current_shares = hp.getProbabilities(hp.getFrequency(test), hp.getFrequency(superTest))
 # print(hp.getFrequency(test))
 
-# maxShare = max(currentShares.values())
-# print(maxShare)
+# max_share = max(current_shares.values())
+# print(max_share)
 
 
 
 
-# Tests
+# # Tests
 
 ### Hardcoded data ###
 # attributes, labels = hp.readFile("data/train_sub.txt")
@@ -151,17 +151,17 @@ class DecisionTreeClassifier(object):
 ######################
 
 # dtClassifier = DecisionTreeClassifier()
-# dtClassifier.train(attributes, labels).tree.print(0, jsonData["root"])
+# dtClassifier.train(attributes, labels).tree.print(0, json_data["root"])
 
-# test_attributes, test_labels = hp.readFile("data/test.txt")
+# test_attributes, test_labels = hp.read_file("data/test.txt")
 # predictions = dtClassifier.predict(test_attributes)
 
-# correct = 0
-# for i in range(len(test_labels)):
-#     if (ord(predictions[i]) == test_labels[i]):
-#         correct += 1
-# print(correct / len(test_labels))
+# # correct = 0
+# # for i in range(len(test_labels)):
+# #     if (ord(predictions[i]) == test_labels[i]):
+# #         correct += 1
+# # print(correct / len(test_labels))
 
 
 # with open('save.json', 'w') as outfile:
-#     json.dump(jsonData, outfile)
+#     json.dump(json_data, outfile)

@@ -16,9 +16,9 @@ function split(splitPoint):
 
 
 
-function findBestSplitPoint():
+function findbest_splitPoint():
     <!-- compute base entropy here -->
-   return bestSplitPoint
+   return best_splitPoint
 
 
 

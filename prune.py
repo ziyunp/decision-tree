@@ -7,50 +7,50 @@ import classification as cf
 import eval as ev
 import copy as cp
 
-def prune(tree, node, validation, annotation, prevNode = None, left = None):
+def prune(tree, node, validation, annotation, prev_node = None, left = None):
 
     if isinstance(node, nd.LeafNode):
         return True
 
     if isinstance(node, nd.DecisionNode):
         
-        trueBranch = prune(tree, node.childTrue, validation, annotation, node, True)
-        falseBranch = prune(tree, node.childFalse, validation, annotation, node, False) 
-        if trueBranch and falseBranch:
-            # print(node, 'with', node.childTrue, node.childFalse)
+        true_branch = prune(tree, node.child_true, validation, annotation, node, True)
+        false_branch = prune(tree, node.child_false, validation, annotation, node, False) 
+        if true_branch and false_branch:
+            # print(node, 'with', node.child_true, node.child_false)
 
-            basePrediction = tree.predict(validation)
+            base_prediction = tree.predict(validation)
             evaluator = ev.Evaluator()
-            baseConfusion = evaluator.confusion_matrix(basePrediction, annotation)
-            baseAccuracy = evaluator.accuracy(baseConfusion)
+            base_confusion = evaluator.confusion_matrix(base_prediction, annotation)
+            base_accuracy = evaluator.accuracy(base_confusion)
 
-            dataset = np.append(node.childTrue.dataset, node.childFalse.dataset, axis=0)
-            freq = node.childTrue.freq
+            dataset = np.append(node.child_true.dataset, node.child_false.dataset, axis=0)
+            freq = node.child_true.freq
             # print(freq)
-            # print(prevNode, 'before reassign', prevNode.childTrue, prevNode.childFalse)
+            # print(prev_node, 'before reassign', prev_node.child_true, prev_node.child_false)
             if left:
-                saved = cp.deepcopy(prevNode.childTrue)
-                prevNode.childTrue = nd.LeafNode(dataset, freq)
+                saved = cp.deepcopy(prev_node.child_true)
+                prev_node.child_true = nd.LeafNode(dataset, freq)
             elif not left:
-                saved = cp.deepcopy(prevNode.childFalse)
-                prevNode.childFalse = nd.LeafNode(dataset, freq)
+                saved = cp.deepcopy(prev_node.child_false)
+                prev_node.child_false = nd.LeafNode(dataset, freq)
 
-            # print(prevNode, 'after reassign', prevNode.childTrue, prevNode.childFalse)
+            # print(prev_node, 'after reassign', prev_node.child_true, prev_node.child_false)
 
-            curPrediction = tree.predict(validation)
-            curConfusion = evaluator.confusion_matrix(curPrediction, annotation)
-            curAccuracy = evaluator.accuracy(curConfusion)
-            # print(baseAccuracy, curAccuracy)
+            cur_prediction = tree.predict(validation)
+            cur_confusion = evaluator.confusion_matrix(cur_prediction, annotation)
+            cur_accuracy = evaluator.accuracy(cur_confusion)
+            # print(base_accuracy, cur_accuracy)
 
-            if curAccuracy >= baseAccuracy:
+            if cur_accuracy >= base_accuracy:
                 # print('returning true')
                 return True
             else:
                 # print('returning false')
                 if left:
-                    prevNode.childTrue = saved 
+                    prev_node.child_true = saved 
                 elif not left:
-                    prevNode.childFalse = saved 
+                    prev_node.child_false = saved 
                 return False
 
     # print('getting to the end')

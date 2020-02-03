@@ -25,7 +25,7 @@ class Evaluator(object):
     """ Class to perform evaluation
     """
     
-    def confusion_matrix(self, prediction, annotation, classLabels=None):
+    def confusion_matrix(self, prediction, annotation, class_labels=[]):
         """ Computes the confusion matrix.
         
         Parameters
@@ -36,7 +36,7 @@ class Evaluator(object):
         annotation : np.array
             an N dimensional numpy array containing the ground truth
             class labels
-        classLabels : np.array
+        class_labels : np.array
             a C dimensional numpy array containing the ordered set of class
             labels. If not provided, defaults to all unique values in
             annotation.
@@ -45,27 +45,24 @@ class Evaluator(object):
         -------
         np.array
             a C by C matrix, where C is the number of classes.
-            Classes should be ordered by classLabels.
+            Classes should be ordered by class_labels.
             Rows are ground truth per class, columns are predictions.
         """
+
+        if (len(class_labels) == 0):
+            class_labels = np.unique(np.append(annotation, prediction))
         
-        if not classLabels:
-            classLabels = np.unique(annotation)
-        
-        confusion = np.zeros((len(classLabels), len(classLabels)), dtype=np.int)
+        confusion = np.zeros((len(class_labels), len(class_labels)), dtype=np.int)
         
             
         for i in range(len(prediction)):
-            rowNum = np.where(classLabels == annotation[i])[0][0]
-            colNum = np.where(classLabels == prediction[i])[0][0]
-            confusion[rowNum][colNum] += 1
-
-        
-        #######################################################################
-        #                 ** TASK 3.1: COMPLETE THIS METHOD **
-        #######################################################################
-        
-        
+            annotation_index = np.where(class_labels == annotation[i])
+            prediction_index = np.where(class_labels == prediction[i])
+            if(len(annotation_index[0]) > 0 and len(prediction_index[0]) > 0):
+                row_num = annotation_index[0][0]
+                col_num = prediction_index[0][0]
+                confusion[row_num][col_num] += 1
+        # TODO: throw error if prediction is not found in the class_labels?
         return confusion
     
     
@@ -83,21 +80,18 @@ class Evaluator(object):
         float
             The accuracy (between 0.0 to 1.0 inclusive)
         """
-
-        #######################################################################
-        #                 ** TASK 3.2: COMPLETE THIS METHOD **
-        #######################################################################
-        trueTotal = 0
+        accuracy = 0.0
+        true_total = 0
         total = 0
         for i in range (len(confusion)):
-            trueTotal += confusion[i][i]
+            true_total += confusion[i][i]
             for j in range(len(confusion)):
                 total += confusion[i][j]
+        if total > 0:
+            raw_accuracy = true_total / total
+            # accuracy = round(raw_accuracy, 1)
 
-        rawAccuracy = trueTotal / total
-        accuracy = round(rawAccuracy, 8)
-        # print("accuracy: ", accuracy)
-        return format(rawAccuracy, '.5f')
+        return raw_accuracy
 
     def precision(self, confusion):
         """ Computes the precision score per class given a confusion matrix.
@@ -120,21 +114,22 @@ class Evaluator(object):
         """
         
         # Initialise array to store precision for C classes
-        p = np.zeros((len(confusion), ))
+        precision = np.zeros((len(confusion), ))
 
-        for i in range (0, len(confusion)):
-            total = 0
-            TP = confusion[i][i]
-            for j in range (0, len(confusion)):
-                total += confusion[j][i]
-            p[i] = TP / total
+        for i in range (len(confusion)):
+            total_predicted_positive = 0
+            true_positive = confusion[i][i]
+            for j in range (len(confusion)):
+                total_predicted_positive += confusion[j][i]
+            if total_predicted_positive > 0:
+                precision[i] = true_positive / total_predicted_positive
+    
+        macro_precision = 0
+        for i in range (len(precision)):
+            macro_precision += precision[i]
+        macro_precision = macro_precision / len(precision)
 
-        macro_p = 0
-        for i in range (0, len(p)):
-            macro_p += p[i]
-        macro_p = macro_p / len(p)
-
-        return (p, macro_p)
+        return (precision, macro_precision)
     
     
     def recall(self, confusion):
@@ -159,20 +154,22 @@ class Evaluator(object):
         """
         
         # Initialise array to store recall for C classes
-        r = np.zeros((len(confusion), ))
+        recall = np.zeros((len(confusion), ))
         
         for i in range(len(confusion)):
+            total_actual_positive = 0
             for j in range(len(confusion)):
-                r[i] += confusion[i][j]
-            r[i] = confusion[i][i] / r[i]
+                total_actual_positive += confusion[i][j]
+            if total_actual_positive > 0: 
+                recall[i] = confusion[i][i] / total_actual_positive
         
         # You will also need to change this        
-        macro_r = 0
-        for i in range(len(r)):
-            macro_r += r[i]
-        macro_r = macro_r / len(r)
+        macro_recall = 0
+        for i in range(len(recall)):
+            macro_recall += recall[i]
+        macro_recall = macro_recall / len(recall)
 
-        return (r, macro_r)
+        return (recall, macro_recall)
     
     
     def f1_score(self, confusion):
@@ -197,33 +194,32 @@ class Evaluator(object):
         """
         
         # Initialise array to store recall for C classes
-        f = np.zeros((len(confusion), ))
+        f1 = np.zeros((len(confusion), ))
         
         recall, _ = self.recall(confusion)
-        # precision, _ = self.precision(confusion)
-        precision, _ = self.recall(confusion)
-        f = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
+        precision, _ = self.precision(confusion)
+        f1 = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
         
         # You will also need to change this        
-        macro_f = 0
+        macro_f1 = 0
         for i in range(len(confusion)):
-            macro_f += f[i]
-        macro_f = macro_f / len(confusion)
+            macro_f1 += f1[i]
+        macro_f1 = macro_f1 / len(confusion)
         
-        return (f, macro_f)
+        return (f1, macro_f1)
    
  
 def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 
-    print('going into function', node, 'with', node.childTrue)
+    print('going into function', node, 'with', node.child_true)
     if count == 0:
-        prevNode.childTrue = nd.LeafNode(dataset, freq)
+        prevNode.child_true = nd.LeafNode(dataset, freq)
         # print('new node', node)
         return
 
-    print(count, 'passing in', node, 'with', node.childTrue)
-    testrecursion(node.childTrue, dataset, freq, node, count - 1)
-    print(count, 'after', node, 'with', node.childTrue)
+    print(count, 'passing in', node, 'with', node.child_true)
+    testrecursion(node.child_true, dataset, freq, node, count - 1)
+    print(count, 'after', node, 'with', node.child_true)
 
 
 # Test        
@@ -232,9 +228,9 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 # freq = hp.getFrequency(dataset)
 # dtClassifier = cf.DecisionTreeClassifier()
 # dtClassifier.train(train_attributes, train_labels)
-# print(isinstance(dtClassifier.tree.childTrue, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
 # testrecursion(dtClassifier.tree, dataset, freq)
-# print(isinstance(dtClassifier.tree.childTrue, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
 
 
 # Test
@@ -250,15 +246,15 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 
 # print(evaluator.accuracy(confusion))
 
-# print(isinstance(dtClassifier.tree.childTrue, nd.DecisionNode))
-# print(isinstance(dtClassifier.tree.childFalse, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_false, nd.DecisionNode))
 
 # dataset = hp.getData(train_attributes, train_labels)
 # freq = hp.getFrequency(dataset)
 
-# saved = dtClassifier.tree.childTrue
-# dtClassifier.tree.childTrue = nd.LeafNode(dataset, freq)
-# dtClassifier.tree.childFalse = nd.LeafNode(dataset, freq)
+# saved = dtClassifier.tree.child_true
+# dtClassifier.tree.child_true = nd.LeafNode(dataset, freq)
+# dtClassifier.tree.child_false = nd.LeafNode(dataset, freq)
 
 
 # predictions = dtClassifier.predict(test_attributes)
@@ -269,10 +265,10 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 
 # print(evaluator.accuracy(confusion))
 
-# print(isinstance(dtClassifier.tree.childTrue, nd.DecisionNode))
-# print(isinstance(dtClassifier.tree.childFalse, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_false, nd.DecisionNode))
 
-# dtClassifier.tree.childTrue = saved
+# dtClassifier.tree.child_true = saved
 
 # predictions = dtClassifier.predict(test_attributes)
 
@@ -283,8 +279,8 @@ def testrecursion(node, dataset, freq, prevNode = None, count = 1):
 # print(evaluator.accuracy(confusion))
 
 
-# print(isinstance(dtClassifier.tree.childTrue, nd.DecisionNode))
-# print(isinstance(dtClassifier.tree.childFalse, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_true, nd.DecisionNode))
+# print(isinstance(dtClassifier.tree.child_false, nd.DecisionNode))
 
 
 

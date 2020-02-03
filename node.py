@@ -27,52 +27,38 @@ class DecisionNode(Node):
 
     """
 
-    # splitInfo = si.SplitInfo(None, None)
-    # childTrue = Node()
-    # childFalse = Node()
+    # split_info = si.SplitInfo(None, None)
+    # child_true = Node()
+    # child_false = Node()
 
-    def __init__(self, _splitInfo, childTrue, childFalse):
+    def __init__(self, _split_info, child_true, child_false):
         super().__init__()
-        self.splitInfo = _splitInfo
-        self.childTrue = childTrue
-        self.childFalse = childFalse
+        self.split_info = _split_info
+        self.child_true = child_true
+        self.child_false = child_false
 
         # Before pruning, there is no label stored in the Decision nodes but after pruning, the 
         # decision node is effectively a LeafNode
 
-    def print(self, layer, jsonData):
+    def print(self, layer, json_data):
         for _ in range(layer):
             print('--', end='')
         print("Decision Node: Attribute {} is smaller than {}?"
-            .format(self.splitInfo.attribute, self.splitInfo.value))
-        jsonData.append({
-            "splitPoint": [self.splitInfo.attribute, int(self.splitInfo.value)],
-            "childTrue": [],
-            "childFalse": []
+            .format(self.split_info.attribute, self.split_info.value))
+        json_data.append({
+            "split_point": [self.split_info.attribute, int(self.split_info.value)],
+            "child_true": [],
+            "child_false": []
         })
-        self.childTrue.print(layer + 1, jsonData[0]['childTrue'])
-        self.childFalse.print(layer + 1, jsonData[0]['childFalse'])
+        self.child_true.print(layer + 1, json_data[0]['child_true'])
+        self.child_false.print(layer + 1, json_data[0]['child_false'])
 
 
-    def question(self, attributes):
-        if (attributes[self.splitInfo.attribute] < self.splitInfo.value):
-            return self.childTrue.question(attributes)
+    def question(self, attributes):        
+        if (int(attributes[self.split_info.attribute]) < int(self.split_info.value)):
+            return self.child_true.question(attributes)
         else:
-            return self.childFalse.question(attributes)
-        
-
-
-        
-# attributes, labels = readFile("data/toy.txt")
-
-# root = DecisionNode(attributes, labels)
-# print("Root has entropy: " + str(root.entropy))
-
-# attributes1, labels1 = readFile("data/toy_sub1.txt")
-# attributes2, labels2 = readFile("data/toy_sub2.txt")
-# test = root.calcIG(labels1, labels2)
-# print(test)
-
+            return self.child_false.question(attributes)
 
 class LeafNode(Node):
 
@@ -83,10 +69,10 @@ class LeafNode(Node):
         self.predictions = hp.getProbabilities(hp.getFrequency(dataset), freq)
         self.label = hp.getMajorLabel(self.predictions)
 
-    def print(self, layer, jsonData):
+    def print(self, layer, json_data):
         for _ in range(layer):
             print('--', end='')
-        jsonData.append({
+        json_data.append({
             "label": chr(self.label)
         })        
         print("Leaf Node: Label is {}".format(chr(self.label)))
