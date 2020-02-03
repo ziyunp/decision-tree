@@ -9,7 +9,7 @@ def split_dataset(filename, k):
     dataset = get_data(attributes, labels)
     length = len(dataset)
 
-    if ((k <= 0) or (k > length)):
+    if ((k <= 1) or (k > length)):
         print("Error: invalid k value")
         return
 
