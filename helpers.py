@@ -28,7 +28,8 @@ def read_file(filename):
     return attributes, labels
 
 def get_data(attributes, labels):
-    return np.append(attributes, labels[:,None], axis=1)
+    labels = np.array([[ord(labels[i])] for i in range(len(labels))])
+    return np.append(attributes, labels, axis=1)
 
 
 def get_frequency(dataset):

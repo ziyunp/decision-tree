@@ -48,9 +48,9 @@ class Evaluator(object):
             Classes should be ordered by class_labels.
             Rows are ground truth per class, columns are predictions.
         """
-        
+
         if (len(class_labels) == 0):
-            class_labels = np.unique(annotation)
+            class_labels = np.unique(np.append(annotation, prediction))
         
         confusion = np.zeros((len(class_labels), len(class_labels)), dtype=np.int)
         

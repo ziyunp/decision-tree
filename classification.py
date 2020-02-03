@@ -122,7 +122,7 @@ class DecisionTreeClassifier(object):
         predictions = np.zeros((x.shape[0],), dtype=np.object)
         
         for i in range(len(x)):
-            predictions[i] = self.tree.question(x[i])
+            predictions[i] = chr(self.tree.question(x[i]))
     
         # remember to change this if you rename the variable
         return predictions
