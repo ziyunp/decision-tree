@@ -37,7 +37,7 @@ class DecisionTreeClassifier(object):
         self.is_trained = False
     
 
-    def induce_decision_tree(self, dataset):
+    def induce_decision_tree(self, dataset, freq = {}, accuracy = 0):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -53,15 +53,16 @@ class DecisionTreeClassifier(object):
         
         """
         # recursively inducing a decision tree
+        current_shares = hp.get_probabilities(hp.get_frequency(dataset), freq)
+        max_share = max(current_shares.values())
         best_split = hp.find_best_split(dataset)
-        if (best_split.attribute == None): # all samples have the same label or cannot be split
-            node = nd.LeafNode(dataset)
+        if (best_split.attribute == None or max_share < 0.00): # all samples have the same label or cannot be split
+            node = nd.Leaf_node(dataset, freq)
         else :
             true_data, false_data = hp.split(dataset, best_split)
-            child_true = self.induce_decision_tree(true_data)
-            child_false = self.induce_decision_tree(false_data)
-            node = nd.DecisionNode(best_split, child_true, child_false)
-
+            child_true = self.induce_decision_tree(true_data, freq)
+            child_false = self.induce_decision_tree(false_data, freq)
+            node = nd.Decision_node(best_split, child_true, child_false)
         return node 
     
     def train(self, x, y):
@@ -87,7 +88,7 @@ class DecisionTreeClassifier(object):
             "Training failed. x and y must have the same number of instances."
         
         dataset = hp.get_data(x, y)
-        self.tree = self.induce_decision_tree(dataset)
+        self.tree = self.induce_decision_tree(dataset, hp.get_frequency(dataset))
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
@@ -126,15 +127,27 @@ class DecisionTreeClassifier(object):
     
         # remember to change this if you rename the variable
         return predictions
-        
+
+
+
+
+# superTest = np.asarray([['A'], ['A'], ['A'], ['B'], ['A'], ['A'], ['B'], ['B']])
+# test = np.asarray([['A'], ['A'], ['A'], ['B']])
+# current_shares = hp.get_probabilities(hp.get_frequency(test), hp.get_frequency(superTest))
+# print(hp.get_frequency(test))
+
+# max_share = max(current_shares.values())
+# print(max_share)
+
+
 
 
 # # Tests
 
 ### Hardcoded data ###
 # attributes, labels = hp.read_file("data/train_sub.txt")
-# json_data = {}
-# json_data["root"] = []
+# jsonData = {}
+# jsonData["root"] = []
 ######################
 
 # dtClassifier = DecisionTreeClassifier()

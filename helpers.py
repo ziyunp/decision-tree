@@ -129,11 +129,19 @@ def find_best_split(dataset):
 
     return best_split
 
-def get_major_label(predictions):
-    values = list(predictions.values())
-    keys = list(predictions.keys())
+def get_major_label(probabilities):
+    
+    values = list(probabilities.values())
+    keys = list(probabilities.keys())
     return keys[values.index(max(values))]
 
 
+def get_probabilities(currentFrequency, initialFrequency):
 
+    probabilities = {}
+    total = sum(currentFrequency.values())
 
+    for item in currentFrequency:
+        probabilities[item] = currentFrequency[item] / (initialFrequency[item] if bool(initialFrequency) else total)
+
+    return probabilities
