@@ -42,8 +42,8 @@ def prune(tree, node, validation, annotation, prevNode = None, left = None):
             curAccuracy = evaluator.accuracy(curConfusion)
             # print(baseAccuracy, curAccuracy)
 
-            if curAccuracy > baseAccuracy:
-                print('returning true')
+            if curAccuracy >= baseAccuracy:
+                # print('returning true')
                 return True
             else:
                 # print('returning false')
@@ -58,7 +58,7 @@ def prune(tree, node, validation, annotation, prevNode = None, left = None):
 
 # test
 
-train_attributes, train_labels = hp.readFile("data/train_sub.txt")
+train_attributes, train_labels = hp.readFile("data/train_full.txt")
 dtClassifier = cf.DecisionTreeClassifier()
 dtClassifier.train(train_attributes, train_labels)
 
