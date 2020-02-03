@@ -61,7 +61,12 @@ def run(training_dataset, test_dataset):
 
     # print("Evaluating test predictions...")
     evaluator = Evaluator()
-    confusion = evaluator.confusion_matrix(predictions, y_test)
+    
+    # requires str in both params
+    annotations = []
+    for i in range(len(y_test)):
+        annotations.append(chr(y_test[i]))
+    confusion = evaluator.confusion_matrix(predictions, annotations)
     
     # print("Confusion matrix:")
     # print(confusion)
