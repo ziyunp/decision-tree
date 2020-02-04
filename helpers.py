@@ -28,10 +28,7 @@ def read_file(filename):
     return attributes, labels
 
 def get_data(attributes, labels):
-    if labels[0].dtype == np.int:
-        labels = np.array([[label] for label in labels])
-    else: 
-        labels = np.array([[ord(label)] for label in labels])
+    labels = np.array([[ord(label)] for label in labels])
     return np.append(attributes, labels, axis=1)
 
 
