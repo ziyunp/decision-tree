@@ -142,3 +142,17 @@ def get_probabilities(current_frequency, initial_frequency):
         probabilities[item] = current_frequency[item] / (initial_frequency[item] if bool(initial_frequency) else total)
 
     return probabilities
+
+def merge_freq(freq1, freq2):
+    freq_ret = {}
+    for key in freq1:
+        if key in freq_ret:
+            freq_ret[key] = freq_ret[key] + freq1[key]
+        else:
+            freq_ret[key] = freq1[key]
+    for key in freq2:
+        if key in freq_ret:
+            freq_ret[key] = freq_ret[key] + freq2[key]
+        else:
+            freq_ret[key] = freq2[key]    
+    return freq_ret

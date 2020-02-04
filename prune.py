@@ -24,16 +24,16 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
             base_confusion = evaluator.confusion_matrix(base_prediction, annotation)
             base_accuracy = evaluator.accuracy(base_confusion)
 
-            dataset = np.append(node.child_true.dataset, node.child_false.dataset, axis=0)
-            freq = node.child_true.freq
+            cur_freq = hp.merge_freq(node.child_true.cur_freq, node.child_false.cur_freq)
+            init_freq = node.child_true.init_freq
             # print(freq)
             # print(prev_node, 'before reassign', prev_node.child_true, prev_node.child_false)
             if left:
                 saved = cp.deepcopy(prev_node.child_true)
-                prev_node.child_true = nd.Leaf_node(dataset, freq)
+                prev_node.child_true = nd.Leaf_node(cur_freq, init_freq)
             elif not left:
                 saved = cp.deepcopy(prev_node.child_false)
-                prev_node.child_false = nd.Leaf_node(dataset, freq)
+                prev_node.child_false = nd.Leaf_node(cur_freq, init_freq)
 
             # print(prev_node, 'after reassign', prev_node.child_true, prev_node.child_false)
 
@@ -62,6 +62,10 @@ train_attributes, train_labels = hp.read_file("data/train_full.txt")
 dtClassifier = cf.DecisionTreeClassifier()
 dtClassifier.train(train_attributes, train_labels)
 
+# print()
+# print(dtClassifier.tree.get_cur_freq())
+# print(dtClassifier.tree.get_entropy())
+
 val_attributes, val_labels = hp.read_file("data/validation.txt")
 # val_attributes = np.append(val_attributes, train_attributes, axis=0)
 # val_labels = np.append(val_labels, train_labels, axis=0)
@@ -84,3 +88,9 @@ print(evaluator.accuracy(confusion))
 print(evaluator.precision(confusion)[-1])
 print(evaluator.recall(confusion)[-1])
 print(evaluator.f1_score(confusion)[-1])
+
+# print()
+# print(dtClassifier.tree.get_cur_freq())
+# print(dtClassifier.tree.get_entropy())
+
+# print(hp.calc_entropy(hp.get_frequency(hp.get_data(train_attributes, train_labels))))
