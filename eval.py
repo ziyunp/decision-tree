@@ -15,8 +15,8 @@
 import numpy as np
 
 import helpers as hp
-import classification as cf
-import node as nd
+import Classification as cf
+import Node as nd
 
 
 
@@ -275,18 +275,18 @@ class Evaluator(object):
 
 # test
 
-# train_attributes, train_labels = hp.read_file("data/train_full.txt")
-# dtClassifier = cf.DecisionTreeClassifier()
-# dtClassifier.train(train_attributes, train_labels)
+train_attributes, train_labels = hp.read_file("data/train_full.txt")
+dtClassifier = cf.DecisionTreeClassifier()
+dtClassifier.train(train_attributes, train_labels)
 
-# test_attributes, test_labels = hp.read_file("data/test.txt")
-# predictions = dtClassifier.predict(test_attributes)
+test_attributes, test_labels = hp.read_file("data/test.txt")
+predictions = dtClassifier.predict(test_attributes)
 
-# evaluator = Evaluator()
-# confusion = evaluator.confusion_matrix(predictions, test_labels)
-# print(confusion)
+evaluator = Evaluator()
+confusion = evaluator.confusion_matrix(predictions, test_labels)
+print(confusion)
 
-# print(evaluator.accuracy(confusion))
-# print(evaluator.precision(confusion))
-# print(evaluator.recall(confusion))
-# print(evaluator.f1_score(confusion))
+print(evaluator.accuracy(confusion))
+print(evaluator.precision(confusion))
+print(evaluator.recall(confusion))
+print(evaluator.f1_score(confusion))

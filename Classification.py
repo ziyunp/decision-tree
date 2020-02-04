@@ -11,7 +11,7 @@ import numpy as np
 
 # own libraries
 import helpers as hp
-import node as nd
+import Node as nd
 import json
 
 

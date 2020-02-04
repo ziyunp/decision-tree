@@ -1,5 +1,5 @@
 import numpy as np
-from classification import *
+from Classification import *
 from helpers import *
 from eval import *
 
@@ -9,7 +9,7 @@ def split_dataset(filename, k):
     dataset = get_data(attributes, labels)
     length = len(dataset)
 
-    if ((k <= 0) or (k > length)):
+    if ((k <= 1) or (k > length)):
         print("Error: invalid k value")
         return
 
@@ -61,6 +61,8 @@ def run(training_dataset, test_dataset):
 
     # print("Evaluating test predictions...")
     evaluator = Evaluator()
+    
+    # requires str in both params
     confusion = evaluator.confusion_matrix(predictions, y_test)
     
     # print("Confusion matrix:")

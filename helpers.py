@@ -28,7 +28,7 @@ def read_file(filename):
     return attributes, labels
 
 def get_data(attributes, labels):
-    labels = np.array([[ord(labels[i])] for i in range(len(labels))])
+    labels = np.array([[ord(label)] for label in labels])
     return np.append(attributes, labels, axis=1)
 
 
@@ -59,8 +59,7 @@ def sort_by_attr_and_label(data, col):
         return sortedArr
 
 
-def calc_entropy(dataset):
-    freq = get_frequency(dataset)
+def calc_entropy(freq):
     total = sum(freq.values())
     entropy = 0
 
@@ -73,7 +72,9 @@ def calc_entropy(dataset):
 def calc_info_gain(base_entropy, true_data, false_data):
     data_count= len(true_data) + len(false_data)
     p = len(true_data) / data_count
-    child_entropy = p * calc_entropy(true_data) + (1-p) * calc_entropy(false_data)
+    true_freq = get_frequency(true_data)
+    false_freq = get_frequency(false_data)
+    child_entropy = p * calc_entropy(true_freq) + (1-p) * calc_entropy(false_freq)
     return base_entropy - child_entropy
 
 # def checkIG(data, attr, split_point):
@@ -101,8 +102,8 @@ def split(dataset, split_info):
 def find_best_split(dataset):
     best_info_gain = 0
     best_split = si.SplitInfo(None, None)
-
-    base_entropy = calc_entropy(dataset)
+    dataset_freq = get_frequency(dataset)
+    base_entropy = calc_entropy(dataset_freq)
 
     for attr in range (len(dataset[0]) - 1):
         sorted_arr = sort_by_attr_and_label(dataset, attr)
@@ -132,12 +133,12 @@ def get_major_label(probabilities):
     return keys[values.index(max(values))]
 
 
-def get_probabilities(currentFrequency, initialFrequency):
+def get_probabilities(current_frequency, initial_frequency):
 
     probabilities = {}
-    total = sum(currentFrequency.values())
+    total = sum(current_frequency.values())
 
-    for item in currentFrequency:
-        probabilities[item] = currentFrequency[item] / (initialFrequency[item] if bool(initialFrequency) else total)
+    for item in current_frequency:
+        probabilities[item] = current_frequency[item] / (initial_frequency[item] if bool(initial_frequency) else total)
 
     return probabilities
