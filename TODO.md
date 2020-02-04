@@ -1,47 +1,20 @@
-# Functions
-attr[]: n columns of integers
-labels[]: 1 column of letter
+1. Visualisation tree (entropy each level) + limit depth (alex)
+<!-- 2. JSON ? -->
+3. Pruning (K&K)
+4. Report (everyone)
+5. Remove sorting function? / findbestsplitpoint improvement (ziyun)
 
 
-dataset[]
+# REPORT
 
-<!-- Already have pseudo code -->
-function main(dataset): 
-    return node
+## Part 2
+- 2.1, 2.2: ziyun
+- 2.3: alex
+- Q2.1: ziyun
 
-function split(splitPoint):
-    return subset1, subset2
+## Part 3
+- Q3.1, Q3.1: kai
+- 3.6, Q3.3, Q3.4, Q3.5: alex
 
-
-
-
-
-function findbest_splitPoint():
-    <!-- compute base entropy here -->
-   return best_splitPoint
-
-
-
-<!-- Numpy function ? -->
-function sortCategory():
-function sortLabel():
-
-
-function entropy(subset):
-    return entropy
-
-function IG(base, subset1, subset2):
-    return IG
-
-function getLabel(ascii):
-
-class Node: (abstract class) (subset)
-    entropy
-
-class Decision_node:
-    splitPoint
-    subset1
-    subset2
-
-class Leaf_node:
-    set
+## Part 4
+- ken
