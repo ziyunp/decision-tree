@@ -2,8 +2,8 @@ import numpy as np
 
 # own libraries
 import helpers as hp
-import node as nd
-import classification as cf
+import Node as nd
+import Classification as cf
 import eval as ev
 import copy as cp
 

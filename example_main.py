@@ -6,7 +6,7 @@
 
 import numpy as np
 
-from classification import DecisionTreeClassifier
+from Classification import DecisionTreeClassifier
 from eval import Evaluator
 
 if __name__ == "__main__":
