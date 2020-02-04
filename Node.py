@@ -37,9 +37,6 @@ class Decision_node(Node):
         self.child_true = child_true
         self.child_false = child_false
 
-        # Before pruning, there is no label stored in the Decision nodes but after pruning, the 
-        # decision node is effectively a Leaf_node
-
     def print(self, layer, json_data):
         for _ in range(layer):
             print('--', end='')
@@ -53,7 +50,6 @@ class Decision_node(Node):
         self.child_true.print(layer + 1, json_data[0]['child_true'])
         self.child_false.print(layer + 1, json_data[0]['child_false'])
 
-
     def question(self, attributes):        
         if (int(attributes[self.split_info.attribute]) < int(self.split_info.value)):
             return self.child_true.question(attributes)
@@ -62,11 +58,11 @@ class Decision_node(Node):
 
 class Leaf_node(Node):
 
-    def __init__(self, dataset, freq):
+    def __init__(self, dataset, init_freq):
         super().__init__()
         self.dataset = dataset
-        self.freq = freq
-        self.predictions = hp.get_probabilities(hp.get_frequency(dataset), freq)
+        self.init_freq = init_freq
+        self.predictions = hp.get_probabilities(hp.get_frequency(dataset), init_freq)
         self.label = hp.get_major_label(self.predictions)
 
     def print(self, layer, json_data):

@@ -25,7 +25,7 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
             base_accuracy = evaluator.accuracy(base_confusion)
 
             dataset = np.append(node.child_true.dataset, node.child_false.dataset, axis=0)
-            freq = node.child_true.freq
+            freq = node.child_true.init_freq
             # print(freq)
             # print(prev_node, 'before reassign', prev_node.child_true, prev_node.child_false)
             if left:
