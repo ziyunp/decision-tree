@@ -58,11 +58,11 @@ class Decision_node(Node):
 
 class Leaf_node(Node):
 
-    def __init__(self, dataset, init_freq):
+    def __init__(self, cur_freq, init_freq):
         super().__init__()
-        self.dataset = dataset
+        self.cur_freq = cur_freq
         self.init_freq = init_freq
-        self.predictions = hp.get_probabilities(hp.get_frequency(dataset), init_freq)
+        self.predictions = hp.get_probabilities(self.cur_freq, self.init_freq)
         self.label = hp.get_major_label(self.predictions)
 
     def print(self, layer, json_data):

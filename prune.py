@@ -24,16 +24,17 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
             base_confusion = evaluator.confusion_matrix(base_prediction, annotation)
             base_accuracy = evaluator.accuracy(base_confusion)
 
-            dataset = np.append(node.child_true.dataset, node.child_false.dataset, axis=0)
+            cur_freq = cp.copy(node.child_true.cur_freq)
+            cur_freq.update(node.child_false.cur_freq)
             init_freq = node.child_true.init_freq
             # print(freq)
             # print(prev_node, 'before reassign', prev_node.child_true, prev_node.child_false)
             if left:
                 saved = cp.deepcopy(prev_node.child_true)
-                prev_node.child_true = nd.Leaf_node(dataset, init_freq)
+                prev_node.child_true = nd.Leaf_node(cur_freq, init_freq)
             elif not left:
                 saved = cp.deepcopy(prev_node.child_false)
-                prev_node.child_false = nd.Leaf_node(dataset, init_freq)
+                prev_node.child_false = nd.Leaf_node(cur_freq, init_freq)
 
             # print(prev_node, 'after reassign', prev_node.child_true, prev_node.child_false)
 
