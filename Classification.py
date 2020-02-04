@@ -35,9 +35,10 @@ class DecisionTreeClassifier(object):
 
     def __init__(self):
         self.is_trained = False
+        self.init_freq = {}
     
 
-    def induce_decision_tree(self, dataset, freq = {}, accuracy = 0):
+    def induce_decision_tree(self, dataset, accuracy = 0):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -52,16 +53,16 @@ class DecisionTreeClassifier(object):
             The root node of the induced decision tree
         
         """
-        # recursively inducing a decision tree
-        current_shares = hp.get_probabilities(hp.get_frequency(dataset), freq)
-        max_share = max(current_shares.values())
+        current_shares = hp.get_probabilities(hp.get_frequency(dataset), self.init_freq)
+        max_share = max(current_shares.values()) 
+
         best_split = hp.find_best_split(dataset)
         if (best_split.attribute == None or max_share < 0.00): # all samples have the same label or cannot be split
-            node = nd.Leaf_node(dataset, freq)
+            node = nd.Leaf_node(hp.get_frequency(dataset), self.init_freq)
         else :
             true_data, false_data = hp.split(dataset, best_split)
-            child_true = self.induce_decision_tree(true_data, freq)
-            child_false = self.induce_decision_tree(false_data, freq)
+            child_true = self.induce_decision_tree(true_data)
+            child_false = self.induce_decision_tree(false_data)
             node = nd.Decision_node(best_split, child_true, child_false)
         return node 
     
@@ -88,7 +89,8 @@ class DecisionTreeClassifier(object):
             "Training failed. x and y must have the same number of instances."
         
         dataset = hp.get_data(x, y)
-        self.tree = self.induce_decision_tree(dataset, hp.get_frequency(dataset))
+        self.init_freq = hp.get_frequency(dataset)
+        self.tree = self.induce_decision_tree(dataset)
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True
