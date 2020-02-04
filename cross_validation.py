@@ -47,8 +47,8 @@ def cross_validation(filename, k):
 
 def run(training_dataset, test_dataset):
 
-    x,y = training_dataset[:,:-1], training_dataset[:,-1]
-    x_test, y_test = test_dataset[:,:-1], test_dataset[:,-1]
+    x,y = training_dataset[:,:-1], [chr(training_dataset[i][-1]) for i in range(len(training_dataset))]
+    x_test, y_test = test_dataset[:,:-1], [chr(test_dataset[i][-1]) for i in range(len(test_dataset))]
 
     # print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
@@ -63,10 +63,7 @@ def run(training_dataset, test_dataset):
     evaluator = Evaluator()
     
     # requires str in both params
-    annotations = []
-    for i in range(len(y_test)):
-        annotations.append(chr(y_test[i]))
-    confusion = evaluator.confusion_matrix(predictions, annotations)
+    confusion = evaluator.confusion_matrix(predictions, y_test)
     
     # print("Confusion matrix:")
     # print(confusion)
