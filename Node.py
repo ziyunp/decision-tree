@@ -9,6 +9,12 @@ class Node:
     def question(self, attributes):
         raise NotImplementedError
 
+    def get_entropy(self):
+        raise NotImplementedError
+
+    def get_cur_freq(self):
+        raise NotImplementedError
+
 
 class Decision_node(Node):
     """
@@ -55,6 +61,14 @@ class Decision_node(Node):
             return self.child_true.question(attributes)
         else:
             return self.child_false.question(attributes)
+    
+    def get_cur_freq(self):
+        ret_freq = hp.merge_freq(self.child_true.get_cur_freq(), self.child_false.get_cur_freq())
+        return ret_freq
+
+    def get_entropy(self):
+        cur_freq = self.get_cur_freq()
+        return hp.calc_entropy(cur_freq)
 
 class Leaf_node(Node):
 
@@ -75,3 +89,9 @@ class Leaf_node(Node):
 
     def question(self, attributes):
         return self.label
+
+    def get_cur_freq(self):
+        return self.cur_freq
+
+    def get_entropy(self):
+        return hp.calc_entropy(self.cur_freq)
