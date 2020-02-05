@@ -36,9 +36,12 @@ class DecisionTreeClassifier(object):
     def __init__(self):
         self.is_trained = False
         self.init_freq = {}
+        self.max_share_hyperparameter = 0.00
     
+    def set_max_share_hyperparameter(self, value):
+        self.max_share_hyperparameter = value
 
-    def induce_decision_tree(self, dataset, accuracy = 0):
+    def induce_decision_tree(self, dataset):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -57,7 +60,7 @@ class DecisionTreeClassifier(object):
         max_share = max(current_shares.values()) 
 
         best_split = hp.find_best_split(dataset)
-        if (best_split.attribute == None or max_share < 0.00): # all samples have the same label or cannot be split
+        if (best_split.attribute == None or max_share < self.max_share_hyperparameter): # all samples have the same label or cannot be split
             node = nd.Leaf_node(hp.get_frequency(dataset), self.init_freq)
         else :
             true_data, false_data = hp.split(dataset, best_split)

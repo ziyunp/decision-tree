@@ -18,9 +18,6 @@ import helpers as hp
 import classification as cf
 import Node as nd
 
-
-
-
 class Evaluator(object):
     """ Class to perform evaluation
     """
@@ -275,18 +272,26 @@ class Evaluator(object):
 
 # test
 
-train_attributes, train_labels = hp.read_file("data/train_full.txt")
-dtClassifier = cf.DecisionTreeClassifier()
-dtClassifier.train(train_attributes, train_labels)
+# train_attributes, train_labels = hp.read_file("data/train_full.txt")
+# dtClassifier = cf.DecisionTreeClassifier()
+# dtClassifier.train(train_attributes, train_labels)
 
-test_attributes, test_labels = hp.read_file("data/test.txt")
-predictions = dtClassifier.predict(test_attributes)
+# test_attributes, test_labels = hp.read_file("data/test.txt")
+# predictions = dtClassifier.predict(test_attributes)
+# predictions_cross_validation = cross_validation("data/train_full.txt", 10).predict(test_attributes)
 
-evaluator = Evaluator()
-confusion = evaluator.confusion_matrix(predictions, test_labels)
-print(confusion)
+# evaluator = Evaluator()
+# confusion = evaluator.confusion_matrix(predictions, test_labels)
+# confusion_cross_validation = evaluator.confusion_matrix(predictions_cross_validation, test_labels)
+# print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
+# print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cross_validation))
 
-print(evaluator.accuracy(confusion))
-print(evaluator.precision(confusion))
-print(evaluator.recall(confusion))
-print(evaluator.f1_score(confusion))
+
+
+
+
+# print(confusion)
+
+# print(evaluator.precision(confusion))
+# print(evaluator.recall(confusion))
+# print(evaluator.f1_score(confusion))
