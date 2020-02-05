@@ -11,41 +11,24 @@ def analyse(filename):
   attr_max = np.amax(attr, axis = 0)
   attr_min = np.amin(attr, axis = 0)
   for i in range(len(attr[0])):
-    print("Range of attribute ", i, " is {} - {}".format(attr_min[i], attr_max[i]))
+    print("Attribute ", i, ": {} - {}".format(attr_min[i], attr_max[i]))
 
-  # range of labels
   dataset = get_data(attr, label)
-  class_frequency = get_frequency(dataset)
-  for key in class_frequency:
-    print(chr(key), ": ", class_frequency[key])
-
-# Difference between train_full and train_sub
-def class_distribution(file1, file2):
-  attr1, label1 = read_file(file1)
-  attr2, label2 = read_file(file2)
-  dataset1 = get_data(attr1, label1)
-  dataset2 = get_data(attr2, label2)
-
-  frequency1 = get_frequency(dataset1)
-  frequency2 = get_frequency(dataset2)
-
-  distr1 = {}
-  distr2 = {}
-
-  for key in frequency1:
-    distr1[chr(key)] = frequency1[key]/len(dataset1)
-  for key in frequency2:
-    distr2[chr(key)] = frequency2[key]/len(dataset2)
-
-  print("Distribution in ", file1, ": ")
-  for key in distr1:
-    print(key, ": ", round(distr1[key]*100, 2), "%")
-  print("Distribution in ", file2, ": ")
-  for key in distr2:
-    print(key, ": ", round(distr2[key]*100, 2), "%")
+  frequency = get_frequency(dataset)
+  distr = {}
+  
+  # frequency of labels
+  print("Frequency of labels: ")
+  for key in frequency:
+    print(chr(key), ": ", frequency[key])
+    distr[chr(key)] = frequency[key]/len(dataset)    
+  
+  # class distribution
+  print("Class distribution: ")
+  for key in distr:
+    print(key, ": ", round(distr[key]*100, 2), "%")
 
 
-# Difference of labels between train_full and train_noisy
 def proportion_of_difference(file1, file2):
   attr1, label1 = read_file(file1)
   attr2, label2 = read_file(file2)
@@ -55,14 +38,15 @@ def proportion_of_difference(file1, file2):
   frequency1 = get_frequency(dataset1)
   frequency2 = get_frequency(dataset2)
   difference = {}
-  
+
+  print("Difference of label: ")
   for key in frequency2:
     diff = frequency2[key] - frequency1[key]
+    print(key, ": ", diff)
     difference[chr(key)] = diff if diff >= 0 else -(diff)
   
   total_diff = 0
   for key in difference:
-    print("Difference of label ", key, ": ", difference[key])
     total_diff += difference[key] 
   
   proportion = total_diff / len(dataset2)
@@ -85,11 +69,8 @@ def map_att_to_label(filename):
     if len(att_label[key].keys()) > 1:
       inconsistent_count += 1
       # print("Inconsistent class: ", key, ": ", att_label[key])
-    # else:
-    #   for label in att_label[key]:
-    #     if att_label[key][label] > 1:
-    #       print(key, ": ", att_label[key])
-  print("Number of attribute strings that have more than one class labels: ", inconsistent_count)
+
+  print("Number of attribute strings that have more than one class labels in {}: \n{}".format(filename, inconsistent_count))
   return att_label
 
 def match_att_label(file1, file2):
@@ -108,12 +89,12 @@ def match_att_label(file1, file2):
   print("Number of instances with mismatched labels: ", mismatch_count)
 
 
-# analyse("data/train_full.txt")
-# analyse("data/train_noisy.txt")
-# analyse("data/train_sub.txt")
+analyse("data/train_full.txt")
+analyse("data/train_noisy.txt")
+analyse("data/train_sub.txt")
 
-# class_distribution("data/train_full.txt", "data/train_sub.txt")
-# proportion_of_difference("data/train_full.txt", "data/train_noisy.txt")
+# Difference of labels between train_full and train_noisy
+proportion_of_difference("data/train_full.txt", "data/train_noisy.txt")
 
-# map_att_to_label("data/train_noisy.txt")
-# match_att_label("data/train_full.txt", "data/train_noisy.txt")
+# Difference of attribute-labels between train_full and train_noisy
+match_att_label("data/train_full.txt", "data/train_noisy.txt")
