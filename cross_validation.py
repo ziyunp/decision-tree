@@ -38,8 +38,10 @@ def cross_validation(filename, k):
                 training_dataset = np.append(training_dataset, training_subset, axis=0)
         accuracy.append(run(training_dataset, test_dataset))
 
-    for i in range (len(accuracy)):
-        total += 1 - accuracy[i]
+    # for i in range (len(accuracy)):
+    #     total += 1 - accuracy[i]
+
+    total = np.nansum([1 - acc for acc in accuracy])
 
     global_error = total / len(accuracy)
 
