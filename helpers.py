@@ -76,7 +76,6 @@ def calc_info_gain(base_entropy, true_data, false_data):
     false_freq = get_frequency(false_data)
     child_entropy = p * calc_entropy(true_freq) + (1-p) * calc_entropy(false_freq)
     return base_entropy - child_entropy
-
 # def checkIG(data, attr, split_point):
 #     # split in 2 subsets
 #     subset1 = []
@@ -107,36 +106,22 @@ def find_best_split(dataset):
 
     for attr in range (len(dataset[0]) - 1):
         sorted_arr = sort_by_attr_and_label(dataset, attr)
-        prev_class = sorted_arr[0][LABEL_COL]
-        first_attr_value = sorted_arr[0][attr]
-        used_split_point = None
 
-        # start checking from 1st index because splitting at 0th index will return the original array
+        # find split points
+        prev_split_point = sorted_arr[0][attr]
+        # start checking from 1st value because splitting at 0th index will return the original array
         for row in range (1, len(sorted_arr)):
+
             split_point = sorted_arr[row][attr]
-            cur_class = sorted_arr[row][LABEL_COL]
-            class_changed = cur_class != prev_class
 
-            # only consider split points between attribute values that have different class labels
-            if (class_changed):
-                # shift to the next value if this is the first attr value
-                # splitting before first attr value returns the original array
-                while split_point == first_attr_value and row+1 < len(sorted_arr):
-                    row += 1
-                    split_point = sorted_arr[row][attr]
-                
-                # prevents repeated split point 
-                if split_point != used_split_point and split_point != first_attr_value:
-                    used_split_point = split_point
-                    # check info gain
-                    true_data, false_data = split(dataset, si.SplitInfo(attr, split_point))
-                    info_gain = calc_info_gain(base_entropy, true_data, false_data)
-                    if info_gain > best_info_gain:
-                        best_info_gain = info_gain
-                        best_split = si.SplitInfo(attr, split_point)
-            
-            prev_class = cur_class
-
+            if (prev_split_point != split_point):
+                # check info gain
+                true_data, false_data = split(dataset, si.SplitInfo(attr, split_point))
+                info_gain = calc_info_gain(base_entropy, true_data, false_data)
+                if info_gain > best_info_gain:
+                    best_info_gain = info_gain
+                    best_split = si.SplitInfo(attr, split_point)
+            prev_split_point = split_point
     return best_split
 
 def get_major_label(probabilities):
