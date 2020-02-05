@@ -28,15 +28,18 @@ def cross_validation(filename, k):
     total = 0
 
     for i in range (k):
-        test_dataset = []
         training_dataset = []
+        validation_dataset = []
+        test_dataset = []
         test_dataset = subsets[i]
         for training_subset in np.delete(subsets, i, 0):
-            if (len(training_dataset) == 0):
+            if (len(validation_dataset) == 0):
+                validation_dataset = training_subset
+            elif (len(training_dataset) == 0):
                 training_dataset = training_subset
             else:
                 training_dataset = np.append(training_dataset, training_subset, axis=0)
-        accuracy.append(run(training_dataset, test_dataset))
+        accuracy.append(run(training_dataset, validation_dataset, test_dataset))
 
     for i in range (len(accuracy)):
         total += 1 - accuracy[i]
@@ -45,9 +48,10 @@ def cross_validation(filename, k):
 
     return global_error
 
-def run(training_dataset, test_dataset):
+def run(training_dataset, validation_dataset, test_dataset):
 
     x,y = training_dataset[:,:-1], [chr(training_dataset[i][-1]) for i in range(len(training_dataset))]
+    x_validation, y_validation = validation_dataset[:,:-1], [chr(validation_dataset[i][-1]) for i in range(len(validation_dataset))]
     x_test, y_test = test_dataset[:,:-1], [chr(test_dataset[i][-1]) for i in range(len(test_dataset))]
 
     # print("Training the decision tree...")
