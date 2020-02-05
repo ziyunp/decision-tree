@@ -38,7 +38,7 @@ class DecisionTreeClassifier(object):
         self.init_freq = {}
         self.max_share_hyperparameter = 0.00
     
-    def set_max_share_hyperparameter(value):
+    def set_max_share_hyperparameter(self, value):
         self.max_share_hyperparameter = value
 
     def induce_decision_tree(self, dataset):

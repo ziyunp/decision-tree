@@ -44,17 +44,19 @@ class Decision_node(Node):
         self.child_false = child_false
 
     def print(self, layer, json_data):
-        for _ in range(layer):
-            print('--', end='')
-        print("Decision Node: Attribute {} is smaller than {}?"
-            .format(self.split_info.attribute, self.split_info.value))
-        json_data.append({
-            "split_point": [self.split_info.attribute, int(self.split_info.value)],
-            "child_true": [],
-            "child_false": []
-        })
-        self.child_true.print(layer + 1, json_data[0]['child_true'])
-        self.child_false.print(layer + 1, json_data[0]['child_false'])
+        if (layer <= 10):
+            for _ in range(layer):
+                print('    ', end='')
+            print("+---- ", end='')
+            print("Decision Node: Attribute {} is smaller than {}?"
+                .format(self.split_info.attribute, self.split_info.value))
+            json_data.append({
+                "split_point": [self.split_info.attribute, int(self.split_info.value)],
+                "child_true": [],
+                "child_false": []
+            })
+            self.child_true.print(layer + 1, json_data[0]['child_true'])
+            self.child_false.print(layer + 1, json_data[0]['child_false'])
 
     def question(self, attributes):        
         if (int(attributes[self.split_info.attribute]) < int(self.split_info.value)):
@@ -80,12 +82,14 @@ class Leaf_node(Node):
         self.label = hp.get_major_label(self.predictions)
 
     def print(self, layer, json_data):
-        for _ in range(layer):
-            print('--', end='')
-        json_data.append({
-            "label": chr(self.label)
-        })        
-        print("Leaf Node: Label is {}".format(chr(self.label)))
+        if (layer <= 10):
+            for _ in range(layer):
+                print('    ', end='')
+            print("+---- ", end='')
+            json_data.append({
+                "label": chr(self.label)
+            })        
+            print("Leaf {}".format(chr(self.label)))
 
     def question(self, attributes):
         return self.label
