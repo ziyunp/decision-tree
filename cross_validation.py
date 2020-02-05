@@ -1,5 +1,5 @@
 import numpy as np
-from Classification import *
+from classification import *
 from helpers import *
 from eval import *
 
