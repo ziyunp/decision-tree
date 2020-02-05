@@ -3,7 +3,7 @@ import numpy as np
 # own libraries
 import helpers as hp
 import Node as nd
-import Classification as cf
+import classification as cf
 import eval as ev
 import copy as cp
 

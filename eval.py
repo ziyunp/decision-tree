@@ -15,7 +15,7 @@
 import numpy as np
 
 import helpers as hp
-import Classification as cf
+import classification as cf
 import Node as nd
 
 
