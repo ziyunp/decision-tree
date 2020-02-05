@@ -68,12 +68,20 @@ def calc_entropy(freq):
 
     return entropy
 
+def calc_info_gain(sorted_dataset, split_info):
+    dataset_freq = get_frequency(sorted_dataset)
+    base_entropy = calc_entropy(dataset_freq)
+    data_count = len(sorted_dataset)
 
-def calc_info_gain(base_entropy, true_data, false_data):
-    data_count= len(true_data) + len(false_data)
-    p = len(true_data) / data_count
-    true_freq = get_frequency(true_data)
-    false_freq = get_frequency(false_data)
+    for i in range (len(sorted_dataset)):
+        if not split_info.match(sorted_dataset[i]):
+            split_index = i
+            break
+
+    p = split_index / data_count
+    true_freq = get_frequency(sorted_dataset[0:split_index])
+    false_freq = get_frequency(sorted_dataset[split_index:])
+
     child_entropy = p * calc_entropy(true_freq) + (1-p) * calc_entropy(false_freq)
     return base_entropy - child_entropy
 # def checkIG(data, attr, split_point):
@@ -101,8 +109,6 @@ def split(dataset, split_info):
 def find_best_split(dataset):
     best_info_gain = 0
     best_split = si.SplitInfo(None, None)
-    dataset_freq = get_frequency(dataset)
-    base_entropy = calc_entropy(dataset_freq)
 
     for attr in range (len(dataset[0]) - 1):
         sorted_arr = sort_by_attr_and_label(dataset, attr)
@@ -116,8 +122,7 @@ def find_best_split(dataset):
 
             if (prev_split_point != split_point):
                 # check info gain
-                true_data, false_data = split(dataset, si.SplitInfo(attr, split_point))
-                info_gain = calc_info_gain(base_entropy, true_data, false_data)
+                info_gain = calc_info_gain(sorted_arr, si.SplitInfo(attr, split_point))
                 if info_gain > best_info_gain:
                     best_info_gain = info_gain
                     best_split = si.SplitInfo(attr, split_point)
