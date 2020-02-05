@@ -71,6 +71,7 @@ def cross_validation(filename, k, hyperparameter_tuning = False):
             models_list.append([accuracy_test, tree])
 
             print("======================")
+    # total = np.nansum([1 - acc for acc in accuracy])
 
 
         else:

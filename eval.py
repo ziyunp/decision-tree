@@ -15,7 +15,7 @@
 import numpy as np
 
 import helpers as hp
-import Classification as cf
+import classification as cf
 import Node as nd
 
 class Evaluator(object):
@@ -59,7 +59,6 @@ class Evaluator(object):
                 row_num = annotation_index[0][0]
                 col_num = prediction_index[0][0]
                 confusion[row_num][col_num] += 1
-        # TODO: throw error if prediction is not found in the class_labels?
         return confusion
     
     
@@ -77,18 +76,17 @@ class Evaluator(object):
         float
             The accuracy (between 0.0 to 1.0 inclusive)
         """
-        accuracy = 0.0
-        true_total = 0
+        total_true = 0
         total = 0
         for i in range (len(confusion)):
-            true_total += confusion[i][i]
+            total_true += confusion[i][i]
             for j in range(len(confusion)):
                 total += confusion[i][j]
-        if total > 0:
-            raw_accuracy = true_total / total
-            # accuracy = round(raw_accuracy, 1)
+        accuracy = total_true / total
+        if total == 0:
+            print("Error in accuracy(): Division by zero!")
 
-        return raw_accuracy
+        return accuracy
 
     def precision(self, confusion):
         """ Computes the precision score per class given a confusion matrix.
@@ -118,8 +116,9 @@ class Evaluator(object):
             true_positive = confusion[i][i]
             for j in range (len(confusion)):
                 total_predicted_positive += confusion[j][i]
-            if total_predicted_positive > 0:
-                precision[i] = true_positive / total_predicted_positive
+            precision[i] = true_positive / total_predicted_positive
+            if total_predicted_positive == 0:
+                print("Error in precision(): Division by zero!")
     
         macro_precision = 0
         for i in range (len(precision)):
@@ -157,8 +156,9 @@ class Evaluator(object):
             total_actual_positive = 0
             for j in range(len(confusion)):
                 total_actual_positive += confusion[i][j]
-            if total_actual_positive > 0: 
-                recall[i] = confusion[i][i] / total_actual_positive
+            recall[i] = confusion[i][i] / total_actual_positive
+            if total_actual_positive == 0:
+                print("Error in recall(): Division by zero!")
         
         # You will also need to change this        
         macro_recall = 0
