@@ -1,7 +1,6 @@
 import numpy as np
 from helpers import *
-from Classification import *
-import Node as nd
+from classification import *
 from eval import *
 
 def split_dataset(filename, k):
@@ -120,39 +119,5 @@ def run(training_dataset, test_dataset, max_share):
     # print(confusion)
 
     accuracy = evaluator.accuracy(confusion)
-    # print()
-    # print("Accuracy: {}".format(accuracy))
-
-    (p, macro_p) = evaluator.precision(confusion)
-    (r, macro_r) = evaluator.recall(confusion)
-    (f, macro_f) = evaluator.f1_score(confusion)
-
-    # print()
-    # print("Class: Precision, Recall, F1")
-    # for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-    #     print("{}: {:.2f}, {:.2f}, {:.2f}".format(class_labels[i], p1, r1, f1));
-   
-    # print() 
-    # print("Macro-averaged Precision: {:.2f}".format(macro_p))
-    # print("Macro-averaged Recall: {:.2f}".format(macro_r))
-    # print("Macro-averaged F1")
-
-    # print("======================")
 
     return accuracy, classifier
-
-
-
-train_attributes, train_labels = read_file("data/train_full.txt")
-dtClassifier = DecisionTreeClassifier()
-dtClassifier.train(train_attributes, train_labels)
-
-test_attributes, test_labels = read_file("data/test.txt")
-predictions = dtClassifier.predict(test_attributes)
-predictions_cross_validation = cross_validation("data/train_full.txt", 10).predict(test_attributes)
-
-evaluator = Evaluator()
-confusion = evaluator.confusion_matrix(predictions, test_labels)
-confusion_cross_validation = evaluator.confusion_matrix(predictions_cross_validation, test_labels)
-print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
-print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cross_validation))
