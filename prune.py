@@ -62,6 +62,8 @@ train_attributes, train_labels = hp.read_file("data/train_full.txt")
 dtClassifier = cf.DecisionTreeClassifier()
 dtClassifier.train(train_attributes, train_labels)
 
+print(dtClassifier.tree.get_depth(0))
+
 # print()
 # print(dtClassifier.tree.get_cur_freq())
 # print(dtClassifier.tree.get_entropy())

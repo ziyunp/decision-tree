@@ -14,6 +14,9 @@ class Node:
 
     def get_cur_freq(self):
         raise NotImplementedError
+    
+    def get_depth(self, cur_depth):
+        raise NotImplementedError
 
 
 class Decision_node(Node):
@@ -70,6 +73,9 @@ class Decision_node(Node):
         cur_freq = self.get_cur_freq()
         return hp.calc_entropy(cur_freq)
 
+    def get_depth(self, cur_depth):
+        return max(self.child_true.get_depth(cur_depth + 1), self.child_false.get_depth(cur_depth + 1))
+
 class Leaf_node(Node):
 
     def __init__(self, cur_freq, init_freq):
@@ -95,3 +101,6 @@ class Leaf_node(Node):
 
     def get_entropy(self):
         return hp.calc_entropy(self.cur_freq)
+
+    def get_depth(self, cur_depth):
+        return cur_depth
