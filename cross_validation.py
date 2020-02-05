@@ -1,6 +1,6 @@
 import numpy as np
-from classification import *
 from helpers import *
+from classification import *
 from eval import *
 
 def split_dataset(filename, k):
@@ -13,6 +13,8 @@ def split_dataset(filename, k):
         print("Error: invalid k value")
         return
 
+    # Shuffle
+    np.random.shuffle(dataset)
     subsets = []
     divider = length // k
     for i in range (k):
@@ -21,37 +23,85 @@ def split_dataset(filename, k):
     return np.array(subsets)
 
 
-def cross_validation(filename, k):
+def cross_validation(filename, k, hyperparameter_tuning = False):
 
     subsets = split_dataset(filename, k)
-    accuracy = [] 
-    total = 0
+    models_list = [] 
 
-    for i in range (k):
-        test_dataset = []
+    for i in range (k - 1):
+        accuracy_list = [] 
         training_dataset = []
+        if hyperparameter_tuning:
+            validation_dataset = []
+        test_dataset = []
         test_dataset = subsets[i]
         for training_subset in np.delete(subsets, i, 0):
-            if (len(training_dataset) == 0):
+            if (hyperparameter_tuning and len(validation_dataset) == 0):
+                validation_dataset = training_subset
+            elif (len(training_dataset) == 0):
                 training_dataset = training_subset
             else:
                 training_dataset = np.append(training_dataset, training_subset, axis=0)
-        accuracy.append(run(training_dataset, test_dataset))
+        
 
-    for i in range (len(accuracy)):
-        total += 1 - accuracy[i]
+        if hyperparameter_tuning:
+            # Trying different hyperparameters
+            for max_share in np.arange (0.00, 0.01, 0.002):
+                accuracy, tree = run(training_dataset, validation_dataset, max_share)
+                accuracy_list.append([max_share, accuracy, tree])
 
-    global_error = total / len(accuracy)
+            best_max_share = accuracy_list[0][0]
+            best_accuracy = accuracy_list[0][1]
+            best_tree = accuracy_list[0][2]
 
-    return global_error
+            # Finding the best accuracy
+            for j in range (1, len(accuracy_list)):
+                if (accuracy_list[j][1] > best_accuracy):
+                    best_accuracy = accuracy_list[j][1]
+                    best_max_share = accuracy_list[j][0]
+                    best_tree = accuracy_list[j][2]
 
-def run(training_dataset, test_dataset):
+            print("Best max_share hyperparameter is: ", best_max_share)
+            print("Best accuracy is: ", best_accuracy)
+
+            accuracy_test, tree = run(training_dataset, test_dataset, best_max_share)
+            print("Accuracy on the test dataset with the best max_share is: ", accuracy_test)
+
+            models_list.append([accuracy_test, tree])
+
+            print("======================")
+    # total = np.nansum([1 - acc for acc in accuracy])
+
+
+        else:
+            accuracy_test, tree = run(training_dataset, test_dataset, 0)
+            models_list.append([accuracy_test, tree])
+
+    best_accuracy = models_list[0][0]
+    best_tree = models_list[0][1]
+    # Finding the best accuracy
+    for j in range (1, len(models_list)):
+        if (models_list[j][0] > best_accuracy):
+            best_accuracy = models_list[j][0]
+            best_tree = models_list[j][1]
+
+    average_accuracy = np.average([models_list[i][0] for i in range (len(models_list))])
+    standard_deviation = np.std([models_list[i][0] for i in range (len(models_list))])
+
+    print("Standard deviation: ", average_accuracy, " +- ", standard_deviation)
+
+    return best_tree
+
+
+
+def run(training_dataset, test_dataset, max_share):
 
     x,y = training_dataset[:,:-1], [chr(training_dataset[i][-1]) for i in range(len(training_dataset))]
     x_test, y_test = test_dataset[:,:-1], [chr(test_dataset[i][-1]) for i in range(len(test_dataset))]
 
     # print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
+    classifier.set_max_share_hyperparameter(max_share)
     classifier = classifier.train(x, y)
 
     # print("Testing the decision tree...")
@@ -69,29 +119,5 @@ def run(training_dataset, test_dataset):
     # print(confusion)
 
     accuracy = evaluator.accuracy(confusion)
-    # print()
-    # print("Accuracy: {}".format(accuracy))
 
-    (p, macro_p) = evaluator.precision(confusion)
-    (r, macro_r) = evaluator.recall(confusion)
-    (f, macro_f) = evaluator.f1_score(confusion)
-
-    # print()
-    # print("Class: Precision, Recall, F1")
-    # for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-    #     print("{}: {:.2f}, {:.2f}, {:.2f}".format(class_labels[i], p1, r1, f1));
-   
-    # print() 
-    # print("Macro-averaged Precision: {:.2f}".format(macro_p))
-    # print("Macro-averaged Recall: {:.2f}".format(macro_r))
-    # print("Macro-averaged F1")
-
-    # print("======================")
-
-    return accuracy
-
-# print(splitDataset("data/toy.txt", 11))
-# print("Error for k=", 2, "is", cross_validation("data/toy.txt", 2))
-for i in range (2, 11):
-    print("Error for k=", i, "is", cross_validation("data/simple1.txt", i))
-    
+    return accuracy, classifier

@@ -36,9 +36,12 @@ class DecisionTreeClassifier(object):
     def __init__(self):
         self.is_trained = False
         self.init_freq = {}
+        self.max_share_hyperparameter = 0.00
     
+    def set_max_share_hyperparameter(self, value):
+        self.max_share_hyperparameter = value
 
-    def induce_decision_tree(self, dataset, accuracy = 0):
+    def induce_decision_tree(self, dataset):
         """ Recursively inducing a decision tree
         
         Parameters
@@ -57,7 +60,7 @@ class DecisionTreeClassifier(object):
         max_share = max(current_shares.values()) 
 
         best_split = hp.find_best_split(dataset)
-        if (best_split.attribute == None or max_share < 0.00): # all samples have the same label or cannot be split
+        if (best_split.attribute == None or max_share < self.max_share_hyperparameter): # all samples have the same label or cannot be split
             node = nd.Leaf_node(hp.get_frequency(dataset), self.init_freq)
         else :
             true_data, false_data = hp.split(dataset, best_split)
@@ -129,41 +132,3 @@ class DecisionTreeClassifier(object):
     
         # remember to change this if you rename the variable
         return predictions
-
-
-
-
-# superTest = np.asarray([['A'], ['A'], ['A'], ['B'], ['A'], ['A'], ['B'], ['B']])
-# test = np.asarray([['A'], ['A'], ['A'], ['B']])
-# current_shares = hp.get_probabilities(hp.get_frequency(test), hp.get_frequency(superTest))
-# print(hp.get_frequency(test))
-
-# max_share = max(current_shares.values())
-# print(max_share)
-
-
-
-
-# # Tests
-
-### Hardcoded data ###
-# attributes, labels = hp.read_file("data/train_sub.txt")
-# jsonData = {}
-# jsonData["root"] = []
-######################
-
-# dtClassifier = DecisionTreeClassifier()
-# dtClassifier.train(attributes, labels).tree.print(0, json_data["root"])
-
-# test_attributes, test_labels = hp.read_file("data/test.txt")
-# predictions = dtClassifier.predict(test_attributes)
-
-# # correct = 0
-# # for i in range(len(test_labels)):
-# #     if (ord(predictions[i]) == test_labels[i]):
-# #         correct += 1
-# # print(correct / len(test_labels))
-
-
-# with open('save.json', 'w') as outfile:
-#     json.dump(json_data, outfile)

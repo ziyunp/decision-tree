@@ -18,9 +18,6 @@ import helpers as hp
 import classification as cf
 import Node as nd
 
-
-
-
 class Evaluator(object):
     """ Class to perform evaluation
     """
@@ -62,7 +59,6 @@ class Evaluator(object):
                 row_num = annotation_index[0][0]
                 col_num = prediction_index[0][0]
                 confusion[row_num][col_num] += 1
-        # TODO: throw error if prediction is not found in the class_labels?
         return confusion
     
     
@@ -80,18 +76,17 @@ class Evaluator(object):
         float
             The accuracy (between 0.0 to 1.0 inclusive)
         """
-        accuracy = 0.0
-        true_total = 0
+        total_true = 0
         total = 0
         for i in range (len(confusion)):
-            true_total += confusion[i][i]
+            total_true += confusion[i][i]
             for j in range(len(confusion)):
                 total += confusion[i][j]
-        if total > 0:
-            raw_accuracy = true_total / total
-            # accuracy = round(raw_accuracy, 1)
+        accuracy = total_true / total
+        if total == 0:
+            print("Error in accuracy(): Division by zero!")
 
-        return raw_accuracy
+        return accuracy
 
     def precision(self, confusion):
         """ Computes the precision score per class given a confusion matrix.
@@ -121,8 +116,9 @@ class Evaluator(object):
             true_positive = confusion[i][i]
             for j in range (len(confusion)):
                 total_predicted_positive += confusion[j][i]
-            if total_predicted_positive > 0:
-                precision[i] = true_positive / total_predicted_positive
+            precision[i] = true_positive / total_predicted_positive
+            if total_predicted_positive == 0:
+                print("Error in precision(): Division by zero!")
     
         macro_precision = 0
         for i in range (len(precision)):
@@ -160,8 +156,9 @@ class Evaluator(object):
             total_actual_positive = 0
             for j in range(len(confusion)):
                 total_actual_positive += confusion[i][j]
-            if total_actual_positive > 0: 
-                recall[i] = confusion[i][i] / total_actual_positive
+            recall[i] = confusion[i][i] / total_actual_positive
+            if total_actual_positive == 0:
+                print("Error in recall(): Division by zero!")
         
         # You will also need to change this        
         macro_recall = 0
@@ -207,86 +204,3 @@ class Evaluator(object):
         macro_f1 = macro_f1 / len(confusion)
         
         return (f1, macro_f1)
-   
- 
-
-# Test        
-# train_attributes, train_labels = hp.read_file("data/train_full.txt")
-# dataset = hp.get_data(train_attributes, train_labels)
-# freq = hp.get_frequency(dataset)
-# dtClassifier = cf.DecisionTreeClassifier()
-# dtClassifier.train(train_attributes, train_labels)
-# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
-# testrecursion(dtClassifier.tree, dataset, freq)
-# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
-
-
-# Test
-# train_attributes, train_labels = hp.read_file("data/train_full.txt")
-# dtClassifier = cf.DecisionTreeClassifier()
-# dtClassifier.train(train_attributes, train_labels)
-# test_attributes, test_labels = hp.read_file("data/test.txt")
-# predictions = dtClassifier.predict(test_attributes)
-
-# evaluator = Evaluator()
-# confusion = evaluator.confusion_matrix(predictions, test_labels)
-# print(confusion)
-
-# print(evaluator.accuracy(confusion))
-
-# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
-# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
-
-# dataset = hp.get_data(train_attributes, train_labels)
-# freq = hp.get_frequency(dataset)
-
-# saved = dtClassifier.tree.child_true
-# dtClassifier.tree.child_true = nd.Leaf_node(dataset, freq)
-# dtClassifier.tree.child_false = nd.Leaf_node(dataset, freq)
-
-
-# predictions = dtClassifier.predict(test_attributes)
-
-# evaluator = Evaluator()
-# confusion = evaluator.confusion_matrix(predictions, test_labels)
-# print(confusion)
-
-# print(evaluator.accuracy(confusion))
-
-# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
-# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
-
-# dtClassifier.tree.child_true = saved
-
-# predictions = dtClassifier.predict(test_attributes)
-
-# evaluator = Evaluator()
-# confusion = evaluator.confusion_matrix(predictions, test_labels)
-# print(confusion)
-
-# print(evaluator.accuracy(confusion))
-
-
-# print(isinstance(dtClassifier.tree.child_true, nd.Decision_node))
-# print(isinstance(dtClassifier.tree.child_false, nd.Decision_node))
-
-
-
-
-# test
-
-train_attributes, train_labels = hp.read_file("data/train_full.txt")
-dtClassifier = cf.DecisionTreeClassifier()
-dtClassifier.train(train_attributes, train_labels)
-
-test_attributes, test_labels = hp.read_file("data/test.txt")
-predictions = dtClassifier.predict(test_attributes)
-
-evaluator = Evaluator()
-confusion = evaluator.confusion_matrix(predictions, test_labels)
-print(confusion)
-
-print(evaluator.accuracy(confusion))
-print(evaluator.precision(confusion))
-print(evaluator.recall(confusion))
-print(evaluator.f1_score(confusion))
