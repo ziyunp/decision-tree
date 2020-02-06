@@ -30,7 +30,7 @@ def prune_more(dt_classifier, node, validation, annotation, prev_node = None, no
         return node
     else:
         if isinstance(node.child_true, nd.Decision_node):
-            node.child_true = prune_mroe(dt_classifier, node.child_true, validation, annotation, node, True)
+            node.child_true = prune_more(dt_classifier, node.child_true, validation, annotation, node, True)
         if isinstance(node.child_false, nd.Decision_node):
             node.child_false = prune_more(dt_classifier, node.child_false, validation, annotation, node, False)
 
