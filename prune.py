@@ -25,14 +25,14 @@ def pruning_helper(node, max_depth):
     return node
 
 
-def prune_zo(dt_classifier, node, validation, annotation, prev_node = None, node_class = None):
+def prune_more(dt_classifier, node, validation, annotation, prev_node = None, node_class = None):
     if isinstance(node, nd.Leaf_node):
         return node
     else:
         if isinstance(node.child_true, nd.Decision_node):
-            node.child_true = prune_zo(dt_classifier, node.child_true, validation, annotation, node, True)
+            node.child_true = prune_mroe(dt_classifier, node.child_true, validation, annotation, node, True)
         if isinstance(node.child_false, nd.Decision_node):
-            node.child_false = prune_zo(dt_classifier, node.child_false, validation, annotation, node, False)
+            node.child_false = prune_more(dt_classifier, node.child_false, validation, annotation, node, False)
 
         # save the current node
         node_backup = cp.deepcopy(node)   
