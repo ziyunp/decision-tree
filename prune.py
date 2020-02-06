@@ -7,6 +7,24 @@ import classification as cf
 import eval as ev
 import copy as cp
 
+def prune_to_max_depth(dt_classifier, max_depth):
+    dt_classifier.tree = pruning_helper(dt_classifier.tree, max_depth)
+    return dt_classifier
+
+def pruning_helper(node, max_depth):
+    if (max_depth == 0):
+        if (not isinstance(node, nd.Leaf_node)):
+            cur_freq, init_freq = remove_children(node)
+            new_node = nd.Leaf_node(cur_freq, init_freq)
+            return new_node
+        # else: # a Leaf Node, no need to change
+    else: # a Decision Node, continue to ge deeper
+        if (not isinstance(node, nd.Leaf_node)):
+            node.childTrue = pruning_helper(node.childTrue, max_depth - 1)
+            node.childFalse = pruning_helper(node.childFalse, max_depth - 1)
+    return node
+
+
 def prune_zo(dt_classifier, node, validation, annotation, prev_node = None, node_class = None):
     if isinstance(node, nd.Leaf_node):
         return node
