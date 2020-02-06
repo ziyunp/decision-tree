@@ -24,18 +24,14 @@ dtClassifier.train(train_attributes, train_labels)
 
 # predict
 predictions = dtClassifier.predict(test_attributes)
-predictions_cross_validation = cross_validation("data/train_full.txt", 10).predict(test_attributes)
 
 # evaluate
 evaluator = Evaluator()
 confusion = evaluator.confusion_matrix(predictions, test_labels)
-confusion_cross_validation = evaluator.confusion_matrix(predictions_cross_validation, test_labels)
 print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
-print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cross_validation))
 
 # with open('save.json', 'w') as outfile:
 #     json.dump(json_data, outfile)
-
 
 def max_depth_test(dt_classifier, val_attributes, val_labels):
     """
@@ -46,4 +42,17 @@ def max_depth_test(dt_classifier, val_attributes, val_labels):
     prune(dt_classifier_copy, dt_classifier_copy.tree, val_attributes, val_labels)
     print("After pruning the maximum depth of tree is: ", dt_classifier_copy.tree.get_depth(0))
 
-max_depth_test(dtClassifier, val_attributes, val_labels)
+def cross_validation_accuracy(test_attributes, evaluator):
+    predictions_cross_validation = cross_validation("data/train_full.txt", 10).predict(test_attributes)
+    confusion_cross_validation = evaluator.confusion_matrix(predictions_cross_validation, test_labels)
+    print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cross_validation))
+
+# cross_validation("data/train_full.txt", 10, True)
+
+#################################################################
+
+# test1
+# max_depth_test(dtClassifier, val_attributes, val_labels)
+
+# test2
+# cross_validation_accuracy(test_attributes, evaluator)
