@@ -60,7 +60,7 @@ def prune_more(dt_classifier, node, validation, annotation, prev_node = None, no
 
         # decide whether confirm pruning
         if cur_accuracy >= base_accuracy:
-            print("The accuracy improves from {} to {}".format(base_accuracy, cur_accuracy))
+            # print("The accuracy improves from {} to {}".format(base_accuracy, cur_accuracy))
             return node
         else:
             return node_backup
