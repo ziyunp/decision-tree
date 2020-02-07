@@ -157,7 +157,6 @@ def get_majority_label_cross_validation(predictions):
             lbl_list.append(predictions[i][lbl])
         merged_pred.append(majority_element(lbl_list))
     
-    print(merged_pred)
     return merged_pred
 
 
