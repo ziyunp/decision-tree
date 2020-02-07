@@ -51,8 +51,8 @@ class Decision_node(Node):
             for _ in range(layer):
                 print('    ', end='')
             print("+---- ", end='')
-            print("Decision Node: Attribute {} is smaller than {}?"
-                .format(self.split_info.attribute, self.split_info.value))
+            print("Decision Node: Attribute {} < {}? (entropy: {})"
+                .format(self.split_info.attribute + 1, self.split_info.value, '%.3f'%(self.get_entropy())))
             json_data.append({
                 "split_point": [self.split_info.attribute, int(self.split_info.value)],
                 "child_true": [],
@@ -95,7 +95,7 @@ class Leaf_node(Node):
             json_data.append({
                 "label": chr(self.label)
             })        
-            print("Leaf {}".format(chr(self.label)))
+            print("Leaf {} (entropy: {})".format(chr(self.label), '%.3f'%(self.get_entropy())))
 
     def question(self, attributes):
         return self.label
