@@ -24,14 +24,25 @@ dtClassifier.train(train_attributes, train_labels).tree.print(0, json_data["root
 
 # predict
 predictions = dtClassifier.predict(test_attributes)
-predictions_cross_validation = cross_validation("data/train_full.txt", 10).predict(test_attributes)
+predictions_cross_validation, k_trees_cross_validation = cross_validation("data/train_full.txt", 10)
+
+predictions_cross_validation = predictions_cross_validation.predict(test_attributes)
+
+predictions_k_trees_cross_validation = []
+
+for tree in k_trees_cross_validation:
+    predictions_k_trees_cross_validation.append(tree.predict(test_attributes))
+
+predictions_majority_k_trees_cross_validation = get_majority_label_cross_validation(predictions_k_trees_cross_validation)
 
 # evaluate
 evaluator = Evaluator()
 confusion = evaluator.confusion_matrix(predictions, test_labels)
 confusion_cross_validation = evaluator.confusion_matrix(predictions_cross_validation, test_labels)
+confusion_majority_k_trees_cross_validation = evaluator.confusion_matrix(predictions_majority_k_trees_cross_validation, test_labels)
 print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
 print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cross_validation))
+print("Accuracy when training with cross-validation merged predictions for k trees: ", evaluator.accuracy(confusion_majority_k_trees_cross_validation))
 
 # with open('save.json', 'w') as outfile:
 #     json.dump(json_data, outfile)
