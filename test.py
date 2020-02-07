@@ -9,8 +9,8 @@ from prune import *
 # import json
 
 ### Hardcoded data ###
-# jsonData = {}
-# jsonData["root"] = []
+json_data = {}
+json_data["root"] = []
 ######################
 
 # read datasets
@@ -20,7 +20,7 @@ val_attributes, val_labels = hp.read_file("data/validation.txt")
 
 # train
 dtClassifier = DecisionTreeClassifier()
-dtClassifier.train(train_attributes, train_labels)
+dtClassifier.train(train_attributes, train_labels).tree.print(0, json_data["root"])
 
 # predict
 predictions = dtClassifier.predict(test_attributes)
