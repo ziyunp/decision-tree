@@ -44,19 +44,6 @@ def get_frequency(dataset):
         freq[item[LABEL_COL]] += 1
     return freq
 
-# def convertToAscii(label):
-#     newArray = []
-#     for i in range (0, len(label)):
-#         newArray.append(ord(label[i]))
-#     return newArray
-
-# def mergeArrays(label, attr):
-#     mergedArr = []
-#     for i in range (0, len(label)):
-#         mergedArr.append(np.insert(attr[i], 0, label[i]))
-#     return np.array(mergedArr)
-
-
 def sort_by_attr(data, col):
         sorted_list = sorted(data, key=lambda x:x[col])
         return np.array(sorted_list)
@@ -87,17 +74,7 @@ def calc_info_gain(sorted_dataset, split_info):
 
     child_entropy = p * calc_entropy(true_freq) + (1-p) * calc_entropy(false_freq)
     return base_entropy - child_entropy
-# def checkIG(data, attr, split_point):
-#     # split in 2 subsets
-#     subset1 = []
-#     subset2 = []
-#     subset1, subset2 = split(data, attr, split_point)
-#     return calc_info_gain(data[:,0], subset1[:,0], subset2[:,0])
 
-
-# @param dataset NxAttr array
-# @param split_info = [splitAttribute, split_point]
-# @return an split_point x Attr array and an (N - split_point) x Attr array
 def split(dataset, split_info):
     true_data = []
     false_data = []
@@ -115,7 +92,6 @@ def find_best_split(dataset):
 
     for attr in range (len(dataset[0]) - 1):
         sorted_arr = sort_by_attr(dataset, attr)
-        print(sorted_arr)
         # find split points
         prev_split_point = sorted_arr[0][attr]
         # start checking from 1st value because splitting at 0th index will return the original array

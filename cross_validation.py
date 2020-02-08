@@ -101,25 +101,16 @@ def run(training_dataset, test_dataset, max_share):
     x,y = training_dataset[:,:-1], [chr(training_dataset[i][-1]) for i in range(len(training_dataset))]
     x_test, y_test = test_dataset[:,:-1], [chr(test_dataset[i][-1]) for i in range(len(test_dataset))]
 
-    # print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
     classifier.set_max_share_hyperparameter(max_share)
     classifier = classifier.train(x, y)
 
-    # print("Testing the decision tree...")
     predictions = classifier.predict(x_test)
-    # print("Predictions: {}".format(predictions))
-    # print("y_test: ", y_test)
 
-    # print("Evaluating test predictions...")
     evaluator = Evaluator()
     
     # requires str in both params
     confusion = evaluator.confusion_matrix(predictions, y_test)
-    
-    # print("Confusion matrix:")
-    # print(confusion)
-
     accuracy = evaluator.accuracy(confusion)
 
     return accuracy, classifier
