@@ -61,12 +61,12 @@ class DecisionTreeClassifier(object):
 
         best_split = hp.find_best_split(dataset)
         if (best_split.attribute == None or max_share < self.max_share_hyperparameter): # all samples have the same label or cannot be split
-            node = nd.Leaf_node(hp.get_frequency(dataset), self.init_freq)
+            node = nd.LeafNode(hp.get_frequency(dataset), self.init_freq)
         else :
             true_data, false_data = hp.split(dataset, best_split)
             child_true = self.induce_decision_tree(true_data)
             child_false = self.induce_decision_tree(false_data)
-            node = nd.Decision_node(best_split, child_true, child_false)
+            node = nd.DecisionNode(best_split, child_true, child_false)
         return node 
     
     def train(self, x, y):

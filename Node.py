@@ -19,7 +19,7 @@ class Node:
         raise NotImplementedError
 
 
-class Decision_node(Node):
+class DecisionNode(Node):
     """
     A decision node
     
@@ -35,10 +35,6 @@ class Decision_node(Node):
         Given a split, compare the sum of the entropies from subLabel1 and subLabel2 with parent entropy
 
     """
-
-    # split_info = si.SplitInfo(None, None)
-    # child_true = Node()
-    # child_false = Node()
 
     def __init__(self, _split_info, child_true, child_false):
         super().__init__()
@@ -79,7 +75,7 @@ class Decision_node(Node):
     def get_depth(self, cur_depth):
         return max(self.child_true.get_depth(cur_depth + 1), self.child_false.get_depth(cur_depth + 1))
 
-class Leaf_node(Node):
+class LeafNode(Node):
 
     def __init__(self, cur_freq, init_freq):
         super().__init__()

@@ -13,25 +13,25 @@ def prune_to_max_depth(dt_classifier, max_depth):
 
 def pruning_helper(node, max_depth):
     if (max_depth == 0):
-        if (not isinstance(node, nd.Leaf_node)):
+        if (not isinstance(node, nd.LeafNode)):
             cur_freq, init_freq = remove_children(node)
-            new_node = nd.Leaf_node(cur_freq, init_freq)
+            new_node = nd.LeafNode(cur_freq, init_freq)
             return new_node
         # else: # a Leaf Node, no need to change
     else: # a Decision Node, continue to ge deeper
-        if (not isinstance(node, nd.Leaf_node)):
+        if (not isinstance(node, nd.LeafNode)):
             node.childTrue = pruning_helper(node.childTrue, max_depth - 1)
             node.childFalse = pruning_helper(node.childFalse, max_depth - 1)
     return node
 
 
 def prune_more(dt_classifier, node, validation, annotation, prev_node = None, node_class = None):
-    if isinstance(node, nd.Leaf_node):
+    if isinstance(node, nd.LeafNode):
         return node
     else:
-        if isinstance(node.child_true, nd.Decision_node):
+        if isinstance(node.child_true, nd.DecisionNode):
             node.child_true = prune_more(dt_classifier, node.child_true, validation, annotation, node, True)
-        if isinstance(node.child_false, nd.Decision_node):
+        if isinstance(node.child_false, nd.DecisionNode):
             node.child_false = prune_more(dt_classifier, node.child_false, validation, annotation, node, False)
 
         # save the current node
@@ -47,7 +47,7 @@ def prune_more(dt_classifier, node, validation, annotation, prev_node = None, no
         if node_class == None: # root_node
             return node
         cur_freq, init_freq = remove_children(node)
-        node = nd.Leaf_node(cur_freq, init_freq)
+        node = nd.LeafNode(cur_freq, init_freq)
         if node_class == True:
             prev_node.child_true = node
         elif node_class == False:
@@ -66,12 +66,12 @@ def prune_more(dt_classifier, node, validation, annotation, prev_node = None, no
             return node_backup
 
 def remove_children(node):
-    if (isinstance(node.child_true, nd.Leaf_node)):
+    if (isinstance(node.child_true, nd.LeafNode)):
         freq_true = node.child_true.predictions
         init_freq = node.child_true.init_freq
     else:
         freq_true, init_freq = remove_children(node.child_true)
-    if (isinstance(node.child_false, nd.Leaf_node)):
+    if (isinstance(node.child_false, nd.LeafNode)):
         freq_false = node.child_false.predictions
     else:
         freq_false, _ = remove_children(node.child_false)
@@ -80,10 +80,10 @@ def remove_children(node):
 
 def prune(tree, node, validation, annotation, prev_node = None, left = None):
 
-    if isinstance(node, nd.Leaf_node):
+    if isinstance(node, nd.LeafNode):
         return True
 
-    if isinstance(node, nd.Decision_node):
+    if isinstance(node, nd.DecisionNode):
         
         true_branch = prune(tree, node.child_true, validation, annotation, node, True)
         false_branch = prune(tree, node.child_false, validation, annotation, node, False) 
@@ -101,10 +101,10 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
             # print(prev_node, 'before reassign', prev_node.child_true, prev_node.child_false)
             if left:
                 saved = cp.deepcopy(prev_node.child_true)
-                prev_node.child_true = nd.Leaf_node(cur_freq, init_freq)
+                prev_node.child_true = nd.LeafNode(cur_freq, init_freq)
             elif not left:
                 saved = cp.deepcopy(prev_node.child_false)
-                prev_node.child_false = nd.Leaf_node(cur_freq, init_freq)
+                prev_node.child_false = nd.LeafNode(cur_freq, init_freq)
 
             # print(prev_node, 'after reassign', prev_node.child_true, prev_node.child_false)
 
