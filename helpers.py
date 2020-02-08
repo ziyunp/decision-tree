@@ -63,7 +63,7 @@ def calc_info_gain(sorted_dataset, split_info):
     base_entropy = calc_entropy(dataset_freq)
     data_count = len(sorted_dataset)
 
-    for i in range (len(sorted_dataset)):
+    for i in range (data_count):
         if not split_info.match(sorted_dataset[i]):
             split_index = i
             break
@@ -94,13 +94,13 @@ def find_best_split(dataset):
         sorted_arr = sort_by_attr(dataset, attr)
         # find split points
         prev_split_point = sorted_arr[0][attr]
-        # start checking from 1st value because splitting at 0th index will return the original array
+        
+        # start from index 1
+        # splitting at index 0 will return the original array
         for row in range (1, len(sorted_arr)):
-
             split_point = sorted_arr[row][attr]
-
+            # only try unique split points
             if (prev_split_point != split_point):
-                # check info gain
                 info_gain = calc_info_gain(sorted_arr, si.SplitInfo(attr, split_point))
                 if info_gain > best_info_gain:
                     best_info_gain = info_gain
@@ -153,12 +153,12 @@ def merge_freq(freq1, freq2):
     freq_ret = {}
     for key in freq1:
         if key in freq_ret:
-            freq_ret[key] = freq_ret[key] + freq1[key]
+            freq_ret[key] += freq1[key]
         else:
             freq_ret[key] = freq1[key]
     for key in freq2:
         if key in freq_ret:
-            freq_ret[key] = freq_ret[key] + freq2[key]
+            freq_ret[key] += freq2[key]
         else:
             freq_ret[key] = freq2[key]    
     return freq_ret
