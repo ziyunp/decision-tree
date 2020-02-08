@@ -14,9 +14,10 @@ def read_file(filename):
         return
 
     data = [raw_line.split(',') for raw_line in raw_data]
+    # remove any whitespace in the data
     for line in data: 
-        for e in line:
-            e.strip()
+        for i in range(len(line)):
+            line[i] = line[i].strip()
 
     # check whether number of columns in each line is consistent
     num_of_col = len(data[0])
@@ -56,10 +57,9 @@ def get_frequency(dataset):
 #     return np.array(mergedArr)
 
 
-def sort_by_attr_and_label(data, col):
-        sortedList = sorted(data, key=lambda x:(x[col], x[-1]))
-        sortedArr = np.array(sortedList)
-        return sortedArr
+def sort_by_attr(data, col):
+        sorted_list = sorted(data, key=lambda x:x[col])
+        return np.array(sorted_list)
 
 
 def calc_entropy(freq):
@@ -114,8 +114,8 @@ def find_best_split(dataset):
     best_split = si.SplitInfo(None, None)
 
     for attr in range (len(dataset[0]) - 1):
-        sorted_arr = sort_by_attr_and_label(dataset, attr)
-
+        sorted_arr = sort_by_attr(dataset, attr)
+        print(sorted_arr)
         # find split points
         prev_split_point = sorted_arr[0][attr]
         # start checking from 1st value because splitting at 0th index will return the original array
