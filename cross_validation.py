@@ -3,20 +3,10 @@ from helpers import *
 from classification import *
 from eval import *
 
-def split_dataset(filename, k):
+def split_dataset(dataset, k):
 
-    attributes, labels = read_file(filename)
-    dataset = get_data(attributes, labels)
-    length = len(dataset)
-
-    if ((k <= 1) or (k > length)):
-        print("Error: invalid k value")
-        return
-
-    # Shuffle
-    np.random.shuffle(dataset)
     subsets = []
-    divider = length // k
+    divider = len(dataset) // k
     for i in range (k):
         subsets.append(dataset[i*divider:(i+1)*divider])
 
@@ -25,7 +15,21 @@ def split_dataset(filename, k):
 
 def cross_validation(filename, k, hyperparameter_tuning = False):
 
-    subsets = split_dataset(filename, k)
+    attributes, labels = read_file(filename)
+    dataset = get_data(attributes, labels)
+    length = len(dataset)
+
+    min_k = 2
+    if hyperparameter_tuning:
+        min_k = 3
+    if ((k < min_k) or (k > length)):
+        print("Error: invalid k value")
+        return
+
+    # Shuffle
+    np.random.shuffle(dataset)
+
+    subsets = split_dataset(dataset, k)
     models_list = [] 
     all_trees = []
 

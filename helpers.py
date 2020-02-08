@@ -28,7 +28,7 @@ def read_file(filename):
             return 
 
     attributes = np.array([data[row][:-1] for row in range(len(data))], int)
-    labels = np.array([data[row][-1] for row in range(len(data))])
+    labels = np.array([data[row][LABEL_COL] for row in range(len(data))])
     return attributes, labels
 
 def get_data(attributes, labels):
