@@ -20,8 +20,8 @@ def pruning_helper(node, max_depth):
         # else: # a Leaf Node, no need to change
     else: # a Decision Node, continue to ge deeper
         if (not isinstance(node, nd.Leaf_node)):
-            node.childTrue = pruning_helper(node.childTrue, max_depth - 1)
-            node.childFalse = pruning_helper(node.childFalse, max_depth - 1)
+            node.child_true = pruning_helper(node.child_true, max_depth - 1)
+            node.child_false = pruning_helper(node.child_false, max_depth - 1)
     return node
 
 
