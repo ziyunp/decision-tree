@@ -13,18 +13,21 @@ def read_file(filename):
         print("No data found in the given file")
         return
 
-    # check whether attributes of each line is consistent
-    attribute_num = len(raw_data[0].split(",")) - 1 
+    data = [raw_line.split(',') for raw_line in raw_data]
+    for line in data: 
+        for e in line:
+            e.strip()
+
+    # check whether number of columns in each line is consistent
+    num_of_col = len(data[0])
     # the last column is label
-    for raw_line in raw_data:
-        line = raw_line.split(",")
-        if (attribute_num != len(line) - 1):
-            print("Attribute numbers of each line is not consistent")
+    for line in data:
+        if num_of_col != len(line):
+            print("Number of columns in each line is not consistent")
             return 
 
-    data = [raw_line.split(',') for raw_line in raw_data]
     attributes = np.array([data[row][:-1] for row in range(len(data))], int)
-    labels = np.array([data[row][-1].strip() for row in range(len(data))])
+    labels = np.array([data[row][-1] for row in range(len(data))])
     return attributes, labels
 
 def get_data(attributes, labels):
