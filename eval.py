@@ -13,7 +13,6 @@
 ##############################################################################
 
 import numpy as np
-
 import helpers as hp
 import classification as cf
 import Node as nd
@@ -45,20 +44,20 @@ class Evaluator(object):
             Classes should be ordered by class_labels.
             Rows are ground truth per class, columns are predictions.
         """
-
-        if (len(class_labels) == 0):
+        labels_len = len(class_labels)
+        if (labels_len == 0):
             class_labels = np.unique(np.append(annotation, prediction))
-        
-        confusion = np.zeros((len(class_labels), len(class_labels)), dtype=np.int)
+
+        confusion = np.zeros((labels_len, labels_len), dtype=np.int)
         
             
         for i in range(len(prediction)):
             annotation_index = np.where(class_labels == annotation[i])
             prediction_index = np.where(class_labels == prediction[i])
             if(len(annotation_index[0]) > 0 and len(prediction_index[0]) > 0):
-                row_num = annotation_index[0][0]
-                col_num = prediction_index[0][0]
-                confusion[row_num][col_num] += 1
+                row = annotation_index[0][0]
+                col = prediction_index[0][0]
+                confusion[row][col] += 1
         return confusion
     
     
@@ -78,9 +77,11 @@ class Evaluator(object):
         """
         total_true = 0
         total = 0
-        for i in range (len(confusion)):
+        confusion_len = len(confusion)
+
+        for i in range (confusion_len):
             total_true += confusion[i][i]
-            for j in range(len(confusion)):
+            for j in range(confusion_len):
                 total += confusion[i][j]
         accuracy = total_true / total
         if total == 0:
@@ -109,12 +110,13 @@ class Evaluator(object):
         """
         
         # Initialise array to store precision for C classes
-        precision = np.zeros((len(confusion), ))
+        confusion_len = len(confusion)
+        precision = np.zeros((confusion_len, ))
 
-        for i in range (len(confusion)):
+        for i in range (confusion_len):
             total_predicted_positive = 0
             true_positive = confusion[i][i]
-            for j in range (len(confusion)):
+            for j in range (confusion_len):
                 total_predicted_positive += confusion[j][i]
             precision[i] = true_positive / total_predicted_positive
             if total_predicted_positive == 0:
@@ -150,20 +152,20 @@ class Evaluator(object):
         """
         
         # Initialise array to store recall for C classes
-        recall = np.zeros((len(confusion), ))
+        confusion_len = len(confusion)
+        recall = np.zeros((confusion_len, ))
         
-        for i in range(len(confusion)):
+        for i in range(confusion_len):
             total_actual_positive = 0
-            for j in range(len(confusion)):
+            for j in range(confusion_len):
                 total_actual_positive += confusion[i][j]
             recall[i] = confusion[i][i] / total_actual_positive
             if total_actual_positive == 0:
                 print("Error in recall(): Division by zero!")
         
-        # You will also need to change this        
         macro_recall = 0
-        for i in range(len(recall)):
-            macro_recall += recall[i]
+        for r in recall:
+            macro_recall += r
         macro_recall = macro_recall / len(recall)
 
         return (recall, macro_recall)
@@ -191,16 +193,16 @@ class Evaluator(object):
         """
         
         # Initialise array to store recall for C classes
-        f1 = np.zeros((len(confusion), ))
+        confusion_len = len(confusion)
+        f1 = np.zeros((confusion_len, ))
         
         recall, _ = self.recall(confusion)
         precision, _ = self.precision(confusion)
         f1 = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
         
-        # You will also need to change this        
         macro_f1 = 0
-        for i in range(len(confusion)):
+        for i in range(confusion_len):
             macro_f1 += f1[i]
-        macro_f1 = macro_f1 / len(confusion)
+        macro_f1 = macro_f1 / confusion_len
         
         return (f1, macro_f1)
