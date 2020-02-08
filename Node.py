@@ -1,6 +1,8 @@
 import SplitInfo as si
 import helpers as hp
 
+MAX_PRINT_DEPTH = 5
+
 class Node:
     
     def print(self):
@@ -43,7 +45,7 @@ class DecisionNode(Node):
         self.child_false = child_false
 
     def print(self, layer, json_data):
-        if (layer <= 10):
+        if (layer <= MAX_PRINT_DEPTH):
             for _ in range(layer):
                 print('    ', end='')
             print("+---- ", end='')
@@ -61,16 +63,13 @@ class DecisionNode(Node):
     def question(self, attributes):        
         if (int(attributes[self.split_info.attribute]) < int(self.split_info.value)):
             return self.child_true.question(attributes)
-        else:
-            return self.child_false.question(attributes)
+        return self.child_false.question(attributes)
     
     def get_cur_freq(self):
-        ret_freq = hp.merge_freq(self.child_true.get_cur_freq(), self.child_false.get_cur_freq())
-        return ret_freq
+        return hp.merge_freq(self.child_true.get_cur_freq(), self.child_false.get_cur_freq())
 
     def get_entropy(self):
-        cur_freq = self.get_cur_freq()
-        return hp.calc_entropy(cur_freq)
+        return hp.calc_entropy(self.get_cur_freq())
 
     def get_depth(self, cur_depth):
         return max(self.child_true.get_depth(cur_depth + 1), self.child_false.get_depth(cur_depth + 1))
@@ -85,7 +84,7 @@ class LeafNode(Node):
         self.label = hp.get_major_label(self.predictions)
 
     def print(self, layer, json_data):
-        if (layer <= 10):
+        if (layer <= MAX_PRINT_DEPTH):
             for _ in range(layer):
                 print('    ', end='')
             print("+---- ", end='')
