@@ -11,34 +11,6 @@ from prune import *
 """
     Common test codes
 """
-
-def print_metrics(predictions):
-    evaluator = Evaluator()
-    confusion = evaluator.confusion_matrix(predictions, test_labels)
-
-    print(confusion)
-
-    accuracy =  evaluator.accuracy(confusion)
-
-    print("Accuracy: {}".format(accuracy))
-
-    (p, macro_p) = evaluator.precision(confusion)
-    (r, macro_r) = evaluator.recall(confusion)
-    (f, macro_f) = evaluator.f1_score(confusion)
-
-    classes = class_labels = np.unique(predictions)
-
-    print()
-    print("Class: Precision, Recall, F1")
-    for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-        print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1))
-
-    print() 
-    print("Macro-averaged Precision: {:.2f}".format(macro_p))
-    print("Macro-averaged Recall: {:.2f}".format(macro_r))
-    print("Macro-averaged F1: {:.2f}".format(macro_f))
-
-
 # json intialisation
 json_data = {}
 json_data["root"] = []
@@ -58,12 +30,9 @@ dtClassifier.train(train_attributes, train_labels)
 predictions = dtClassifier.predict(test_attributes)
 
 # evaluate
-print("Accuracy when training on full dataset: ")
-print_metrics(predictions)
-print("Accuracy when training with cross-validation: ")
-print_metrics(predictions_cross_validation)
-print("Accuracy when training with cross-validation merged predictions for k trees: ")
-print_metrics(predictions_majority_k_trees_cross_validation)
+evaluator = Evaluator()
+confusion = evaluator.confusion_matrix(predictions, test_labels)
+print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
 
 with open('save.json', 'w') as outfile:
     json.dump(json_data, outfile)
@@ -91,8 +60,6 @@ def cross_validation_accuracy(test_attributes, evaluator):
     confusion_majority_k_trees_cross_validation = evaluator.confusion_matrix(predictions_majority_k_trees_cross_validation, test_labels)
     print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cross_validation))
     print("Accuracy when training with cross-validation merged predictions for k trees: ", evaluator.accuracy(confusion_majority_k_trees_cross_validation))
-
-
 
 
 def max_depth_test(dt_classifier, val_attributes, val_labels):
