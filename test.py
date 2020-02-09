@@ -23,7 +23,7 @@ val_attributes, val_labels = hp.read_file("data/validation.txt")
 
 # train
 dtClassifier = DecisionTreeClassifier()
-dtClassifier.set_max_share_hyperparameter(0.004)
+# dtClassifier.set_max_share_hyperparameter(0.004)
 dtClassifier.train(train_attributes, train_labels)
 
 # predict
@@ -71,11 +71,14 @@ def max_depth_test(dt_classifier, val_attributes, val_labels):
     prune_more(dt_classifier_copy, dt_classifier_copy.tree, val_attributes, val_labels)
     print("After pruning the maximum depth of tree is: ", dt_classifier_copy.tree.get_depth(0))
 
+
 def cross_validation_accuracy_after_pruning_more():
     cross_validation("data/train_full.txt", 10, False, "prune_more")
 
+
 def cross_validation_accuracy_after_pruning():
     cross_validation("data/train_full.txt", 10, False, "prune")
+
 
 # def cross_validation_accuracy():
 #     cross_validation("data/train_full.txt", 10, False, None)
@@ -90,6 +93,7 @@ def accuracy_with_prune_more(dt_classifier, evaluator, val_attributes, val_label
     print("Recall on test dataset after prune_more is: ", evaluator.recall(confusion))
     print("Precision on test dataset after prune_more is: ", evaluator.precision(confusion))
 
+
 def accuracy_with_prune(dt_classifier, evaluator, val_attributes, val_labels, test_attributes, test_labels):
     dt_classifier_copy = deepcopy(dt_classifier)
     prune(dt_classifier_copy, dt_classifier_copy.tree, val_attributes, val_labels)
@@ -98,6 +102,7 @@ def accuracy_with_prune(dt_classifier, evaluator, val_attributes, val_labels, te
     print("Accuracy on test dataset after prune is: ", evaluator.accuracy(confusion))
     print("Recall on test dataset after prune is: ", evaluator.recall(confusion))
     print("Precision on test dataset after prune is: ", evaluator.precision(confusion))
+
 
 def accuracy_pre_prune(dt_classifier, evaluator, val_attributes, val_labels, test_attributes, test_labels):
     dt_classifier_copy = deepcopy(dt_classifier)
@@ -136,11 +141,16 @@ def accuracy_vs_max_depth_test(dt_classifier, evaluator, test_attributes, test_l
 # cross_validation_accuracy()
 
 # test5
-accuracy_pre_prune(dtClassifier, evaluator, val_attributes, val_labels, test_attributes, test_labels)
-print("====================================")
-accuracy_with_prune(dtClassifier, evaluator, val_attributes, val_labels, test_attributes, test_labels)
-print("====================================")
-accuracy_with_prune_more(dtClassifier, evaluator, val_attributes, val_labels, test_attributes, test_labels)
+# accuracy_pre_prune(dtClassifier, evaluator, val_attributes, val_labels, test_attributes, test_labels)
+# print("====================================")
+# accuracy_with_prune(dtClassifier, evaluator, val_attributes, val_labels, test_attributes, test_labels)
+# print("====================================")
+# accuracy_with_prune_more(dtClassifier, evaluator, val_attributes, val_labels, test_attributes, test_labels)
 
 # test6
 # accuracy_vs_max_depth_test(dtClassifier, evaluator, test_attributes, test_labels)
+
+# Test: cross validation with train_full.txt and print out the macro prediction accuracy
+print()
+print("======= Cross validation with NO post-pruning ========")
+cross_validation_accuracy(test_attributes, evaluator)
