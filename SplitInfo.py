@@ -15,7 +15,6 @@ class SplitInfo:
             The targeted attribute is at the same index as 'attribute'
         Returns True if the given attribute value is less than the split point's attribute value
     """
-
     def __init__(self, _attribute, _value):
         self.attribute = _attribute
         self.value = _value

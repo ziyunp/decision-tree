@@ -6,7 +6,6 @@ from cross_validation import *
 from copy import *
 from prune import *
 # import json
-
 """
     Common test codes
 """
@@ -31,17 +30,17 @@ predictions = dtClassifier.predict(test_attributes)
 # evaluate
 evaluator = Evaluator()
 confusion = evaluator.confusion_matrix(predictions, test_labels)
-print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
+print("Accuracy when training on full dataset: ",
+      evaluator.accuracy(confusion))
 
 # trained_tree.tree.print(0, json_data["root"])
 # with open('save.json', 'w') as outfile:
 #     json.dump(json_data, outfile)
-
-
-
 """
     Test unit functions
 """
+
+
 def cross_validation_accuracy(test_attributes, evaluator):
     # predict
     predictions_cv, k_trees_cv = cross_validation("data/train_full.txt", 10)
@@ -53,13 +52,18 @@ def cross_validation_accuracy(test_attributes, evaluator):
     for tree in k_trees_cv:
         predictions_k_trees_cv.append(tree.predict(test_attributes))
 
-    predictions_majority_k_trees_cv = vote_majority_label(predictions_k_trees_cv)
+    predictions_majority_k_trees_cv = vote_majority_label(
+        predictions_k_trees_cv)
 
     # evaluate
     confusion_cv = evaluator.confusion_matrix(predictions_cv, test_labels)
-    confusion_majority_k_trees_cv = evaluator.confusion_matrix(predictions_majority_k_trees_cv, test_labels)
-    print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cv))
-    print("Accuracy when training with cross-validation merged predictions for k trees: ", evaluator.accuracy(confusion_majority_k_trees_cv))
+    confusion_majority_k_trees_cv = evaluator.confusion_matrix(
+        predictions_majority_k_trees_cv, test_labels)
+    print("Accuracy when training with cross-validation: ",
+          evaluator.accuracy(confusion_cv))
+    print(
+        "Accuracy when training with cross-validation merged predictions for k trees: ",
+        evaluator.accuracy(confusion_majority_k_trees_cv))
 
 
 def max_depth_test(dt_classifier, val_attributes, val_labels):
@@ -67,42 +71,58 @@ def max_depth_test(dt_classifier, val_attributes, val_labels):
     print out the depth of the given tree and the depth after pruning
     """
     dt_classifier_copy = deepcopy(dt_classifier)
-    print("Before pruning the maximum depth of tree is: ", dt_classifier_copy.tree.get_depth(0))
-    prune_more(dt_classifier_copy, dt_classifier_copy.tree, val_attributes, val_labels)
-    print("After pruning the maximum depth of tree is: ", dt_classifier_copy.tree.get_depth(0))
+    print("Before pruning the maximum depth of tree is: ",
+          dt_classifier_copy.tree.get_depth(0))
+    prune_more(dt_classifier_copy, dt_classifier_copy.tree, val_attributes,
+               val_labels)
+    print("After pruning the maximum depth of tree is: ",
+          dt_classifier_copy.tree.get_depth(0))
 
 
 def cross_validation_pruning_more():
     cross_validation("data/train_full.txt", 10, False, "prune_more")
 
+
 def cross_validation_pruning():
     cross_validation("data/train_full.txt", 10, False, "prune")
+
 
 def cross_validation_no_prune():
     cross_validation("data/train_full.txt", 10, False, None)
 
 
-def accuracy_with_prune_more(dt_classifier, evaluator, val_attributes, val_labels, test_attributes, test_labels):
+def accuracy_with_prune_more(dt_classifier, evaluator, val_attributes,
+                             val_labels, test_attributes, test_labels):
     dt_classifier_copy = deepcopy(dt_classifier)
-    prune_more(dt_classifier_copy, dt_classifier_copy.tree, val_attributes, val_labels)
+    prune_more(dt_classifier_copy, dt_classifier_copy.tree, val_attributes,
+               val_labels)
     predictions = dt_classifier_copy.predict(test_attributes)
     confusion = evaluator.confusion_matrix(predictions, test_labels)
-    print("Accuracy on test dataset after prune_more is: ", evaluator.accuracy(confusion))
-    print("Recall on test dataset after prune_more is: ", evaluator.recall(confusion))
-    print("Precision on test dataset after prune_more is: ", evaluator.precision(confusion))
+    print("Accuracy on test dataset after prune_more is: ",
+          evaluator.accuracy(confusion))
+    print("Recall on test dataset after prune_more is: ",
+          evaluator.recall(confusion))
+    print("Precision on test dataset after prune_more is: ",
+          evaluator.precision(confusion))
 
 
-def accuracy_with_prune(dt_classifier, evaluator, val_attributes, val_labels, test_attributes, test_labels):
+def accuracy_with_prune(dt_classifier, evaluator, val_attributes, val_labels,
+                        test_attributes, test_labels):
     dt_classifier_copy = deepcopy(dt_classifier)
-    prune(dt_classifier_copy, dt_classifier_copy.tree, val_attributes, val_labels)
+    prune(dt_classifier_copy, dt_classifier_copy.tree, val_attributes,
+          val_labels)
     predictions = dt_classifier_copy.predict(test_attributes)
     confusion = evaluator.confusion_matrix(predictions, test_labels)
-    print("Accuracy on test dataset after prune is: ", evaluator.accuracy(confusion))
-    print("Recall on test dataset after prune is: ", evaluator.recall(confusion))
-    print("Precision on test dataset after prune is: ", evaluator.precision(confusion))
+    print("Accuracy on test dataset after prune is: ",
+          evaluator.accuracy(confusion))
+    print("Recall on test dataset after prune is: ",
+          evaluator.recall(confusion))
+    print("Precision on test dataset after prune is: ",
+          evaluator.precision(confusion))
 
 
-def accuracy_pre_prune(dt_classifier, evaluator, val_attributes, val_labels, test_attributes, test_labels):
+def accuracy_pre_prune(dt_classifier, evaluator, val_attributes, val_labels,
+                       test_attributes, test_labels):
     dt_classifier_copy = deepcopy(dt_classifier)
     predictions = dt_classifier_copy.predict(test_attributes)
     confusion = evaluator.confusion_matrix(predictions, test_labels)
@@ -111,13 +131,15 @@ def accuracy_pre_prune(dt_classifier, evaluator, val_attributes, val_labels, tes
     print("Precision on test dataset is: ", evaluator.precision(confusion))
 
 
-def accuracy_vs_max_depth_test(dt_classifier, evaluator, test_attributes, test_labels):
+def accuracy_vs_max_depth_test(dt_classifier, evaluator, test_attributes,
+                               test_labels):
     for i in range(20):
         dt_classifier_copy = deepcopy(dt_classifier)
         dt_classifier_copy = prune_to_max_depth(dt_classifier_copy, 20 - i)
         predictions = dt_classifier_copy.predict(test_attributes)
         confusion = evaluator.confusion_matrix(predictions, test_labels)
-        print("Accuracy after pruning to depth:", 20 - i, " is ", evaluator.accuracy(confusion))
+        print("Accuracy after pruning to depth:", 20 - i, " is ",
+              evaluator.accuracy(confusion))
 
 
 #################################################################

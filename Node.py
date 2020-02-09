@@ -3,8 +3,8 @@ import helpers as hp
 
 MAX_PRINT_DEPTH = 99
 
+
 class Node:
-    
     def print(self):
         raise NotImplementedError
 
@@ -16,7 +16,7 @@ class Node:
 
     def get_cur_freq(self):
         raise NotImplementedError
-    
+
     def get_depth(self, cur_depth):
         raise NotImplementedError
 
@@ -48,7 +48,6 @@ class DecisionNode(Node):
     get_depth(self, cur_depth):
         Recursively called to return the maximum depth of the decision tree
     """
-
     def __init__(self, _split_info, child_true, child_false):
         super().__init__()
         self.split_info = _split_info
@@ -60,30 +59,38 @@ class DecisionNode(Node):
             for _ in range(layer):
                 print('    ', end='')
             print("+---- ", end='')
-            print("Decision Node: Attribute {} < {}? (entropy: {})"
-                .format(self.split_info.attribute + 1, self.split_info.value, '%.3f'%(self.get_entropy())))
+            print("Decision Node: Attribute {} < {}? (entropy: {})".format(
+                self.split_info.attribute + 1, self.split_info.value,
+                '%.3f' % (self.get_entropy())))
             json_data.append({
-                "split_point": [self.split_info.attribute, int(self.split_info.value)],
-                "entropy": self.get_entropy(),
+                "split_point":
+                [self.split_info.attribute,
+                 int(self.split_info.value)],
+                "entropy":
+                self.get_entropy(),
                 "child_true": [],
                 "child_false": []
             })
             self.child_true.print(layer + 1, json_data[0]['child_true'])
             self.child_false.print(layer + 1, json_data[0]['child_false'])
 
-    def question(self, attributes):        
-        if (int(attributes[self.split_info.attribute]) < int(self.split_info.value)):
+    def question(self, attributes):
+        if (int(attributes[self.split_info.attribute]) < int(
+                self.split_info.value)):
             return self.child_true.question(attributes)
         return self.child_false.question(attributes)
-    
+
     def get_cur_freq(self):
-        return hp.merge_freq(self.child_true.get_cur_freq(), self.child_false.get_cur_freq())
+        return hp.merge_freq(self.child_true.get_cur_freq(),
+                             self.child_false.get_cur_freq())
 
     def get_entropy(self):
         return hp.calc_entropy(self.get_cur_freq())
 
     def get_depth(self, cur_depth):
-        return max(self.child_true.get_depth(cur_depth + 1), self.child_false.get_depth(cur_depth + 1))
+        return max(self.child_true.get_depth(cur_depth + 1),
+                   self.child_false.get_depth(cur_depth + 1))
+
 
 class LeafNode(Node):
     """  
@@ -117,8 +124,6 @@ class LeafNode(Node):
     get_depth(self, cur_depth):
         Returns the value of cur_depth
     """
-
-
     def __init__(self, cur_freq, init_freq):
         super().__init__()
         self.cur_freq = cur_freq
@@ -134,8 +139,9 @@ class LeafNode(Node):
             json_data.append({
                 "label": chr(self.label),
                 "entropy": self.get_entropy()
-            })        
-            print("Leaf {} (entropy: {})".format(chr(self.label), '%.3f'%(self.get_entropy())))
+            })
+            print("Leaf {} (entropy: {})".format(chr(self.label), '%.3f' %
+                                                 (self.get_entropy())))
 
     def question(self, attributes):
         return self.label
