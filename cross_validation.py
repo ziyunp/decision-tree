@@ -134,9 +134,10 @@ def run(training_dataset, test_dataset, max_share, prune_func):
     x, y = training_dataset[:, :-1], [
         chr(training_dataset[i][-1]) for i in range(len(training_dataset))
     ]
-    x_test, y_test = test_dataset[:, :-1], [
-        chr(test_dataset[i][-1]) for i in range(len(test_dataset))
-    ]
+    if not prune_func == None:
+        x_test, y_test = test_dataset[:, :-1], [
+            chr(test_dataset[i][-1]) for i in range(len(test_dataset))
+        ]
 
     classifier = DecisionTreeClassifier()
     classifier.set_max_share_hyperparameter(max_share)
