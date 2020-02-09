@@ -32,13 +32,19 @@ class DecisionNode(Node):
     child_false: Nodemaximum depth of the decision tree
         Recursively prints the tree at each layer
         Allow saving of the tree into a json file
+    
+    Methods
+    -------
     question(self, attributes): 
         Recursively call the corresponding child's question method
         The child is selected by the attribute value used to split at this node
+    
     get_cur_freq(self):
         Returns the frequency of class labels in the dataset at this node
+    
     get_entropy(self):
         Returns the entropy at this node
+    
     get_depth(self, cur_depth):
         Recursively called to return the maximum depth of the decision tree
     """
@@ -96,12 +102,16 @@ class LeafNode(Node):
     print(self, layer, json_data): 
         Prints out the leaf node
         Allow saving of the tree into a json file
+    
     question(self, attributes): 
         Returns self.label
+    
     get_cur_freq(self):
         Returns self.cur_freq
+    
     get_entropy(self):
         Returns the entropy at this node
+    
     get_depth(self, cur_depth):
         Returns the value of cur_depth
     """

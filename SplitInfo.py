@@ -10,8 +10,9 @@ class SplitInfo:
     Methods
     -------
     match(self, instance): 
-        Parameter: instance contains a list of values of different attributes
-        The targeted attribute is at the same index as 'attribute'
+        instance: 
+            Contains a list of values of different attributes
+            The targeted attribute is at the same index as 'attribute'
         Returns True if the given attribute value is less than the split point's attribute value
     """
 

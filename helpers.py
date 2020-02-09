@@ -5,7 +5,7 @@ import SplitInfo as si
 LABEL_COL = -1
 
 def read_file(filename):
-    raw_data = open(filename).read().splitlines() # a list of lines
+    raw_data = open(filename).read().splitlines()
 
     # check whether there is data
     data_num = len(raw_data)
