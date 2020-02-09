@@ -28,6 +28,7 @@ def cross_validation(filename, k, hyperparameter_tuning = False, prune_func = No
 
     subsets = split_dataset(filename, k)
     models_list = [] 
+    all_trees = []
 
     for i in range (k - 1):
         accuracy_list = [] 
@@ -70,6 +71,7 @@ def cross_validation(filename, k, hyperparameter_tuning = False, prune_func = No
             accuracy_test = get_accuracy(best_tree, x_test, y_test)
             print("Accuracy on the test dataset with the best max_share is: ", accuracy_test)
 
+            all_trees.append(best_tree)
             models_list.append([accuracy_test, best_tree])
 
             print("======================")
@@ -84,6 +86,7 @@ def cross_validation(filename, k, hyperparameter_tuning = False, prune_func = No
 
         else:
             accuracy_test, tree = run(training_dataset, test_dataset, 0, None)
+            all_trees.append(tree)
             models_list.append([accuracy_test, tree])
 
     best_accuracy = models_list[0][0]
@@ -100,7 +103,7 @@ def cross_validation(filename, k, hyperparameter_tuning = False, prune_func = No
     standard_deviation = np.std([models_list[i][0] for i in range (len(models_list))])
     print("Standard deviation: ", average_accuracy, " +- ", standard_deviation)
 
-    return best_tree
+    return best_tree, all_trees
 
 
 
