@@ -44,22 +44,22 @@ print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
 """
 def cross_validation_accuracy(test_attributes, evaluator):
     # predict
-    predictions_cross_validation, k_trees_cross_validation = cross_validation("data/train_full.txt", 10)
+    predictions_cv, k_trees_cv = cross_validation("data/train_full.txt", 10)
 
-    predictions_cross_validation = predictions_cross_validation.predict(test_attributes)
+    predictions_cv = predictions_cv.predict(test_attributes)
 
-    predictions_k_trees_cross_validation = []
+    predictions_k_trees_cv = []
 
-    for tree in k_trees_cross_validation:
-        predictions_k_trees_cross_validation.append(tree.predict(test_attributes))
+    for tree in k_trees_cv:
+        predictions_k_trees_cv.append(tree.predict(test_attributes))
 
-    predictions_majority_k_trees_cross_validation = get_majority_label_cross_validation(predictions_k_trees_cross_validation)
+    predictions_majority_k_trees_cv = vote_majority_label(predictions_k_trees_cv)
 
     # evaluate
-    confusion_cross_validation = evaluator.confusion_matrix(predictions_cross_validation, test_labels)
-    confusion_majority_k_trees_cross_validation = evaluator.confusion_matrix(predictions_majority_k_trees_cross_validation, test_labels)
-    print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cross_validation))
-    print("Accuracy when training with cross-validation merged predictions for k trees: ", evaluator.accuracy(confusion_majority_k_trees_cross_validation))
+    confusion_cv = evaluator.confusion_matrix(predictions_cv, test_labels)
+    confusion_majority_k_trees_cv = evaluator.confusion_matrix(predictions_majority_k_trees_cv, test_labels)
+    print("Accuracy when training with cross-validation: ", evaluator.accuracy(confusion_cv))
+    print("Accuracy when training with cross-validation merged predictions for k trees: ", evaluator.accuracy(confusion_majority_k_trees_cv))
 
 
 def max_depth_test(dt_classifier, val_attributes, val_labels):
@@ -72,16 +72,14 @@ def max_depth_test(dt_classifier, val_attributes, val_labels):
     print("After pruning the maximum depth of tree is: ", dt_classifier_copy.tree.get_depth(0))
 
 
-def cross_validation_accuracy_after_pruning_more():
+def cross_validation_pruning_more():
     cross_validation("data/train_full.txt", 10, False, "prune_more")
 
-
-def cross_validation_accuracy_after_pruning():
+def cross_validation_pruning():
     cross_validation("data/train_full.txt", 10, False, "prune")
 
-
-# def cross_validation_accuracy():
-#     cross_validation("data/train_full.txt", 10, False, None)
+def cross_validation_no_prune():
+    cross_validation("data/train_full.txt", 10, False, None)
 
 
 def accuracy_with_prune_more(dt_classifier, evaluator, val_attributes, val_labels, test_attributes, test_labels):
@@ -136,9 +134,9 @@ def accuracy_vs_max_depth_test(dt_classifier, evaluator, test_attributes, test_l
 # cross_validation_accuracy(test_attributes, evaluator)
 
 # test3
-# cross_validation_accuracy_after_pruning_more()
-# cross_validation_accuracy_after_pruning()
-# cross_validation_accuracy()
+# cross_validation_pruning_more()
+# cross_validation_pruning()
+# cross_validation_no_prune()
 
 # test5
 # accuracy_pre_prune(dtClassifier, evaluator, val_attributes, val_labels, test_attributes, test_labels)
@@ -151,6 +149,6 @@ def accuracy_vs_max_depth_test(dt_classifier, evaluator, test_attributes, test_l
 # accuracy_vs_max_depth_test(dtClassifier, evaluator, test_attributes, test_labels)
 
 # Test: cross validation with train_full.txt and print out the macro prediction accuracy
-print()
+
 print("======= Cross validation with NO post-pruning ========")
 cross_validation_accuracy(test_attributes, evaluator)

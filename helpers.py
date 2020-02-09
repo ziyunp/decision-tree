@@ -115,20 +115,20 @@ def get_major_label(probabilities):
     return keys[values.index(max(values))]
 
 def majority_element(label_list):
-    idx, ctr = 0, 1
+    index, counter = 0, 1
     
     for i in range(1, len(label_list)):
-        if (label_list[idx] == label_list[i]):
-            ctr += 1
+        if (label_list[index] == label_list[i]):
+            counter += 1
         else:
-            ctr -= 1
-            if ctr == 0:
-                idx = i
-                ctr = 1
+            counter -= 1
+            if counter == 0:
+                index = i
+                counter = 1
     
-    return label_list[idx]
+    return label_list[index]
 
-def get_majority_label_cross_validation(predictions):
+def vote_majority_label(predictions):
     merged_pred = []
     for lbl in range (len(predictions[0])):
         lbl_list = []
