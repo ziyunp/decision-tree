@@ -1,17 +1,3 @@
-##############################################################################
-# CO395: Introduction to Machine Learning
-# Coursework 1 Skeleton code
-# Prepared by: Josiah Wang
-#
-# Your tasks: 
-# Complete the following methods of Evaluator:
-# - confusion_matrix()
-# - accuracy()
-# - precision()
-# - recall()
-# - f1_score()
-##############################################################################
-
 import numpy as np
 import helpers as hp
 import classification as cf
@@ -41,7 +27,7 @@ class Evaluator(object):
         -------
         np.array
             a C by C matrix, where C is the number of classes.
-            Classes should be ordered by class_labels.
+            Classes are ordered by class_labels.
             Rows are ground truth per class, columns are predictions.
         """
         if (len(class_labels) == 0):
@@ -199,9 +185,9 @@ class Evaluator(object):
         precision, _ = self.precision(confusion)
         f1 = np.multiply(2, np.divide(np.multiply(recall, precision), np.add(recall, precision)))
         
-        macro_f1 = 0
+        total_f1 = 0
         for i in range(confusion_len):
-            macro_f1 += f1[i]
-        macro_f1 = macro_f1 / confusion_len
+            total_f1 += f1[i]
+        macro_f1 = total_f1 / confusion_len
         
         return (f1, macro_f1)
