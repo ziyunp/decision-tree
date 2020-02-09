@@ -1,6 +1,4 @@
 import numpy as np
-
-# own libraries
 import helpers as hp
 import Node as nd
 import classification as cf
@@ -17,8 +15,7 @@ def pruning_helper(node, max_depth):
             cur_freq, init_freq = remove_children(node)
             new_node = nd.LeafNode(cur_freq, init_freq)
             return new_node
-        # else: # a Leaf Node, no need to change
-    else: # a Decision Node, continue to ge deeper
+    else: 
         if (not isinstance(node, nd.LeafNode)):
             node.child_true = pruning_helper(node.child_true, max_depth - 1)
             node.child_false = pruning_helper(node.child_false, max_depth - 1)
@@ -42,10 +39,11 @@ def prune_more(dt_classifier, node, validation, annotation, prev_node = None, no
         evaluator = ev.Evaluator()
         base_confusion = evaluator.confusion_matrix(base_prediction, annotation)
         base_accuracy = evaluator.accuracy(base_confusion)
-
-        # prune chidlren
-        if node_class == None: # root_node
+        
+        # root_node
+        if node_class == None:
             return node
+        # prune chidlren
         cur_freq, init_freq = remove_children(node)
         node = nd.LeafNode(cur_freq, init_freq)
         if node_class == True:
@@ -60,10 +58,8 @@ def prune_more(dt_classifier, node, validation, annotation, prev_node = None, no
 
         # decide whether confirm pruning
         if cur_accuracy >= base_accuracy:
-            # print("The accuracy improves from {} to {}".format(base_accuracy, cur_accuracy))
             return node
-        else:
-            return node_backup
+        return node_backup
 
 def remove_children(node):
     if (isinstance(node.child_true, nd.LeafNode)):
@@ -88,7 +84,6 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
         true_branch = prune(tree, node.child_true, validation, annotation, node, True)
         false_branch = prune(tree, node.child_false, validation, annotation, node, False) 
         if true_branch and false_branch:
-            # print(node, 'with', node.child_true, node.child_false)
 
             base_prediction = tree.predict(validation)
             evaluator = ev.Evaluator()
@@ -97,8 +92,7 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
 
             cur_freq = hp.merge_freq(node.child_true.cur_freq, node.child_false.cur_freq)
             init_freq = node.child_true.init_freq
-            # print(freq)
-            # print(prev_node, 'before reassign', prev_node.child_true, prev_node.child_false)
+
             if left:
                 saved = cp.deepcopy(prev_node.child_true)
                 prev_node.child_true = nd.LeafNode(cur_freq, init_freq)
@@ -106,23 +100,16 @@ def prune(tree, node, validation, annotation, prev_node = None, left = None):
                 saved = cp.deepcopy(prev_node.child_false)
                 prev_node.child_false = nd.LeafNode(cur_freq, init_freq)
 
-            # print(prev_node, 'after reassign', prev_node.child_true, prev_node.child_false)
-
             cur_prediction = tree.predict(validation)
             cur_confusion = evaluator.confusion_matrix(cur_prediction, annotation)
             cur_accuracy = evaluator.accuracy(cur_confusion)
-            # print(base_accuracy, cur_accuracy)
 
             if cur_accuracy >= base_accuracy:
-                # print('returning true')
                 return True
-            else:
-                # print('returning false')
-                if left:
-                    prev_node.child_true = saved 
-                elif not left:
-                    prev_node.child_false = saved 
-                return False
+            if left:
+                prev_node.child_true = saved 
+            elif not left:
+                prev_node.child_false = saved 
+            return False
 
-    # print('getting to the end')
     return False
