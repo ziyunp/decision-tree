@@ -87,8 +87,6 @@ class LeafNode(Node):
         Stores the frequency of each class in this node
     init_freq: dictionary
         Stores the initial frequency of each class in the original dataset
-    predictions: dictionary
-        Stores the proportion of each class in this node of all the class present in the initial sample
     label: int
         Stores the majority class label in the form of ASCII code
 
@@ -113,8 +111,8 @@ class LeafNode(Node):
         super().__init__()
         self.cur_freq = cur_freq
         self.init_freq = init_freq
-        self.predictions = hp.get_probabilities(self.cur_freq, self.init_freq)
-        self.label = hp.get_major_label(self.predictions)
+        predictions = hp.get_probabilities(self.cur_freq, self.init_freq)
+        self.label = hp.get_major_label(predictions)
 
     def print(self, layer, json_data):
         if (layer <= MAX_PRINT_DEPTH):
