@@ -5,46 +5,51 @@ import json
 
 
 class DecisionTreeClassifier(object):
-    """
-    A decision tree classifier
-    
+    """    
     Attributes
     ----------
-    is_trained : bool
+    is_trained: bool
         Keeps track of whether the classifier has been trained
+    init_freq: dictionary
+        Stores the initial frequency of the original dataset
+    max_share_hyperparameter: float
+        Stores the value of the hyperparameter to pre-prune the tree
     
     Methods
     -------
-    train(X, y)
-        Constructs a decision tree from data X and label y
-    predict(X)
-        Predicts the class label of samples X
-    
-    """
+    set_max_share_hyperparameter(self, value):
+        value: float
+            Assigns value to the class attribute max_share_hyperparameter
+    induce_decision_tree(self, dataset):
+        dataset: numpy.array
+            an N by K+1 numpy array (N is the number of instances, K is the number of attributes and the first column is labels)
+        Recursively induces a decision tree and returns the root node of the induced decision tree
 
+    train(x, y):
+        x : numpy.array
+            An N by K numpy array (N is the number of instances, K is the 
+            number of attributes)
+        y : numpy.array
+            An N-dimensional numpy array
+        Returns a copy of the DecisionTreeClassifier instance
+
+    predict(x):
+        x : numpy.array
+            An N by K numpy array (N is the number of samples, K is the 
+            number of attributes)
+        Returns an N-dSets = {}
+        self.max_share_hyperparameter = 0.00
+    """
+    
     def __init__(self):
         self.is_trained = False
         self.init_freq = {}
         self.max_share_hyperparameter = 0.00
-    
+
     def set_max_share_hyperparameter(self, value):
         self.max_share_hyperparameter = value
 
     def induce_decision_tree(self, dataset):
-        """ Recursively inducing a decision tree
-        
-        Parameters
-        ----------
-        dataset : numpy.array
-            An N by K+1 numpy array (N is the number of instances, K is the 
-            number of attributes and the first column is labels)
-        
-        Returns
-        -------
-        Node
-            The root node of the induced decision tree
-        
-        """
         current_shares = hp.get_probabilities(hp.get_frequency(dataset), self.init_freq)
         max_share = max(current_shares.values()) 
 
@@ -60,23 +65,6 @@ class DecisionTreeClassifier(object):
         return node 
     
     def train(self, x, y):
-        """ Constructs a decision tree classifier from data
-        
-        Parameters
-        ----------
-        x : numpy.array
-            An N by K numpy array (N is the number of instances, K is the 
-            number of attributes)
-        y : numpy.array
-            An N-dimensional numpy array
-        
-        Returns
-        -------
-        DecisionTreeClassifier
-            A copy of the DecisionTreeClassifier instance
-        
-        """
-        
         # Make sure that x and y have the same number of instances
         assert x.shape[0] == len(y), \
             "Training failed. x and y must have the same number of instances."
@@ -92,23 +80,6 @@ class DecisionTreeClassifier(object):
     
     
     def predict(self, x):
-        """ Predicts a set of samples using the trained DecisionTreeClassifier.
-        
-        Assumes that the DecisionTreeClassifier has already been trained.
-        
-        Parameters
-        ----------
-        x : numpy.array
-            An N by K numpy array (N is the number of samples, K is the 
-            number of attributes)
-        
-        Returns
-        -------
-        numpy.array
-            An N-dimensional numpy array containing the predicted class label
-            for each instance in x
-        """
-        
         # make sure that classifier has been trained before predicting
         if not self.is_trained:
             raise Exception("Decision Tree classifier has not yet been trained.")
