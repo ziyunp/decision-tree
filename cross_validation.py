@@ -4,6 +4,7 @@ from classification import *
 from eval import *
 from prune import *
 
+HYPERPARAMETER_THRESHOLD = 0.01
 def split_dataset(dataset, k):
 
     subsets = []
@@ -52,7 +53,7 @@ def cross_validation(filename, k, hyperparameter_tuning = False, prune_func = No
 
         if hyperparameter_tuning: 
             # Trying different hyperparameters
-            for max_share in np.arange (0.00, 0.01, 0.002):
+            for max_share in np.arange (0.00, HYPERPARAMETER_THRESHOLD, 0.002):
                 accuracy, tree = run(training_dataset, validation_dataset, max_share, prune_func)
                 accuracy_list.append([max_share, accuracy, tree])
 
