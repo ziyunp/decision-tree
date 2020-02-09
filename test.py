@@ -23,7 +23,7 @@ val_attributes, val_labels = hp.read_file("data/validation.txt")
 # train
 dtClassifier = DecisionTreeClassifier()
 # dtClassifier.set_max_share_hyperparameter(0.004)
-dtClassifier.train(train_attributes, train_labels)
+trained_tree = dtClassifier.train(train_attributes, train_labels)
 
 # predict
 predictions = dtClassifier.predict(test_attributes)
@@ -33,8 +33,9 @@ evaluator = Evaluator()
 confusion = evaluator.confusion_matrix(predictions, test_labels)
 print("Accuracy when training on full dataset: ", evaluator.accuracy(confusion))
 
-with open('save.json', 'w') as outfile:
-    json.dump(json_data, outfile)
+# trained_tree.tree.print(0, json_data["root"])
+# with open('save.json', 'w') as outfile:
+#     json.dump(json_data, outfile)
 
 
 
@@ -42,7 +43,7 @@ with open('save.json', 'w') as outfile:
     Test unit functions
 """
 def cross_validation_accuracy(test_attributes, evaluator):
-    # prefict
+    # predict
     predictions_cross_validation, k_trees_cross_validation = cross_validation("data/train_full.txt", 10)
 
     predictions_cross_validation = predictions_cross_validation.predict(test_attributes)
