@@ -26,6 +26,10 @@ def split_dataset(filename, k):
 
 def cross_validation(filename, k, hyperparameter_tuning = False, prune_func = None):
 
+    if ((k < 2) and hyperparameter_tuning):
+        print("Error: invalid k value")
+        return
+
     subsets = split_dataset(filename, k)
     models_list = [] 
     all_trees = []
