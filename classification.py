@@ -1,15 +1,4 @@
-##############################################################################
-# CO395: Introduction to Machine Learning
-# Coursework 1 Skeleton code
-# Prepared by: Josiah Wang
-#
-# Your tasks: Complete the train() and predict() methods of the 
-# DecisionTreeClassifier 
-##############################################################################
-
 import numpy as np
-
-# own libraries
 import helpers as hp
 import Node as nd
 import json
@@ -60,7 +49,8 @@ class DecisionTreeClassifier(object):
         max_share = max(current_shares.values()) 
 
         best_split = hp.find_best_split(dataset)
-        if (best_split.attribute == None or max_share < self.max_share_hyperparameter): # all samples have the same label or cannot be split
+        # no more info gain or hyperparameter is set to pre-prune the tree
+        if (best_split.attribute == None or max_share < self.max_share_hyperparameter): 
             node = nd.LeafNode(hp.get_frequency(dataset), self.init_freq)
         else :
             true_data, false_data = hp.split(dataset, best_split)
@@ -124,11 +114,9 @@ class DecisionTreeClassifier(object):
             raise Exception("Decision Tree classifier has not yet been trained.")
         
         # set up empty N-dimensional vector to store predicted labels 
-        # feel free to change this if needed
         predictions = np.zeros((x.shape[0],), dtype=np.object)
         
         for i in range(len(x)):
             predictions[i] = chr(self.tree.question(x[i]))
     
-        # remember to change this if you rename the variable
         return predictions
