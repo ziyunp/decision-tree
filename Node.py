@@ -1,7 +1,7 @@
 import SplitInfo as si
 import helpers as hp
 
-MAX_PRINT_DEPTH = 5
+MAX_PRINT_DEPTH = 99
 
 class Node:
     
@@ -22,20 +22,25 @@ class Node:
 
 
 class DecisionNode(Node):
-    """
-    A decision node
-    
+    """  
     Attributes
     ----------
-    entropy : float
-        Saves entropy for comparison with children entropy
-    
-    Methods
-    -------
-    
-    calcChildEntropy(self, subLabel1, subLabel2) : float
-        Given a split, compare the sum of the entropies from subLabel1 and subLabel2 with parent entropy
-
+    split_info: SplitInfo
+        Saves the split point used at this node
+    child_true: Node
+        Stores the "true" subset that matches the split point
+    child_false: Nodemaximum depth of the decision tree
+        Recursively prints the tree at each layer
+        Allow saving of the tree into a json file
+    question(self, attributes): 
+        Recursively call the corresponding child's question method
+        The child is selected by the attribute value used to split at this node
+    get_cur_freq(self):
+        Returns the frequency of class labels in the dataset at this node
+    get_entropy(self):
+        Returns the entropy at this node
+    get_depth(self, cur_depth):
+        Recursively called to return the maximum depth of the decision tree
     """
 
     def __init__(self, _split_info, child_true, child_false):
@@ -75,6 +80,34 @@ class DecisionNode(Node):
         return max(self.child_true.get_depth(cur_depth + 1), self.child_false.get_depth(cur_depth + 1))
 
 class LeafNode(Node):
+    """  
+    Attributes
+    ----------
+    cur_freq: dictionary
+        Stores the frequency of each class in this node
+    init_freq: dictionary
+        Stores the initial frequency of each class in the original dataset
+    predictions: dictionary
+        Stores the proportion of each class in this node of all the class present in the initial sample
+    label: int
+        Stores the majority class label in the form of ASCII code
+
+
+    Methods
+    -------
+    print(self, layer, json_data): 
+        Prints out the leaf node
+        Allow saving of the tree into a json file
+    question(self, attributes): 
+        Returns self.label
+    get_cur_freq(self):
+        Returns self.cur_freq
+    get_entropy(self):
+        Returns the entropy at this node
+    get_depth(self, cur_depth):
+        Returns the value of cur_depth
+    """
+
 
     def __init__(self, cur_freq, init_freq):
         super().__init__()
