@@ -5,7 +5,8 @@ from eval import *
 from cross_validation import *
 from copy import *
 from prune import *
-# import json
+import json
+
 """
     Common test codes
 """
@@ -22,8 +23,12 @@ val_attributes, val_labels = hp.read_file("data/validation.txt")
 
 # train
 dtClassifier = DecisionTreeClassifier()
-dtClassifier.set_max_share_hyperparameter(0.000)
-dtClassifier.train(train_attributes, train_labels)
+trained_tree = dtClassifier.train(train_attributes, train_labels)
+
+# visualise
+trained_tree.tree.print(0, json_data["root"])
+with open('save.json', 'w') as outfile:
+    json.dump(json_data, outfile)
 
 # predict
 predictions = dtClassifier.predict(test_attributes)
@@ -31,16 +36,59 @@ predictions = dtClassifier.predict(test_attributes)
 # evaluate
 evaluator = Evaluator()
 confusion = evaluator.confusion_matrix(predictions, test_labels)
-print("Accuracy when training on full dataset: ",
-      evaluator.accuracy(confusion))
+print('\n')
+print("Confusion matrix: ")
+print(confusion)
 
-# trained_tree.tree.print(0, json_data["root"])
-# with open('save.json', 'w') as outfile:
-#     json.dump(json_data, outfile)
+print('\n')
+print("Accuracy: ",
+      evaluator.accuracy(confusion))
+print("Recall: ",
+    evaluator.recall(confusion))
+print("Precision: ",
+    evaluator.precision(confusion))
+print("F1: ",
+    evaluator.f1_score(confusion))
+
+# cross validation plain
+best_tree_plain, trees_plain = cross_validation("data/train_full.txt", 10)
+print('\n')
+print("Cross validation plain: ")
+print("Best tree: ", best_tree_plain)
+print("All trees: ", trees_plain)
+
+# cross validation with hyperparameter tuning
+best_tree_hp, trees_hp = cross_validation("data/train_full.txt", 10, True)
+print('\n')
+print("Cross validation with hyperparameter tuning: ")
+print("Best tree: ", best_tree_hp)
+print("All trees: ", trees_hp)
+
+# cross validation with prune
+best_tree_prune, trees_prune = cross_validation("data/train_full.txt", 10, False, "prune_more")
+print('\n')
+print("Cross validation with pruning: ")
+print("Best tree: ", best_tree_prune)
+print("All trees: ", trees_prune)
+
+# cross validation with both hyperparameter and pruning
+best_tree_all, trees_all = cross_validation("data/train_full.txt", 10, True, "prune")
+print('\n')
+print("Cross validation with pruning: ")
+print("Best tree: ", best_tree_all)
+print("All trees: ", trees_all)
+
+# prune
+print('\n')
+print("Depth of unpruned tree: ", trained_tree.tree.get_depth(0))
+prune(trained_tree, trained_tree.tree, val_attributes, val_labels)
+print("Depth of pruned tree: ", trained_tree.tree.get_depth(0))
+
+
 """
     Test unit functions
 """
-
+"""
 
 def cross_validation_accuracy(test_attributes, evaluator):
     # predict
@@ -68,9 +116,7 @@ def cross_validation_accuracy(test_attributes, evaluator):
 
 
 def max_depth_test(dt_classifier, val_attributes, val_labels):
-    """
-    print out the depth of the given tree and the depth after pruning
-    """
+    # print out the depth of the given tree and the depth after pruning
     dt_classifier_copy = deepcopy(dt_classifier)
     print("Before pruning the maximum depth of tree is: ",
           dt_classifier_copy.tree.get_depth(0))
@@ -210,3 +256,4 @@ def parameter_tuning(dt_classifier, train_attributes, train_labels, evaluator,
 # cross_validation("data/train_full.txt", 10, True, None)
 # print("Cross validation with pre-pruning and prune_more")
 # cross_validation("data/train_full.txt", 10, True, "prune_more")
+"""
