@@ -161,50 +161,52 @@ def parameter_tuning(dt_classifier, train_attributes, train_labels, evaluator,
 
 
 #################################################################
-print(
-    "Test: cross validation with train_full.txt and print out the macro prediction accuracy"
-)
-print()
-print("======= Cross validation with NO post-pruning ========")
-cross_validation_accuracy(test_attributes, evaluator)
 
-print("Test: parameter tuning")
-parameter_tuning(dtClassifier, train_attributes, train_labels, evaluator,
-                 val_attributes, val_labels)
-parameter_tuning(dtClassifier, noisy_attributes, noisy_labels, evaluator,
-                 val_attributes, val_labels)
-parameter_tuning(dtClassifier, sub_attributes, sub_labels, evaluator,
-                 val_attributes, val_labels)
+# print("======= Test 1: cross validation with train_full.txt and print out the macro prediction accuracy =======")
+# print()
+# cross_validation_accuracy(test_attributes, evaluator)
 
-print("Test: print out evaluation metrics of different pruning techniques")
-accuracy_pre_prune(dtClassifier, evaluator, val_attributes, val_labels,
-                   test_attributes, test_labels)
-print("====================================")
-accuracy_with_prune(dtClassifier, evaluator, val_attributes, val_labels,
-                    test_attributes, test_labels)
-print("====================================")
-accuracy_with_prune_more(dtClassifier, evaluator, val_attributes, val_labels,
-                         test_attributes, test_labels)
 
-print(
-    "Test: compare the maximum depth of decision tree before and after pruning"
-)
-max_depth_test(dtClassifier, val_attributes, val_labels)
 
-print(
-    "Test: print out the predition accuracy when tree in different maximum depth"
-)
-accuracy_vs_max_depth_test(dtClassifier, evaluator, test_attributes,
-                           test_labels)
+# print("======= Test 2: parameter tuning =======")
+# parameter_tuning(dtClassifier, train_attributes, train_labels, evaluator,
+#                  val_attributes, val_labels)
+# parameter_tuning(dtClassifier, noisy_attributes, noisy_labels, evaluator,
+#                  val_attributes, val_labels)
+# parameter_tuning(dtClassifier, sub_attributes, sub_labels, evaluator,
+#                  val_attributes, val_labels)
 
-print(
-    "Test: funcitonality of cross validation with or without pre-pruning and post pruning on"
-)
-print("Cross validation with no pre-pruning and no post-pruning...")
-cross_validation("data/train_full.txt", 10, False, None)
-print("Cross validation with no pre-pruning and prune...")
-cross_validation("data/train_full.txt", 10, False, "prune")
-print("Cross validation with pre-pruning and no post-pruning...")
-cross_validation("data/train_full.txt", 10, True, None)
-print("Cross validation with pre-pruning and prune_more")
-cross_validation("data/train_full.txt", 10, True, "prune_more")
+
+
+# print("======= Test 3: print out evaluation metrics of different pruning techniques =======")
+# accuracy_pre_prune(dtClassifier, evaluator, val_attributes, val_labels,
+#                    test_attributes, test_labels)
+# print("====================================")
+# accuracy_with_prune(dtClassifier, evaluator, val_attributes, val_labels,
+#                     test_attributes, test_labels)
+# print("====================================")
+# accuracy_with_prune_more(dtClassifier, evaluator, val_attributes, val_labels,
+#                          test_attributes, test_labels)
+
+# print(
+#     "Test: compare the maximum depth of decision tree before and after pruning"
+# )
+# max_depth_test(dtClassifier, val_attributes, val_labels)
+
+# print(
+#     "Test: print out the predition accuracy when tree in different maximum depth"
+# )
+# accuracy_vs_max_depth_test(dtClassifier, evaluator, test_attributes,
+#                            test_labels)
+
+
+
+# print("======= Test 4: funcitonality of cross validation with or without pre-pruning and post pruning on =======")
+# print("Cross validation with no pre-pruning and no post-pruning...")
+# cross_validation("data/train_full.txt", 10, False, None)
+# print("Cross validation with no pre-pruning and prune...")
+# cross_validation("data/train_full.txt", 10, False, "prune")
+# print("Cross validation with pre-pruning and no post-pruning...")
+# cross_validation("data/train_full.txt", 10, True, None)
+# print("Cross validation with pre-pruning and prune_more")
+# cross_validation("data/train_full.txt", 10, True, "prune_more")

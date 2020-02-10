@@ -31,9 +31,9 @@ def cross_validation(filename,
     min_k = 2
     if hyperparameter_tuning:
         min_k = 3
-    if ((k < min_k) or (k > length)):
+    if ((k < min_k) or (k > length) or (not isinstance(k, int))):
         print("Error: invalid k value")
-        return
+        exit()
 
     # shuffle dataset
     np.random.shuffle(dataset)
