@@ -9,11 +9,11 @@ import copy as cp
 def prune_to_max_depth(dt_classifier, max_depth):
     """remove nodes that exceed the given maximum depth (max_depth)
     """
-    dt_classifier.tree = prune_recursion_helper(dt_classifier.tree, max_depth)
+    dt_classifier.tree = pruning_helper(dt_classifier.tree, max_depth)
     return dt_classifier
 
 
-def prune_recursion_helper(node, max_depth):
+def pruning_helper(node, max_depth):
     """removes children nodes when max_depth reaches 0 and returns a new leaf node
        emerged from the removed nodes
     """
@@ -24,8 +24,8 @@ def prune_recursion_helper(node, max_depth):
             return new_node
     else:
         if (not isinstance(node, nd.LeafNode)):
-            node.child_true = prune_recursion_helper(node.child_true, max_depth - 1)
-            node.child_false = prune_recursion_helper(node.child_false, max_depth - 1)
+            node.child_true = pruning_helper(node.child_true, max_depth - 1)
+            node.child_false = pruning_helper(node.child_false, max_depth - 1)
     return node
 
 
