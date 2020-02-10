@@ -7,16 +7,11 @@ import copy as cp
 
 
 def prune_to_max_depth(dt_classifier, max_depth):
-    """remove nodes that exceed the given maximum depth (max_depth)
-    """
     dt_classifier.tree = pruning_helper(dt_classifier.tree, max_depth)
     return dt_classifier
 
 
 def pruning_helper(node, max_depth):
-    """removes children nodes when max_depth reaches 0 and returns a new leaf node
-       emerged from the removed nodes
-    """
     if (max_depth == 0):
         if (not isinstance(node, nd.LeafNode)):
             cur_freq, init_freq = remove_children(node)
@@ -35,8 +30,6 @@ def prune_more(dt_classifier,
                annotation,
                prev_node=None,
                node_class=None):
-    """Visit every decision node and prune if removing its children does not affect the accuracy
-    """
     if isinstance(node, nd.LeafNode):
         return node
     else:
@@ -80,9 +73,6 @@ def prune_more(dt_classifier,
 
 
 def remove_children(node):
-    """remove the children of node and create a new leaf node emerging all removed nodes
-       which is about to replace the node
-    """
     if (isinstance(node.child_true, nd.LeafNode)):
         freq_true = node.child_true.predictions
         init_freq = node.child_true.init_freq
@@ -96,15 +86,12 @@ def remove_children(node):
 
 
 def prune(tree, node, validation, annotation, prev_node=None, left=None):
-    """Visit every decision node and prune if removing its children does not affect the 
-       accuracy, but stops trying removing a subtree when removing the bottom leaf nodes
-       of the subtree hass been proven to decrease the accuracy. 
-    """
+
     if isinstance(node, nd.LeafNode):
         return True
 
     if isinstance(node, nd.DecisionNode):
-        # go to the bottom of decision tree
+
         true_branch = prune(tree, node.child_true, validation, annotation,
                             node, True)
         false_branch = prune(tree, node.child_false, validation, annotation,
@@ -121,7 +108,6 @@ def prune(tree, node, validation, annotation, prev_node=None, left=None):
                                      node.child_false.cur_freq)
             init_freq = node.child_true.init_freq
 
-            # back up the children
             if left:
                 saved = cp.deepcopy(prev_node.child_true)
                 prev_node.child_true = nd.LeafNode(cur_freq, init_freq)
@@ -129,13 +115,11 @@ def prune(tree, node, validation, annotation, prev_node=None, left=None):
                 saved = cp.deepcopy(prev_node.child_false)
                 prev_node.child_false = nd.LeafNode(cur_freq, init_freq)
 
-            # calculate the current accuracy
             cur_prediction = tree.predict(validation)
             cur_confusion = evaluator.confusion_matrix(cur_prediction,
                                                        annotation)
             cur_accuracy = evaluator.accuracy(cur_confusion)
 
-            # compare the current and original accuracy
             if cur_accuracy >= base_accuracy:
                 return True
             if left:
