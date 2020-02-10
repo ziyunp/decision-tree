@@ -93,6 +93,7 @@ print()
 
 """
     Test unit functions
+    -- Uncomment to run the tests --
 """
 """
 
